@@ -172,7 +172,7 @@ const RULES = {
       <div>
         <strong>Use crosses to eliminate cells.</strong>
         <br>
-        Tap a square once for a queen, again for ×, and again to clear it.
+        Tap once for ×, twice for a queen, and a third time to clear the square.
       </div>
     </div>
   `,
@@ -2819,6 +2819,40 @@ function renderQueens(
 
     cell.className =
       `queens-cell queen-region-${puzzle.regions[i]}`;
+                        const row = Math.floor(i / puzzle.size);
+                        const col = i % puzzle.size;
+                        const region = puzzle.regions[i];
+
+                        /* Black boundary whenever the neighbouring cell
+                        belongs to a different region. */
+
+                        if (
+                        row === 0 ||
+                        puzzle.regions[(row - 1) * puzzle.size + col] !== region
+                        ) {
+                        cell.classList.add("region-border-top");
+                        }
+
+                        if (
+                        row === puzzle.size - 1 ||
+                        puzzle.regions[(row + 1) * puzzle.size + col] !== region
+                        ) {
+                        cell.classList.add("region-border-bottom");
+                        }
+
+                        if (
+                        col === 0 ||
+                        puzzle.regions[row * puzzle.size + (col - 1)] !== region
+                        ) {
+                        cell.classList.add("region-border-left");
+                        }
+
+                        if (
+                        col === puzzle.size - 1 ||
+                        puzzle.regions[row * puzzle.size + (col + 1)] !== region
+                        ) {
+                        cell.classList.add("region-border-right");
+                        }
 
     const mark =
       state.queensMarks[i];
@@ -2856,13 +2890,12 @@ function renderQueens(
       () => {
 
         state.queensMarks[i] =
-          (
-            state.queensMarks[i]
-            +
-            1
-          )
-          %
-          3;
+        state.queensMarks[i] === 0
+            ? 2       // first click = X
+            : state.queensMarks[i] === 2
+            ? 1     // second click = Queen
+            : 0;    // third click = empty
+        
 
         renderCurrentGame();
 
