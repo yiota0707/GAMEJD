@@ -3647,3 +3647,43 @@ small {
   }
 
 }
+
+/* ==========================================================
+   QUEENS — COLOURBLIND ACCESSIBILITY
+   ========================================================== */
+
+/* Keep a light line between every individual square */
+.queens-cell {
+  box-sizing: border-box;
+  outline: 1px solid rgba(0, 0, 0, 0.18);
+  outline-offset: -1px;
+}
+
+/* Strong black outlines around each coloured region */
+.queens-cell.region-border-top {
+  border-top: 3px solid #000 !important;
+}
+
+.queens-cell.region-border-bottom {
+  border-bottom: 3px solid #000 !important;
+}
+
+.queens-cell.region-border-left {
+  border-left: 3px solid #000 !important;
+}
+
+.queens-cell.region-border-right {
+  border-right: 3px solid #000 !important;
+}
+
+/* Cross must be clearly visible without relying on colour */
+.queens-cell.has-cross {
+  color: #000 !important;
+  font-weight: 900 !important;
+}
+
+/* Queen must also be clearly visible */
+.queens-cell.has-queen {
+  color: #000 !important;
+  font-weight: 900 !important;
+}
