@@ -1,0 +1,693 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#103c2d" />
+
+  <title>Deans Games</title>
+
+  <link rel="stylesheet" href="style.css" />
+</head>
+
+<body>
+
+<div id="app">
+
+  <!-- ======================================================
+       TOP HEADER
+       ====================================================== -->
+
+  <header class="topbar">
+
+    <button
+      id="logoButton"
+      class="brand-button"
+      aria-label="Go home"
+    >
+      <span class="brand-main">DEANS</span>
+      <span class="brand-divider"> | </span>
+      <span class="brand-sub">Games</span>
+    </button>
+
+    <button
+      id="profileButton"
+      class="avatar"
+      aria-label="Open Jack's statistics"
+    >
+      JD
+    </button>
+
+  </header>
+
+
+  <main>
+
+    <!-- ======================================================
+         HOME SCREEN
+         ====================================================== -->
+
+    <section id="homeScreen" class="screen active">
+
+      <div class="hero-copy">
+
+        <p id="greeting" class="eyebrow">
+          Good afternoon, Jack.
+        </p>
+
+        <h1>
+          Your brain has plans today.
+        </h1>
+
+        <p class="hero-sub">
+          Fresh daily puzzles. Unlimited extra rounds.
+          No daily play limit.
+        </p>
+
+      </div>
+
+
+      <div class="section-heading">
+
+        <div>
+          <p class="eyebrow">
+            TODAY'S BOARD
+          </p>
+
+          <h2>
+            Pick your poison.
+          </h2>
+        </div>
+
+        <span id="todayLabel" class="date-chip"></span>
+
+      </div>
+
+
+      <!-- Game cards are inserted using JavaScript -->
+
+      <div id="gameGrid" class="game-grid"></div>
+
+
+      <!-- JACK SPECIAL -->
+
+      <section class="special-card">
+
+        <div class="special-topline">
+
+          <span class="mini-pill">
+            JACK SPECIAL
+          </span>
+
+          <span>
+            Occasional bonus
+          </span>
+
+        </div>
+
+
+        <div class="special-content">
+
+          <div>
+
+            <h3>
+              Grid Legends
+            </h3>
+
+            <p>
+              Formula 1, cars, brands and fantasy-inspired puzzles
+              appear occasionally without taking over the main game collection.
+            </p>
+
+          </div>
+
+          <div class="special-icon">
+            🏁
+          </div>
+
+        </div>
+
+
+        <button id="specialButton" class="button light">
+          Play today's special
+        </button>
+
+      </section>
+
+
+      <p class="home-footer-message">
+        Complete today's puzzles, replay older ones or keep generating
+        extra rounds for as long as you want.
+      </p>
+
+    </section>
+
+
+
+    <!-- ======================================================
+         GAME SCREEN
+         ====================================================== -->
+
+    <section id="gameScreen" class="screen">
+
+      <div class="game-header">
+
+        <button
+          id="leaveGame"
+          class="icon-button text-button"
+        >
+          ← Leave
+        </button>
+
+
+        <div class="game-title-wrap">
+
+          <p id="gameModeLabel" class="eyebrow">
+            TODAY
+          </p>
+
+          <h2 id="gameTitle">
+            Game
+          </h2>
+
+        </div>
+
+
+        <div class="timer-wrap">
+
+          <span class="timer-label">
+            TIME
+          </span>
+
+          <span id="timer">
+            00:00
+          </span>
+
+        </div>
+
+      </div>
+
+
+      <article class="play-card">
+
+        <div class="play-meta">
+
+          <span
+            id="difficultyChip"
+            class="mini-pill green"
+          >
+            HARD
+          </span>
+
+          <span
+            id="attemptsChip"
+            class="mini-pill plain"
+          >
+            0 checks
+          </span>
+
+        </div>
+
+
+        <h3 id="puzzlePrompt"></h3>
+
+        <p
+          id="puzzleDescription"
+          class="muted"
+        ></p>
+
+
+        <!-- Actual interactive game appears here -->
+
+        <div id="gameArea" class="game-area"></div>
+
+
+        <!-- Feedback / hint -->
+
+        <div
+          id="feedback"
+          class="feedback hidden"
+          aria-live="polite"
+        ></div>
+
+
+        <!-- Controls -->
+
+        <div class="game-actions">
+
+          <button
+            id="checkButton"
+            class="button primary"
+          >
+            Check
+          </button>
+
+          <button
+            id="hintButton"
+            class="button secondary"
+          >
+            Hint
+          </button>
+
+          <button
+            id="pauseButton"
+            class="button secondary"
+          >
+            Pause
+          </button>
+
+          <button
+            id="rulesButton"
+            class="button secondary"
+          >
+            ? Rules
+          </button>
+
+          <button
+            id="resetButton"
+            class="button ghost wide"
+          >
+            Reset puzzle
+          </button>
+
+        </div>
+
+      </article>
+
+    </section>
+
+
+
+    <!-- ======================================================
+         PAUSE SCREEN
+         ====================================================== -->
+
+    <section id="pauseScreen" class="screen">
+
+      <article class="center-card">
+
+        <div class="pause-symbol">
+          Ⅱ
+        </div>
+
+        <p class="eyebrow">
+          PAUSED
+        </p>
+
+        <h2>
+          Puzzle frozen.
+        </h2>
+
+        <p class="muted">
+          Your timer has stopped.
+          Your board is still waiting for you.
+        </p>
+
+
+        <div class="stack-actions">
+
+          <button
+            id="resumeButton"
+            class="button primary"
+          >
+            Resume
+          </button>
+
+          <button
+            id="restartFromPause"
+            class="button secondary"
+          >
+            Restart puzzle
+          </button>
+
+          <button
+            id="leaveFromPause"
+            class="button ghost"
+          >
+            Save & leave
+          </button>
+
+        </div>
+
+      </article>
+
+    </section>
+
+
+
+    <!-- ======================================================
+         ARCHIVE
+         ====================================================== -->
+
+    <section id="archiveScreen" class="screen">
+
+      <div class="page-heading">
+
+        <p class="eyebrow">
+          ARCHIVE
+        </p>
+
+        <h1>
+          Nothing disappears.
+        </h1>
+
+        <p class="muted">
+          Replay puzzles from previous days whenever you want.
+        </p>
+
+      </div>
+
+
+      <div id="archiveList" class="archive-list"></div>
+
+    </section>
+
+
+
+    <!-- ======================================================
+         STATS
+         ====================================================== -->
+
+    <section id="statsScreen" class="screen">
+
+      <div class="page-heading">
+
+        <p class="eyebrow">
+          JACK'S STATS
+        </p>
+
+        <h1>
+          Your puzzle record.
+        </h1>
+
+      </div>
+
+
+      <div class="stats-grid">
+
+        <article class="stat-card">
+
+          <strong id="statSolved">
+            0
+          </strong>
+
+          <span>
+            Solved
+          </span>
+
+        </article>
+
+
+        <article class="stat-card">
+
+          <strong id="statBest">
+            —
+          </strong>
+
+          <span>
+            Best time
+          </span>
+
+        </article>
+
+
+        <article class="stat-card">
+
+          <strong id="statPerfect">
+            0
+          </strong>
+
+          <span>
+            Perfect solves
+          </span>
+
+        </article>
+
+
+        <article class="stat-card">
+
+          <strong id="statStreak">
+            0
+          </strong>
+
+          <span>
+            Day streak
+          </span>
+
+        </article>
+
+
+        <article class="stat-card">
+
+          <strong id="statPlayed">
+            0
+          </strong>
+
+          <span>
+            Total rounds
+          </span>
+
+        </article>
+
+
+        <article class="stat-card">
+
+          <strong>
+            ∞
+          </strong>
+
+          <span>
+            Daily limit
+          </span>
+
+        </article>
+
+      </div>
+
+
+      <button
+        id="resetStatsButton"
+        class="button ghost reset-stats"
+      >
+        Reset local stats
+      </button>
+
+    </section>
+
+
+
+    <!-- ======================================================
+         WIN SCREEN
+         ====================================================== -->
+
+    <section id="winScreen" class="screen">
+
+      <div
+        id="confettiLayer"
+        class="confetti-layer"
+        aria-hidden="true"
+      ></div>
+
+
+      <article class="center-card win-card">
+
+        <div class="success-check">
+          ✓
+        </div>
+
+
+        <p class="eyebrow">
+          SOLVED
+        </p>
+
+
+        <h2 id="winHeadline">
+          Brilliant.
+        </h2>
+
+
+        <p
+          id="winMeta"
+          class="muted"
+        ></p>
+
+
+        <div class="learn-box">
+
+          <span>
+            WHY IT WORKS
+          </span>
+
+          <p id="winExplanation"></p>
+
+        </div>
+
+
+        <div class="stack-actions">
+
+          <button
+            id="playAnotherButton"
+            class="button primary"
+          >
+            Another puzzle
+          </button>
+
+          <button
+            id="replayButton"
+            class="button secondary"
+          >
+            Replay this puzzle
+          </button>
+
+          <button
+            id="winHomeButton"
+            class="button ghost"
+          >
+            Back to Deans Games
+          </button>
+
+        </div>
+
+      </article>
+
+    </section>
+
+  </main>
+
+
+
+  <!-- ======================================================
+       BOTTOM NAVIGATION
+       ====================================================== -->
+
+  <nav class="bottom-nav">
+
+    <button
+      class="nav-button active"
+      data-screen="homeScreen"
+    >
+      <span>◉</span>
+      Play
+    </button>
+
+
+    <button
+      class="nav-button"
+      data-screen="archiveScreen"
+    >
+      <span>▤</span>
+      Archive
+    </button>
+
+
+    <button
+      class="nav-button"
+      data-screen="statsScreen"
+    >
+      <span>JD</span>
+      Me
+    </button>
+
+  </nav>
+
+
+
+  <!-- ======================================================
+       RULES POPUP
+       ====================================================== -->
+
+  <div
+    id="rulesOverlay"
+    class="modal-overlay hidden"
+  >
+
+    <div class="rules-modal">
+
+      <button
+        id="closeRulesButton"
+        class="modal-close"
+      >
+        ×
+      </button>
+
+
+      <p class="eyebrow">
+        HOW TO PLAY
+      </p>
+
+
+      <h2 id="rulesHeading">
+        Game
+      </h2>
+
+
+      <div
+        id="rulesBody"
+        class="rules-body"
+      ></div>
+
+
+      <button
+        id="startFromRulesButton"
+        class="button primary wide"
+      >
+        Got it — play
+      </button>
+
+    </div>
+
+  </div>
+
+
+
+  <!-- ======================================================
+       CONFIRM POPUP
+       ====================================================== -->
+
+  <div
+    id="confirmOverlay"
+    class="modal-overlay hidden"
+  >
+
+    <div class="confirm-modal">
+
+      <h2 id="confirmTitle">
+        Leave game?
+      </h2>
+
+
+      <p
+        id="confirmText"
+        class="muted"
+      ></p>
+
+
+      <div class="confirm-actions">
+
+        <button
+          id="confirmCancel"
+          class="button secondary"
+        >
+          Keep playing
+        </button>
+
+        <button
+          id="confirmOkay"
+          class="button primary"
+        >
+          Leave
+        </button>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</div>
+
+
+<script src="script.js"></script>
+
+</body>
+</html>
