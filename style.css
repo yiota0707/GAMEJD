@@ -2557,3 +2557,1093 @@ button:focus-visible {
   }
 
 }
+
+/* ==========================================================
+   DEANS GAMES — HARD PUZZLE UPGRADES
+   Queens + enhanced game interfaces
+   ========================================================== */
+
+
+/* ==========================================================
+   QUEENS
+   ========================================================== */
+
+.queens-board {
+
+  --queens-size: 9;
+
+  width:
+    min(
+      100%,
+      520px
+    );
+
+  margin:
+    0 auto;
+
+  display:
+    grid;
+
+  grid-template-columns:
+    repeat(
+      var(--queens-size),
+      minmax(0, 1fr)
+    );
+
+  overflow:
+    hidden;
+
+  border:
+    3px solid
+    var(--green-950);
+
+  border-radius:
+    18px;
+
+  background:
+    var(--green-950);
+
+  gap:
+    1px;
+
+  box-shadow:
+    0 10px 30px
+    rgba(
+      13,
+      47,
+      36,
+      0.12
+    );
+
+}
+
+
+.queens-cell {
+
+  appearance:
+    none;
+
+  position:
+    relative;
+
+  min-width:
+    0;
+
+  aspect-ratio:
+    1;
+
+  border:
+    0;
+
+  padding:
+    0;
+
+  display:
+    flex;
+
+  align-items:
+    center;
+
+  justify-content:
+    center;
+
+  color:
+    var(--green-950);
+
+  font-size:
+    clamp(
+      17px,
+      5vw,
+      30px
+    );
+
+  font-family:
+    Georgia,
+    serif;
+
+  cursor:
+    pointer;
+
+  transition:
+    transform 0.12s ease,
+    box-shadow 0.12s ease,
+    filter 0.12s ease;
+
+}
+
+
+.queens-cell:active {
+
+  transform:
+    scale(0.91);
+
+}
+
+
+.queens-cell.has-queen {
+
+  box-shadow:
+    inset
+    0
+    0
+    0
+    3px
+    rgba(
+      13,
+      47,
+      36,
+      0.62
+    );
+
+  font-weight:
+    900;
+
+}
+
+
+.queens-cell.has-queen::after {
+
+  content:
+    "";
+
+  position:
+    absolute;
+
+  width:
+    64%;
+
+  height:
+    64%;
+
+  border-radius:
+    50%;
+
+  background:
+    rgba(
+      255,
+      255,
+      255,
+      0.42
+    );
+
+  z-index:
+    0;
+
+}
+
+
+.queens-cell.has-queen {
+
+  z-index:
+    1;
+
+}
+
+
+.queens-cell.has-queen {
+
+  text-shadow:
+    0
+    1px
+    0
+    rgba(
+      255,
+      255,
+      255,
+      0.8
+    );
+
+}
+
+
+.queens-cell.has-cross {
+
+  color:
+    rgba(
+      13,
+      47,
+      36,
+      0.52
+    );
+
+  font-family:
+    Inter,
+    sans-serif;
+
+  font-size:
+    clamp(
+      16px,
+      4vw,
+      24px
+    );
+
+}
+
+
+.queen-region-0 {
+
+  background:
+    #dbe9df;
+
+}
+
+
+.queen-region-1 {
+
+  background:
+    #e5e0ef;
+
+}
+
+
+.queen-region-2 {
+
+  background:
+    #e8efcf;
+
+}
+
+
+.queen-region-3 {
+
+  background:
+    #f0dfd8;
+
+}
+
+
+.queen-region-4 {
+
+  background:
+    #dcebee;
+
+}
+
+
+.queen-region-5 {
+
+  background:
+    #efe4d3;
+
+}
+
+
+.queen-region-6 {
+
+  background:
+    #d4e4d9;
+
+}
+
+
+.queen-region-7 {
+
+  background:
+    #eadce5;
+
+}
+
+
+.queen-region-8 {
+
+  background:
+    #e7e5cf;
+
+}
+
+
+.queens-counter {
+
+  margin-top:
+    14px;
+
+  padding:
+    11px 15px;
+
+  border:
+    1px solid
+    var(--border);
+
+  border-radius:
+    999px;
+
+  background:
+    #f4f6f3;
+
+  color:
+    var(--green-900);
+
+  text-align:
+    center;
+
+  font-size:
+    13px;
+
+  font-weight:
+    900;
+
+}
+
+
+/* ==========================================================
+   CIRCUIT HARD MODE
+   ========================================================== */
+
+.logic-list {
+
+  display:
+    grid;
+
+  gap:
+    8px;
+
+  margin-bottom:
+    18px;
+
+}
+
+
+.circuit-hard-grid {
+
+  display:
+    grid;
+
+  grid-template-columns:
+    repeat(
+      2,
+      minmax(0,1fr)
+    );
+
+  gap:
+    10px;
+
+}
+
+
+.circuit-pair {
+
+  min-height:
+    76px;
+
+  display:
+    grid;
+
+  grid-template-columns:
+    1fr
+    1px
+    1fr;
+
+  align-items:
+    stretch;
+
+  padding:
+    0;
+
+  overflow:
+    hidden;
+
+  border:
+    1px solid
+    #bccdc3;
+
+  border-radius:
+    18px;
+
+  background:
+    linear-gradient(
+      180deg,
+      #ffffff,
+      #f3f7f4
+    );
+
+  color:
+    var(--green-950);
+
+  cursor:
+    pointer;
+
+  box-shadow:
+    0
+    4px
+    0
+    rgba(
+      13,
+      47,
+      36,
+      0.08
+    );
+
+  transition:
+    transform
+    0.13s
+    ease;
+
+}
+
+
+.circuit-pair:active {
+
+  transform:
+    rotate(
+      -1deg
+    )
+    scale(
+      0.97
+    );
+
+}
+
+
+.circuit-pair span {
+
+  display:
+    flex;
+
+  align-items:
+    center;
+
+  justify-content:
+    center;
+
+  font-family:
+    Georgia,
+    serif;
+
+  font-size:
+    31px;
+
+  font-weight:
+    800;
+
+}
+
+
+.circuit-pair i {
+
+  width:
+    1px;
+
+  height:
+    100%;
+
+  background:
+    #aebdb4;
+
+}
+
+
+/* ==========================================================
+   ROUTE HARD MODE
+   ========================================================== */
+
+.route-counter {
+
+  margin:
+    14px auto
+    0;
+
+  width:
+    fit-content;
+
+  padding:
+    8px
+    13px;
+
+  border-radius:
+    999px;
+
+  border:
+    1px solid
+    var(--border);
+
+  background:
+    #f5f7f5;
+
+  font-size:
+    12px;
+
+  color:
+    var(--green-900);
+
+  font-weight:
+    900;
+
+}
+
+
+.route-cell.checkpoint {
+
+  background:
+    #f5df9c;
+
+  color:
+    #493b13;
+
+  font-weight:
+    950;
+
+}
+
+
+.route-cell.path:not(
+  .start
+):not(
+  .end
+) {
+
+  background:
+    var(--green-200);
+
+  box-shadow:
+    inset
+    0
+    0
+    0
+    2px
+    var(--green-700);
+
+}
+
+
+/* ==========================================================
+   CIPHER HARD MODE
+   ========================================================== */
+
+.cipher-five {
+
+  letter-spacing:
+    0.12em;
+
+  font-size:
+    clamp(
+      20px,
+      6vw,
+      30px
+    );
+
+}
+
+
+.cipher-five-keypad {
+
+  grid-template-columns:
+    repeat(
+      5,
+      minmax(
+        0,
+        1fr
+      )
+    );
+
+}
+
+
+.cipher-five-keypad
+.symbol-key {
+
+  min-width:
+    0;
+
+  min-height:
+    62px;
+
+  font-size:
+    24px;
+
+}
+
+
+/* ==========================================================
+   SHIFT HARD MODE
+   ========================================================== */
+
+.shift-target {
+
+  margin-bottom:
+    16px;
+
+  padding:
+    14px;
+
+  border-radius:
+    17px;
+
+  border:
+    1px solid
+    #cad6ce;
+
+  background:
+    var(--green-100);
+
+  text-align:
+    center;
+
+}
+
+
+.shift-target span {
+
+  display:
+    block;
+
+  margin-bottom:
+    6px;
+
+  color:
+    var(--green-700);
+
+  font-size:
+    10px;
+
+  font-weight:
+    900;
+
+  letter-spacing:
+    0.12em;
+
+}
+
+
+.shift-target strong {
+
+  font-size:
+    clamp(
+      17px,
+      5vw,
+      23px
+    );
+
+  letter-spacing:
+    0.11em;
+
+}
+
+
+.shift-six {
+
+  grid-template-columns:
+    repeat(
+      6,
+      minmax(
+        0,
+        1fr
+      )
+    ) !important;
+
+}
+
+
+.shift-six
+.shift-cell {
+
+  min-width:
+    0;
+
+  min-height:
+    48px;
+
+  font-size:
+    16px;
+
+}
+
+
+/* ==========================================================
+   BALANCE HARD MODE
+   ========================================================== */
+
+.balance-hard-tray {
+
+  min-height:
+    134px;
+
+}
+
+
+.balance-hard-tray
+small {
+
+  display:
+    block;
+
+  margin-top:
+    9px;
+
+  color:
+    var(--muted);
+
+  font-size:
+    11px;
+
+  font-weight:
+    800;
+
+}
+
+
+.balance-hard-tray
+.tray-values {
+
+  display:
+    flex;
+
+  align-items:
+    center;
+
+  justify-content:
+    center;
+
+  min-height:
+    40px;
+
+}
+
+
+/* ==========================================================
+   SIGNAL INPUT PUZZLES
+   ========================================================== */
+
+.signal-input {
+
+  width:
+    100%;
+
+  min-height:
+    64px;
+
+  padding:
+    0
+    18px;
+
+  border:
+    2px solid
+    #c7d4cc;
+
+  border-radius:
+    18px;
+
+  background:
+    #fbfcfa;
+
+  color:
+    var(--green-950);
+
+  text-align:
+    center;
+
+  font-family:
+    Georgia,
+    serif;
+
+  font-size:
+    25px;
+
+  font-weight:
+    800;
+
+  text-transform:
+    uppercase;
+
+  outline:
+    none;
+
+}
+
+
+.signal-input:focus {
+
+  border-color:
+    var(--green-700);
+
+  box-shadow:
+    0
+    0
+    0
+    4px
+    rgba(
+      35,
+      108,
+      80,
+      0.12
+    );
+
+}
+
+
+/* ==========================================================
+   SIGNAL ORDERING
+   ========================================================== */
+
+.signal-order {
+
+  display:
+    grid;
+
+  gap:
+    8px;
+
+}
+
+
+.signal-order-row {
+
+  min-height:
+    62px;
+
+  display:
+    flex;
+
+  align-items:
+    center;
+
+  justify-content:
+    space-between;
+
+  gap:
+    12px;
+
+  padding:
+    9px
+    10px
+    9px
+    16px;
+
+  border:
+    1px solid
+    var(--border);
+
+  border-radius:
+    17px;
+
+  background:
+    #fafbf9;
+
+}
+
+
+.signal-order-row strong {
+
+  font-family:
+    Georgia,
+    serif;
+
+  font-size:
+    18px;
+
+}
+
+
+.signal-order-row > div {
+
+  display:
+    flex;
+
+  gap:
+    5px;
+
+}
+
+
+.signal-order-row button {
+
+  width:
+    42px;
+
+  height:
+    42px;
+
+  border:
+    1px solid
+    #cad4ce;
+
+  border-radius:
+    13px;
+
+  background:
+    var(--paper);
+
+  color:
+    var(--green-900);
+
+  font-size:
+    18px;
+
+  font-weight:
+    900;
+
+  cursor:
+    pointer;
+
+}
+
+
+/* ==========================================================
+   HARD GAME DETAILS
+   ========================================================== */
+
+#difficultyChip {
+
+  letter-spacing:
+    0.1em;
+
+}
+
+
+.play-card {
+
+  position:
+    relative;
+
+}
+
+
+.game-area {
+
+  user-select:
+    none;
+
+}
+
+
+/* ==========================================================
+   MOBILE TUNING
+   ========================================================== */
+
+@media (
+  max-width:
+  520px
+) {
+
+  .queens-board {
+
+    border-radius:
+      13px;
+
+  }
+
+
+  .queens-cell {
+
+    font-size:
+      20px;
+
+  }
+
+
+  .circuit-hard-grid {
+
+    grid-template-columns:
+      1fr
+      1fr;
+
+  }
+
+
+  .circuit-pair {
+
+    min-height:
+      66px;
+
+  }
+
+
+  .circuit-pair span {
+
+    font-size:
+      25px;
+
+  }
+
+
+  .cipher-five-keypad {
+
+    gap:
+      5px;
+
+  }
+
+
+  .cipher-five-keypad
+  .symbol-key {
+
+    min-height:
+      54px;
+
+    padding:
+      0;
+
+  }
+
+
+  .shift-row {
+
+    grid-template-columns:
+      42px
+      1fr
+      42px;
+
+  }
+
+
+  .shift-six {
+
+    gap:
+      3px;
+
+  }
+
+
+  .shift-six
+  .shift-cell {
+
+    min-height:
+      43px;
+
+    border-radius:
+      10px;
+
+    font-size:
+      14px;
+
+  }
+
+}
+
+
+@media (
+  max-width:
+  380px
+) {
+
+  .queens-cell {
+
+    font-size:
+      17px;
+
+  }
+
+
+  .circuit-hard-grid {
+
+    gap:
+      7px;
+
+  }
+
+
+  .circuit-pair {
+
+    min-height:
+      60px;
+
+  }
+
+
+  .circuit-pair span {
+
+    font-size:
+      21px;
+
+  }
+
+}

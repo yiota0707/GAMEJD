@@ -1,6 +1,15 @@
-console.log("Deans Games loaded 💚");(() => {
+console.log("Deans Games loaded 💚");
+
+(() => {
 
 "use strict";
+
+/* ==========================================================
+   CONFIG
+   ========================================================== */
+
+const START_DATE = "2026-08-30";
+const TOTAL_DAILY_DAYS = 200;
 
 
 /* ==========================================================
@@ -14,33 +23,18 @@ const $$ = selector =>
   [...document.querySelectorAll(selector)];
 
 
-
 /* ==========================================================
    SCREENS
    ========================================================== */
 
 const screens = {
-
-  home:
-    $("#homeScreen"),
-
-  game:
-    $("#gameScreen"),
-
-  pause:
-    $("#pauseScreen"),
-
-  archive:
-    $("#archiveScreen"),
-
-  stats:
-    $("#statsScreen"),
-
-  win:
-    $("#winScreen")
-
+  home: $("#homeScreen"),
+  game: $("#gameScreen"),
+  pause: $("#pauseScreen"),
+  archive: $("#archiveScreen"),
+  stats: $("#statsScreen"),
+  win: $("#winScreen")
 };
-
 
 
 /* ==========================================================
@@ -49,1016 +43,85 @@ const screens = {
 
 const GAME_META = {
 
-  circuit: {
-
-    title:
-      "Circuit",
-
-    icon:
-      "◫",
-
-    color:
-      "linear-gradient(135deg,#e3efce,#c7dda5)",
-
-    featured:
-      true,
-
-    difficulty:
-      "VERY HARD",
-
-    time:
-      "8–20 min",
-
-    tags:
-      "Spatial · Deduction · Numbers",
-
+  queens: {
+    title: "Queens",
+    icon: "♛",
+    color: "linear-gradient(135deg,#d9e8dd,#a8cbb8)",
+    featured: true,
+    difficulty: "VERY HARD",
+    time: "8–20 min",
+    tags: "Logic · Regions · Deduction",
     blurb:
-      "Rotate number-pairs until every region condition works at the same time."
-
+      "Place one queen in every row, column and coloured region — without queens touching diagonally."
   },
 
+  circuit: {
+    title: "Circuit",
+    icon: "◫",
+    color: "linear-gradient(135deg,#e3efce,#c7dda5)",
+    difficulty: "VERY HARD",
+    time: "8–20 min",
+    tags: "Spatial · Deduction · Numbers",
+    blurb:
+      "Resolve a network of linked number-pair constraints."
+  },
 
   route: {
-
-    title:
-      "Route",
-
-    icon:
-      "↗",
-
-    color:
-      "#ddebef",
-
-    difficulty:
-      "HARD",
-
-    time:
-      "4–12 min",
-
-    tags:
-      "Pathfinding · Planning",
-
+    title: "Route",
+    icon: "↗",
+    color: "#ddebef",
+    difficulty: "HARD",
+    time: "6–15 min",
+    tags: "Pathfinding · Planning",
     blurb:
-      "Draw one legal path through every checkpoint without trapping yourself."
-
+      "Build a precise route through ordered checkpoints without trapping yourself."
   },
-
 
   cipher: {
-
-    title:
-      "Cipher",
-
-    icon:
-      "⌨",
-
-    color:
-      "#e8e0f1",
-
-    difficulty:
-      "HARD",
-
-    time:
-      "5–12 min",
-
-    tags:
-      "Deduction · Codes",
-
+    title: "Cipher",
+    icon: "⌨",
+    color: "#e8e0f1",
+    difficulty: "VERY HARD",
+    time: "6–15 min",
+    tags: "Deduction · Codes",
     blurb:
-      "Decode a hidden four-symbol system using only partial evidence."
-
+      "Decode a five-symbol system from positional evidence."
   },
-
 
   shift: {
-
-    title:
-      "Shift",
-
-    icon:
-      "↔",
-
-    color:
-      "#efdcd7",
-
-    difficulty:
-      "CHALLENGING",
-
-    time:
-      "3–10 min",
-
-    tags:
-      "Transformation · Patterns",
-
+    title: "Shift",
+    icon: "↔",
+    color: "#efdcd7",
+    difficulty: "HARD",
+    time: "5–12 min",
+    tags: "Transformation · Patterns",
     blurb:
-      "Slide rows cyclically until the whole board reconstructs the target."
-
+      "Shift complete rows until a scrambled pattern locks into place."
   },
-
 
   balance: {
-
-    title:
-      "Balance",
-
-    icon:
-      "⚖",
-
-    color:
-      "#efe4d3",
-
-    difficulty:
-      "CHALLENGING",
-
-    time:
-      "3–8 min",
-
-    tags:
-      "Numbers · Combinations",
-
+    title: "Balance",
+    icon: "⚖",
+    color: "#efe4d3",
+    difficulty: "HARD",
+    time: "5–12 min",
+    tags: "Numbers · Combinations",
     blurb:
-      "Assign weights to both trays so multiple totals hold simultaneously."
-
+      "Partition six weights across two constrained trays."
   },
 
-
   signal: {
-
-    title:
-      "Signal",
-
-    icon:
-      "⌁",
-
-    color:
-      "linear-gradient(135deg,#dfece4,#b8d4c5)",
-
-    difficulty:
-      "HARD",
-
-    time:
-      "2–10 min",
-
-    tags:
-      "Language · Science · Lateral",
-
+    title: "Signal",
+    icon: "⌁",
+    color: "linear-gradient(135deg,#dfece4,#b8d4c5)",
+    difficulty: "HARD",
+    time: "4–12 min",
+    tags: "Patterns · Maths · Lateral",
     blurb:
-      "Infer a hidden rule that is never directly explained."
-
+      "Infer a hidden transformation, sequence or ordering rule."
   }
 
 };
-
-
-
-/* ==========================================================
-   SIGNAL PUZZLES
-   ========================================================== */
-
-const SIGNAL_BANK = [
-
-  {
-
-    items: [
-
-      "MERCURY",
-      "VENUS",
-      "EARTH",
-      "MARS",
-
-      "JUPITER",
-      "SATURN",
-      "EUROPA",
-      "TITAN",
-
-      "PLUTO",
-      "COMET",
-      "SUN",
-      "MOON"
-
-    ],
-
-    answer: [
-
-      "MERCURY",
-      "VENUS",
-      "EARTH",
-      "MARS"
-
-    ],
-
-    prompt:
-      "Find the hidden scientific signal.",
-
-    explanation:
-      "Mercury, Venus, Earth and Mars are the four terrestrial, or rocky, planets.",
-
-    hints: [
-
-      "Think about categories of planets.",
-
-      "Rocky is the important word."
-
-    ]
-
-  },
-
-
-  {
-
-    items: [
-
-      "HELIUM",
-      "NEON",
-      "ARGON",
-      "KRYPTON",
-
-      "OXYGEN",
-      "CARBON",
-      "IRON",
-      "SODIUM",
-
-      "SILICON",
-      "COPPER",
-      "NITROGEN",
-      "GOLD"
-
-    ],
-
-    answer: [
-
-      "HELIUM",
-      "NEON",
-      "ARGON",
-      "KRYPTON"
-
-    ],
-
-    prompt:
-      "Find the hidden chemistry signal.",
-
-    explanation:
-      "Helium, neon, argon and krypton are noble gases.",
-
-    hints: [
-
-      "Look at the periodic table.",
-
-      "Their outer electron shells are unusually stable."
-
-    ]
-
-  },
-
-
-  {
-
-    items: [
-
-      "VIOLIN",
-      "VIOLA",
-      "CELLO",
-      "DOUBLE BASS",
-
-      "TRUMPET",
-      "FLUTE",
-      "OBOE",
-      "PIANO",
-
-      "HARP",
-      "TUBA",
-      "CLARINET",
-      "DRUM"
-
-    ],
-
-    answer: [
-
-      "VIOLIN",
-      "VIOLA",
-      "CELLO",
-      "DOUBLE BASS"
-
-    ],
-
-    prompt:
-      "Find the hidden musical family.",
-
-    explanation:
-      "Violin, viola, cello and double bass are the principal bowed string instruments of the modern orchestra.",
-
-    hints: [
-
-      "Think orchestra sections.",
-
-      "All four are usually played with a bow."
-
-    ]
-
-  },
-
-
-  {
-
-    items: [
-
-      "LIMA",
-      "SANTIAGO",
-      "BOGOTÁ",
-      "QUITO",
-
-      "ROME",
-      "PARIS",
-      "TOKYO",
-      "CAIRO",
-
-      "SEOUL",
-      "OSLO",
-      "NAIROBI",
-      "OTTAWA"
-
-    ],
-
-    answer: [
-
-      "LIMA",
-      "SANTIAGO",
-      "BOGOTÁ",
-      "QUITO"
-
-    ],
-
-    prompt:
-      "Find the geographic signal.",
-
-    explanation:
-      "Lima, Santiago, Bogotá and Quito are national capitals in South America.",
-
-    hints: [
-
-      "Start with continents.",
-
-      "Think South America."
-
-    ]
-
-  },
-
-
-  {
-
-    items: [
-
-      "2",
-      "3",
-      "5",
-      "7",
-
-      "9",
-      "15",
-      "21",
-      "25",
-
-      "27",
-      "33",
-      "35",
-      "49"
-
-    ],
-
-    answer: [
-
-      "2",
-      "3",
-      "5",
-      "7"
-
-    ],
-
-    prompt:
-      "Find the mathematical signal.",
-
-    explanation:
-      "2, 3, 5 and 7 are the first four prime numbers.",
-
-    hints: [
-
-      "Think divisibility.",
-
-      "Each has exactly two positive divisors."
-
-    ]
-
-  }
-
-];
-
-
-
-/* ==========================================================
-   JACK SPECIAL PUZZLES
-   ========================================================== */
-
-const SPECIAL_BANK = [
-
-  {
-
-    title:
-      "Grid Legends",
-
-    prompt:
-      "Find the Formula 1 signal.",
-
-    items: [
-
-      "FERRARI",
-      "MCLAREN",
-      "MERCEDES",
-      "RED BULL",
-
-      "BUGATTI",
-      "PAGANI",
-      "BENTLEY",
-      "KOENIGSEGG",
-
-      "VOLVO",
-      "LEXUS",
-      "JEEP",
-      "MINI"
-
-    ],
-
-    answer: [
-
-      "FERRARI",
-      "MCLAREN",
-      "MERCEDES",
-      "RED BULL"
-
-    ],
-
-    explanation:
-      "Ferrari, McLaren, Mercedes and Red Bull are strongly associated with Formula 1 teams or constructors.",
-
-    hints: [
-
-      "Think race grid rather than road cars.",
-
-      "These are major Formula 1 names."
-
-    ]
-
-  },
-
-
-  {
-
-    title:
-      "Seven Kingdoms",
-
-    prompt:
-      "Find the Westeros signal.",
-
-    items: [
-
-      "STARK",
-      "LANNISTER",
-      "TARGARYEN",
-      "BARATHEON",
-
-      "BAGGINS",
-      "POTTER",
-      "SKYWALKER",
-      "CORLEONE",
-
-      "WAYNE",
-      "BOND",
-      "DRAKE",
-      "SHELBY"
-
-    ],
-
-    answer: [
-
-      "STARK",
-      "LANNISTER",
-      "TARGARYEN",
-      "BARATHEON"
-
-    ],
-
-    explanation:
-      "Stark, Lannister, Targaryen and Baratheon are major noble houses in Game of Thrones.",
-
-    hints: [
-
-      "Think Westeros.",
-
-      "These are family or house names."
-
-    ]
-
-  },
-
-
-  {
-
-    title:
-      "Italian Icons",
-
-    prompt:
-      "Find the Italian performance marques.",
-
-    items: [
-
-      "FERRARI",
-      "LAMBORGHINI",
-      "PAGANI",
-      "MASERATI",
-
-      "PORSCHE",
-      "MCLAREN",
-      "ASTON MARTIN",
-      "BUGATTI",
-
-      "BMW",
-      "AUDI",
-      "LEXUS",
-      "VOLVO"
-
-    ],
-
-    answer: [
-
-      "FERRARI",
-      "LAMBORGHINI",
-      "PAGANI",
-      "MASERATI"
-
-    ],
-
-    explanation:
-      "Ferrari, Lamborghini, Pagani and Maserati are Italian performance-car marques.",
-
-    hints: [
-
-      "Think country of origin.",
-
-      "All four are Italian."
-
-    ]
-
-  }
-
-];
-
-
-
-/* ==========================================================
-   SHIFT PUZZLES
-   ========================================================== */
-
-const SHIFT_BANK = [
-
-  {
-
-    start: [
-
-      ["●","▲","■","◆"],
-
-      ["■","◆","●","▲"],
-
-      ["▲","■","◆","●"],
-
-      ["◆","●","▲","■"]
-
-    ],
-
-    target: [
-
-      ["●","▲","■","◆"],
-
-      ["●","▲","■","◆"],
-
-      ["●","▲","■","◆"],
-
-      ["●","▲","■","◆"]
-
-    ],
-
-    explanation:
-      "Each row contains the same four symbols in cyclic order. Shifting rows aligns identical patterns."
-
-  },
-
-
-  {
-
-    start: [
-
-      ["A","B","C","D"],
-
-      ["C","D","A","B"],
-
-      ["B","C","D","A"],
-
-      ["D","A","B","C"]
-
-    ],
-
-    target: [
-
-      ["A","B","C","D"],
-
-      ["A","B","C","D"],
-
-      ["A","B","C","D"],
-
-      ["A","B","C","D"]
-
-    ],
-
-    explanation:
-      "Because each row is a cyclic permutation, every row can be restored using only left and right shifts."
-
-  }
-
-];
-
-
-
-/* ==========================================================
-   BALANCE PUZZLES
-   ========================================================== */
-
-const BALANCE_BANK = [
-
-  {
-
-    weights:
-      [2,3,4,5,6,7],
-
-    target:
-      9,
-
-    explanation:
-      "There are several ways to make 9, but the puzzle requires two disjoint pairs simultaneously."
-
-  },
-
-
-  {
-
-    weights:
-      [1,4,5,6,7,9],
-
-    target:
-      10,
-
-    explanation:
-      "The two trays must each total 10 using four distinct weights."
-
-  },
-
-
-  {
-
-    weights:
-      [2,5,6,7,8,11],
-
-    target:
-      13,
-
-    explanation:
-      "The trick is to find two non-overlapping pairs that both make 13."
-
-  }
-
-];
-
-
-
-/* ==========================================================
-   ROUTE PUZZLES
-   ========================================================== */
-
-const ROUTE_BANK = [
-
-  {
-
-    size:
-      5,
-
-    blocked:
-      [2,7,16],
-
-    checkpoints:
-      [9,12],
-
-    start:
-      0,
-
-    end:
-      24,
-
-    explanation:
-      "The successful route reaches both checkpoints while remaining orthogonally connected and avoiding blocked cells."
-
-  },
-
-
-  {
-
-    size:
-      5,
-
-    blocked:
-      [5,6,18],
-
-    checkpoints:
-      [3,17],
-
-    start:
-      20,
-
-    end:
-      4,
-
-    explanation:
-      "Planning around the blocked cells avoids creating a dead end before the second checkpoint."
-
-  }
-
-];
-
-
-
-/* ==========================================================
-   CIPHER PUZZLES
-   ========================================================== */
-
-const CIPHER_BANK = [
-
-  {
-
-    symbols:
-      ["▲","●","■","◆"],
-
-    answer:
-      ["●","◆","▲","■"],
-
-    clues: [
-
-      {
-
-        guess:
-          ["▲","●","■","◆"],
-
-        correct:
-          4,
-
-        placed:
-          0
-
-      },
-
-
-      {
-
-        guess:
-          ["◆","■","●","▲"],
-
-        correct:
-          4,
-
-        placed:
-          0
-
-      },
-
-
-      {
-
-        guess:
-          ["●","◆","■","▲"],
-
-        correct:
-          4,
-
-        placed:
-          2
-
-      }
-
-    ],
-
-    explanation:
-      "Every clue constrains symbol position. Combining the clues leaves only one possible arrangement."
-
-  },
-
-
-  {
-
-    symbols:
-      ["☀","☾","★","◆"],
-
-    answer:
-      ["★","☀","◆","☾"],
-
-    clues: [
-
-      {
-
-        guess:
-          ["☀","☾","★","◆"],
-
-        correct:
-          4,
-
-        placed:
-          0
-
-      },
-
-
-      {
-
-        guess:
-          ["★","◆","☀","☾"],
-
-        correct:
-          4,
-
-        placed:
-          2
-
-      },
-
-
-      {
-
-        guess:
-          ["★","☀","☾","◆"],
-
-        correct:
-          4,
-
-        placed:
-          2
-
-      }
-
-    ],
-
-    explanation:
-      "The code is solved by combining the positional information from each clue."
-
-  }
-
-];
-
-
-
-/* ==========================================================
-   CIRCUIT PUZZLES
-   ========================================================== */
-
-const CIRCUIT_BANK = [
-
-  {
-
-    pairs: [
-
-      [5,1],
-
-      [4,2],
-
-      [3,3]
-
-    ],
-
-    target:
-      [0,1,0],
-
-    regions: [
-
-      {
-
-        label:
-          "LEFT",
-
-        rule:
-          "First values total 10",
-
-        className:
-          "region-green"
-
-      },
-
-
-      {
-
-        label:
-          "RIGHT",
-
-        rule:
-          "Second values total 8",
-
-        className:
-          "region-lime"
-
-      },
-
-
-      {
-
-        label:
-          "MIDDLE",
-
-        rule:
-          "Middle domino orientation matters",
-
-        className:
-          "region-sand"
-
-      }
-
-    ],
-
-    explanation:
-      "Rotating one pair changes multiple constraints at once. Circuit is about coordinating local choices so the whole system works."
-
-  },
-
-
-  {
-
-    pairs: [
-
-      [6,2],
-
-      [1,5],
-
-      [4,4]
-
-    ],
-
-    target:
-      [0,1,0],
-
-    regions: [
-
-      {
-
-        label:
-          "LEFT",
-
-        rule:
-          "Match the required orientation",
-
-        className:
-          "region-green"
-
-      },
-
-
-      {
-
-        label:
-          "RIGHT",
-
-        rule:
-          "Balance the opposite side",
-
-        className:
-          "region-lime"
-
-      },
-
-
-      {
-
-        label:
-          "MIDDLE",
-
-        rule:
-          "Equal pair remains stable",
-
-        className:
-          "region-sand"
-
-      }
-
-    ],
-
-    explanation:
-      "Each rotation affects the larger configuration, so the puzzle requires constraint propagation rather than isolated calculation."
-
-  }
-
-];
-
 
 
 /* ==========================================================
@@ -1067,336 +130,229 @@ const CIRCUIT_BANK = [
 
 const RULES = {
 
-  circuit: `
-
+  queens: `
     <div class="rule-row">
-
-      <div class="rule-icon">
-        ↻
-      </div>
-
+      <div class="rule-icon">♛</div>
       <div>
-        <strong>Rotate the pieces.</strong>
+        <strong>Place exactly nine queens.</strong>
         <br>
-        Tap a number-pair to flip its orientation.
+        Each row must contain exactly one queen.
       </div>
-
     </div>
 
-
     <div class="rule-row">
-
-      <div class="rule-icon">
-        ◆
-      </div>
-
+      <div class="rule-icon">↕</div>
       <div>
-        <strong>Read all constraints.</strong>
+        <strong>One queen in every column.</strong>
         <br>
-        One move can affect several conditions.
+        Two queens can never share a column.
       </div>
-
     </div>
 
-
     <div class="rule-row">
-
-      <div class="rule-icon">
-        ✓
-      </div>
-
+      <div class="rule-icon">▦</div>
       <div>
-        <strong>Satisfy everything at once.</strong>
+        <strong>One queen in every coloured region.</strong>
         <br>
-        The board is solved only when every condition is true.
+        Each coloured area must contain exactly one queen.
       </div>
-
     </div>
 
+    <div class="rule-row">
+      <div class="rule-icon">×</div>
+      <div>
+        <strong>Queens may not touch diagonally.</strong>
+        <br>
+        Queens in neighbouring rows cannot sit in neighbouring columns.
+      </div>
+    </div>
+
+    <div class="rule-row">
+      <div class="rule-icon">•</div>
+      <div>
+        <strong>Use crosses to eliminate cells.</strong>
+        <br>
+        Tap a square once for a queen, again for ×, and again to clear it.
+      </div>
+    </div>
   `,
 
-
-  route: `
+  circuit: `
+    <div class="rule-row">
+      <div class="rule-icon">↻</div>
+      <div>
+        <strong>Flip every pair.</strong>
+        <br>
+        Each number-pair can face one of two directions.
+      </div>
+    </div>
 
     <div class="rule-row">
-
-      <div class="rule-icon">
-        A→B
+      <div class="rule-icon">Σ</div>
+      <div>
+        <strong>Read every condition.</strong>
+        <br>
+        Several totals must work at the same time.
       </div>
+    </div>
 
+    <div class="rule-row">
+      <div class="rule-icon">✓</div>
+      <div>
+        <strong>Everything must agree.</strong>
+        <br>
+        One incorrect orientation can break several rules.
+      </div>
+    </div>
+  `,
+
+  route: `
+    <div class="rule-row">
+      <div class="rule-icon">A→B</div>
       <div>
         <strong>Build one continuous path.</strong>
         <br>
-        Begin at A and finish at B.
+        Start at A and finish at B.
       </div>
-
     </div>
-
 
     <div class="rule-row">
-
-      <div class="rule-icon">
-        ★
-      </div>
-
+      <div class="rule-icon">①</div>
       <div>
-        <strong>Visit every checkpoint.</strong>
+        <strong>Visit checkpoints in order.</strong>
         <br>
-        You must pass through every star.
+        1 must appear before 2, then 3.
       </div>
-
     </div>
-
 
     <div class="rule-row">
-
-      <div class="rule-icon">
-        ■
-      </div>
-
+      <div class="rule-icon">#</div>
       <div>
-        <strong>Avoid blocked cells.</strong>
+        <strong>Match the exact path length.</strong>
         <br>
-        Move only up, down, left or right.
+        A correct-looking route can still be too short or too long.
       </div>
-
     </div>
-
   `,
-
 
   cipher: `
-
     <div class="rule-row">
-
-      <div class="rule-icon">
-        4
-      </div>
-
+      <div class="rule-icon">5</div>
       <div>
-        <strong>Find the four-symbol code.</strong>
+        <strong>Find the five-symbol code.</strong>
         <br>
-        Each symbol appears once.
+        Every symbol appears exactly once.
       </div>
-
     </div>
 
-
     <div class="rule-row">
-
-      <div class="rule-icon">
-        ◎
-      </div>
-
+      <div class="rule-icon">◎</div>
       <div>
-        <strong>Use every clue.</strong>
+        <strong>Use the positional clues.</strong>
         <br>
-        “Placed” means the symbol is in the correct position.
+        Some clues say before, after, adjacent or forbidden positions.
       </div>
-
     </div>
 
-
     <div class="rule-row">
-
-      <div class="rule-icon">
-        ⌫
-      </div>
-
+      <div class="rule-icon">⌫</div>
       <div>
-        <strong>Tap your answer to clear it.</strong>
+        <strong>Tap the code to clear.</strong>
         <br>
-        Deduce rather than brute-force.
+        Use deduction rather than trying every permutation.
       </div>
-
     </div>
-
   `,
 
-
   shift: `
-
     <div class="rule-row">
-
-      <div class="rule-icon">
-        ↔
-      </div>
-
+      <div class="rule-icon">↔</div>
       <div>
-        <strong>Shift entire rows.</strong>
+        <strong>Shift whole rows.</strong>
         <br>
         Symbols wrap around from one side to the other.
       </div>
-
     </div>
-
 
     <div class="rule-row">
-
-      <div class="rule-icon">
-        ▦
-      </div>
-
+      <div class="rule-icon">▦</div>
       <div>
-        <strong>Match the target.</strong>
+        <strong>Match the target pattern.</strong>
         <br>
-        Every row must become the target sequence.
+        Every row must become identical to the target.
       </div>
-
     </div>
-
 
     <div class="rule-row">
-
-      <div class="rule-icon">
-        ↺
-      </div>
-
+      <div class="rule-icon">#</div>
       <div>
-        <strong>Think efficiently.</strong>
+        <strong>Watch your move count.</strong>
         <br>
-        Try to solve it using as few shifts as possible.
+        Hard rounds use larger patterns than before.
       </div>
-
     </div>
-
   `,
-
 
   balance: `
-
     <div class="rule-row">
-
-      <div class="rule-icon">
-        ⚖
-      </div>
-
+      <div class="rule-icon">⚖</div>
       <div>
-        <strong>Build two trays.</strong>
+        <strong>Fill both trays.</strong>
         <br>
-        Choose two weights for LEFT and two for RIGHT.
+        Each tray requires exactly three weights.
       </div>
-
     </div>
 
-
     <div class="rule-row">
-
-      <div class="rule-icon">
-        =
-      </div>
-
+      <div class="rule-icon">Σ</div>
       <div>
-        <strong>Both trays must reach the target.</strong>
+        <strong>Hit both target totals.</strong>
         <br>
-        A weight cannot be used twice.
+        LEFT and RIGHT can have different targets.
       </div>
-
     </div>
 
-
     <div class="rule-row">
-
-      <div class="rule-icon">
-        ↻
-      </div>
-
+      <div class="rule-icon">1×</div>
       <div>
-        <strong>Tap again to remove.</strong>
+        <strong>Each weight can be used once.</strong>
         <br>
-        The first two choices go left and the next two go right.
+        Tap a selected weight to remove it.
       </div>
-
     </div>
-
   `,
-
 
   signal: `
-
     <div class="rule-row">
-
-      <div class="rule-icon">
-        ?
-      </div>
-
+      <div class="rule-icon">?</div>
       <div>
-        <strong>The rule is hidden.</strong>
+        <strong>Find the hidden rule.</strong>
         <br>
-        It could involve science, language, maths, geography or structure.
+        Signal now changes puzzle format rather than always asking for four tiles.
       </div>
-
     </div>
 
-
     <div class="rule-row">
-
-      <div class="rule-icon">
-        4
-      </div>
-
+      <div class="rule-icon">→</div>
       <div>
-        <strong>Select exactly four.</strong>
+        <strong>Look for transformations.</strong>
         <br>
-        Every chosen tile must share one precise property.
+        Numbers, letters, sequences and ordering can all appear.
       </div>
-
     </div>
-
-
-    <div class="rule-row">
-
-      <div class="rule-icon">
-        💡
-      </div>
-
-      <div>
-        <strong>Hints are optional.</strong>
-        <br>
-        Perfect solves are completed with no hints and one check.
-      </div>
-
-    </div>
-
   `,
 
-
   special: `
-
     <div class="rule-row">
-
-      <div class="rule-icon">
-        🏁
-      </div>
-
+      <div class="rule-icon">🏁</div>
       <div>
-        <strong>This is a Jack Special.</strong>
+        <strong>Jack Special.</strong>
         <br>
-        These occasional rounds can involve Formula 1,
-        cars, brands or fantasy worlds.
+        Bonus rounds occasionally use cars, Formula 1 and fantasy themes.
       </div>
-
     </div>
-
-
-    <div class="rule-row">
-
-      <div class="rule-icon">
-        4
-      </div>
-
-      <div>
-        <strong>Select four related answers.</strong>
-        <br>
-        Specials use the Signal mechanic in this first version.
-      </div>
-
-    </div>
-
   `
-
 };
-
 
 
 /* ==========================================================
@@ -1405,63 +361,76 @@ const RULES = {
 
 const state = {
 
-  gameKey:
-    null,
+  gameKey: null,
 
-  mode:
-    "daily",
+  mode: "daily",
 
-  dateKey:
-    todayKey(),
+  dateKey: todayKey(),
 
-  puzzle:
-    null,
+  puzzle: null,
 
-  selected:
-    [],
+  selected: [],
 
-  attempts:
-    0,
+  attempts: 0,
 
-  hints:
-    0,
+  hints: 0,
 
-  elapsed:
-    0,
+  elapsed: 0,
 
-  timerId:
-    null,
+  timerId: null,
 
-  timerBase:
-    0,
+  timerBase: 0,
 
-  practiceCounter:
-    0,
+  practiceCounter: 0,
 
-  shiftRows:
-    null,
+  queensMarks: null,
 
-  balanceSelected:
-    null,
+  circuitRotations: null,
 
-  circuitRotations:
-    null
+  routePath: null,
+
+  cipherGuess: null,
+
+  shiftRows: null,
+
+  balanceLeft: [],
+
+  balanceRight: [],
+
+  signalAnswer: ""
 
 };
 
 
-
 /* ==========================================================
-   LOCAL STATS
+   STATS
    ========================================================== */
 
 const storageKey =
-  "deansGamesStatsV1";
+  "deansGamesStatsV2";
 
 
-let stats =
-  loadStats();
+function defaultStats() {
 
+  return {
+
+    solved: 0,
+
+    played: 0,
+
+    perfect: 0,
+
+    bestSeconds: null,
+
+    completedDaily: {},
+
+    lastSolvedDate: null,
+
+    streak: 0
+
+  };
+
+}
 
 
 function loadStats() {
@@ -1478,30 +447,7 @@ function loadStats() {
 
       ||
 
-      {
-
-        solved:
-          0,
-
-        played:
-          0,
-
-        perfect:
-          0,
-
-        bestSeconds:
-          null,
-
-        completedDaily:
-          {},
-
-        lastSolvedDate:
-          null,
-
-        streak:
-          0
-
-      }
+      defaultStats()
 
     );
 
@@ -1509,35 +455,15 @@ function loadStats() {
 
   catch {
 
-    return {
-
-      solved:
-        0,
-
-      played:
-        0,
-
-      perfect:
-        0,
-
-      bestSeconds:
-        null,
-
-      completedDaily:
-        {},
-
-      lastSolvedDate:
-        null,
-
-      streak:
-        0
-
-    };
+    return defaultStats();
 
   }
 
 }
 
+
+let stats =
+  loadStats();
 
 
 function saveStats() {
@@ -1553,7 +479,6 @@ function saveStats() {
   );
 
 }
-
 
 
 /* ==========================================================
@@ -1587,36 +512,48 @@ function todayKey(
 }
 
 
-
-function prettyDate(
-  dateKey
+function dateFromKey(
+  key
 ) {
 
-  const [year,month,day] =
-    dateKey
+  const [
+    y,
+    m,
+    d
+  ] =
+    key
       .split("-")
       .map(Number);
 
-
   return new Date(
-    year,
-    month - 1,
-    day
-  )
-  .toLocaleDateString(
+    y,
+    m - 1,
+    d,
+    12,
+    0,
+    0
+  );
+
+}
+
+
+function prettyDate(
+  key
+) {
+
+  return dateFromKey(
+    key
+  ).toLocaleDateString(
 
     "en-GB",
 
     {
 
-      weekday:
-        "short",
+      weekday: "short",
 
-      day:
-        "numeric",
+      day: "numeric",
 
-      month:
-        "short"
+      month: "short"
 
     }
 
@@ -1625,27 +562,76 @@ function prettyDate(
 }
 
 
+function dailyNumber(
+  key
+) {
+
+  const start =
+    dateFromKey(
+      START_DATE
+    );
+
+  const current =
+    dateFromKey(
+      key
+    );
+
+  const raw =
+    Math.floor(
+
+      (
+        current -
+        start
+      )
+
+      /
+
+      86400000
+
+    );
+
+  return (
+
+    (
+      raw %
+      TOTAL_DAILY_DAYS
+    )
+
+    +
+    TOTAL_DAILY_DAYS
+
+  )
+
+  %
+
+  TOTAL_DAILY_DAYS
+
+  +
+
+  1;
+
+}
+
 
 /* ==========================================================
-   DETERMINISTIC DAILY PUZZLES
+   SEEDED RANDOM
    ========================================================== */
 
 function hashString(
-  string
+  text
 ) {
 
   let hash =
     2166136261;
 
-
   for (
     let i = 0;
-    i < string.length;
+    i < text.length;
     i++
   ) {
 
     hash ^=
-      string.charCodeAt(i);
+      text.charCodeAt(i);
 
     hash =
       Math.imul(
@@ -1655,44 +641,23 @@ function hashString(
 
   }
 
-
   return hash >>> 0;
 
 }
 
 
-
-function seededIndex(
-  key,
-  length
+function rngFrom(
+  token
 ) {
-
-  return (
-    hashString(key)
-    %
-    length
-  );
-
-}
-
-
-
-function shuffleSeeded(
-  items,
-  seedText
-) {
-
-  const array =
-    [...items];
-
 
   let seed =
-    hashString(seedText)
+    hashString(
+      token
+    )
     ||
     1;
 
-
-  function random() {
+  return () => {
 
     seed ^=
       seed << 13;
@@ -1703,62 +668,81 @@ function shuffleSeeded(
     seed ^=
       seed << 5;
 
-
     return (
-
-      (
-        seed >>> 0
-      )
-
-      %
-      100000
-
+      seed >>> 0
     )
-
     /
-    100000;
+    4294967296;
 
-  }
+  };
 
+}
+
+
+function randomInt(
+  rng,
+  min,
+  max
+) {
+
+  return (
+    min
+    +
+    Math.floor(
+      rng()
+      *
+      (
+        max -
+        min +
+        1
+      )
+    )
+  );
+
+}
+
+
+function shuffle(
+  array,
+  rng
+) {
+
+  const copy =
+    [...array];
 
   for (
-
     let i =
-      array.length - 1;
-
+      copy.length - 1;
     i > 0;
-
     i--
-
   ) {
 
     const j =
       Math.floor(
-        random()
+        rng()
         *
-        (i + 1)
+        (
+          i + 1
+        )
       );
 
-
     [
-      array[i],
-      array[j]
+      copy[i],
+      copy[j]
     ]
 
     =
 
     [
-      array[j],
-      array[i]
+      copy[j],
+      copy[i]
     ];
 
   }
 
-
-  return array;
+  return copy;
 
 }
-
 
 
 function clone(
@@ -1766,11 +750,35 @@ function clone(
 ) {
 
   return JSON.parse(
-    JSON.stringify(object)
+    JSON.stringify(
+      object
+    )
   );
 
 }
 
+
+function puzzleToken(
+  gameKey,
+  dateKey,
+  mode
+) {
+
+  if (
+    mode === "practice"
+  ) {
+
+    return (
+      `${gameKey}:practice:${Date.now()}:${state.practiceCounter}`
+    );
+
+  }
+
+  return (
+    `${gameKey}:day:${dailyNumber(dateKey)}:${dateKey}`
+  );
+
+}
 
 
 /* ==========================================================
@@ -1786,18 +794,17 @@ function formatTime(
       seconds / 60
     );
 
-
   const remainder =
     seconds % 60;
 
-
   return (
 
-    String(minutes)
-      .padStart(
-        2,
-        "0"
-      )
+    String(
+      minutes
+    ).padStart(
+      2,
+      "0"
+    )
 
     +
 
@@ -1805,16 +812,16 @@ function formatTime(
 
     +
 
-    String(remainder)
-      .padStart(
-        2,
-        "0"
-      )
+    String(
+      remainder
+    ).padStart(
+      2,
+      "0"
+    )
 
   );
 
 }
-
 
 
 function stopTimer() {
@@ -1835,17 +842,14 @@ function stopTimer() {
 }
 
 
-
 function startTimer() {
 
   stopTimer();
-
 
   state.timerBase =
     Date.now()
     -
     state.elapsed * 1000;
-
 
   state.timerId =
     setInterval(
@@ -1866,7 +870,6 @@ function startTimer() {
 
           );
 
-
         $("#timer").textContent =
           formatTime(
             state.elapsed
@@ -1881,7 +884,6 @@ function startTimer() {
 }
 
 
-
 /* ==========================================================
    SCREEN MANAGEMENT
    ========================================================== */
@@ -1892,8 +894,7 @@ function showScreen(
 
   Object.values(
     screens
-  )
-  .forEach(
+  ).forEach(
 
     screen =>
       screen.classList.remove(
@@ -1902,12 +903,10 @@ function showScreen(
 
   );
 
-
   screens[name]
     .classList.add(
       "active"
     );
-
 
   $$(".nav-button")
     .forEach(
@@ -1916,7 +915,6 @@ function showScreen(
 
         const target =
           button.dataset.screen;
-
 
         const active =
 
@@ -1942,7 +940,6 @@ function showScreen(
             target === "statsScreen"
           );
 
-
         button.classList.toggle(
           "active",
           active
@@ -1952,7 +949,6 @@ function showScreen(
 
     );
 
-
   if (
     name === "archive"
   ) {
@@ -1960,7 +956,6 @@ function showScreen(
     renderArchive();
 
   }
-
 
   if (
     name === "stats"
@@ -1970,14 +965,12 @@ function showScreen(
 
   }
 
-
   window.scrollTo({
     top: 0,
     behavior: "smooth"
   });
 
 }
-
 
 
 /* ==========================================================
@@ -1989,22 +982,18 @@ function clearFeedback() {
   const box =
     $("#feedback");
 
-
   box.classList.add(
     "hidden"
   );
-
 
   box.classList.remove(
     "error"
   );
 
-
   box.textContent =
     "";
 
 }
-
 
 
 function setFeedback(
@@ -2015,15 +1004,12 @@ function setFeedback(
   const box =
     $("#feedback");
 
-
   box.textContent =
     text;
-
 
   box.classList.remove(
     "hidden"
   );
-
 
   box.classList.toggle(
     "error",
@@ -2033,23 +1019,23 @@ function setFeedback(
 }
 
 
-
 /* ==========================================================
    HOME
    ========================================================== */
 
 function renderHome() {
 
+  state.dateKey =
+    todayKey();
+
   const now =
     new Date();
-
 
   const hour =
     now.getHours();
 
-
-  let greeting;
-
+  let greeting =
+    "Good evening, Jack.";
 
   if (
     hour < 12
@@ -2069,88 +1055,62 @@ function renderHome() {
 
   }
 
-  else {
-
-    greeting =
-      "Good evening, Jack.";
-
-  }
-
-
   $("#greeting").textContent =
     greeting;
 
-
   $("#todayLabel").textContent =
-    now.toLocaleDateString(
 
+    `${now.toLocaleDateString(
       "en-GB",
-
       {
-
-        day:
-          "numeric",
-
-        month:
-          "short"
-
+        day: "numeric",
+        month: "short"
       }
-
-    );
-
+    )} · Day ${dailyNumber(
+      state.dateKey
+    )}`;
 
   const grid =
     $("#gameGrid");
 
-
   grid.innerHTML =
     "";
 
-
   Object.entries(
     GAME_META
-  )
-  .forEach(
+  ).forEach(
 
     ([key, meta]) => {
 
       const completed =
         Boolean(
-
           stats
             .completedDaily
             ?.[state.dateKey]
             ?.[key]
-
         );
-
 
       const card =
         document.createElement(
           "button"
         );
 
-
       card.type =
         "button";
 
-
       card.className =
-
         "game-card"
-
         +
-
         (
           meta.featured
-            ? " featured"
-            : ""
+          ?
+          " featured"
+          :
+          ""
         );
-
 
       card.style.background =
         meta.color;
-
 
       card.innerHTML = `
 
@@ -2158,12 +1118,14 @@ function renderHome() {
 
           <div>
 
-            <div style="
-              display:flex;
-              align-items:center;
-              gap:8px;
-              flex-wrap:wrap;
-            ">
+            <div
+              style="
+                display:flex;
+                align-items:center;
+                gap:8px;
+                flex-wrap:wrap;
+              "
+            >
 
               <h3>
                 ${meta.title}
@@ -2171,17 +1133,13 @@ function renderHome() {
 
               ${
                 completed
-
                 ?
-
                 `
                 <span class="mini-pill green">
                   SOLVED
                 </span>
                 `
-
                 :
-
                 `
                 <span class="mini-pill">
                   TODAY
@@ -2197,13 +1155,11 @@ function renderHome() {
 
           </div>
 
-
           <div class="game-icon">
             ${meta.icon}
           </div>
 
         </div>
-
 
         <div class="game-card-footer">
 
@@ -2218,7 +1174,6 @@ function renderHome() {
         </div>
 
       `;
-
 
       card.addEventListener(
 
@@ -2236,7 +1191,6 @@ function renderHome() {
 
       );
 
-
       grid.appendChild(
         card
       );
@@ -2248,255 +1202,1331 @@ function renderHome() {
 }
 
 
-
 /* ==========================================================
-   GET PUZZLES
+   QUEENS GENERATOR
    ========================================================== */
 
-function getDailyPuzzle(
-  gameKey,
-  dateKey
+function createQueensPuzzle(
+  token
 ) {
 
+  const rng =
+    rngFrom(
+      token + ":queens"
+    );
+
+  const size =
+    9;
+
+  /*
+    Choose one queen per row.
+    Columns are a permutation.
+    Adjacent rows cannot use adjacent columns.
+  */
+
+  let solution =
+    null;
+
+  for (
+    let attempt = 0;
+    attempt < 500;
+    attempt++
+  ) {
+
+    const candidate =
+      shuffle(
+        [
+          0,1,2,3,4,5,6,7,8
+        ],
+        rng
+      );
+
+    let valid =
+      true;
+
+    for (
+      let row = 1;
+      row < size;
+      row++
+    ) {
+
+      if (
+        Math.abs(
+          candidate[row]
+          -
+          candidate[row - 1]
+        )
+        ===
+        1
+      ) {
+
+        valid =
+          false;
+
+        break;
+
+      }
+
+    }
+
+    if (
+      valid
+    ) {
+
+      solution =
+        candidate;
+
+      break;
+
+    }
+
+  }
+
+  if (
+    !solution
+  ) {
+
+    solution =
+      [
+        0,2,4,6,8,1,3,5,7
+      ];
+
+  }
+
+
+  /*
+    Create regions around queen locations.
+    Start with each queen cell as its own region,
+    then grow regions until all cells are assigned.
+  */
+
+  const regions =
+    Array(
+      size * size
+    ).fill(
+      -1
+    );
+
+  const frontier =
+    [];
+
+  for (
+    let row = 0;
+    row < size;
+    row++
+  ) {
+
+    const idx =
+      row * size
+      +
+      solution[row];
+
+    regions[idx] =
+      row;
+
+    frontier.push(
+      idx
+    );
+
+  }
+
+  while (
+    regions.some(
+      value =>
+        value === -1
+    )
+  ) {
+
+    const unassigned =
+      [];
+
+    regions.forEach(
+
+      (
+        region,
+        idx
+      ) => {
+
+        if (
+          region === -1
+        ) {
+
+          unassigned.push(
+            idx
+          );
+
+        }
+
+      }
+
+    );
+
+    const idx =
+      unassigned[
+        randomInt(
+          rng,
+          0,
+          unassigned.length - 1
+        )
+      ];
+
+    const row =
+      Math.floor(
+        idx / size
+      );
+
+    const col =
+      idx % size;
+
+    const neighbours =
+      [];
+
+    const candidates =
+      [
+        [row - 1,col],
+        [row + 1,col],
+        [row,col - 1],
+        [row,col + 1]
+      ];
+
+    candidates.forEach(
+
+      (
+        [r,c]
+      ) => {
+
+        if (
+          r >= 0
+          &&
+          r < size
+          &&
+          c >= 0
+          &&
+          c < size
+        ) {
+
+          const nidx =
+            r * size + c;
+
+          if (
+            regions[nidx] !== -1
+          ) {
+
+            neighbours.push(
+              regions[nidx]
+            );
+
+          }
+
+        }
+
+      }
+
+    );
+
+    if (
+      neighbours.length
+    ) {
+
+      regions[idx] =
+        neighbours[
+          randomInt(
+            rng,
+            0,
+            neighbours.length - 1
+          )
+        ];
+
+    }
+
+  }
+
+  return {
+
+    type:
+      "queens",
+
+    size,
+
+    solution,
+
+    regions,
+
+    prompt:
+      "Place 9 queens.",
+
+    description:
+      "Exactly one queen in every row, column and coloured region. Queens may not touch diagonally.",
+
+    explanation:
+      "Each queen occupies a different row, column and colour region, and neighbouring rows never place queens in adjacent columns."
+
+  };
+
+}
+
+
+/* ==========================================================
+   CIRCUIT GENERATOR
+   ========================================================== */
+
+function createCircuitPuzzle(
+  token
+) {
+
+  const rng =
+    rngFrom(
+      token + ":circuit"
+    );
+
+  const pairs =
+    [];
+
+  const target =
+    [];
+
+  for (
+    let i = 0;
+    i < 8;
+    i++
+  ) {
+
+    pairs.push(
+      [
+        randomInt(
+          rng,
+          1,
+          9
+        ),
+        randomInt(
+          rng,
+          1,
+          9
+        )
+      ]
+    );
+
+    target.push(
+      randomInt(
+        rng,
+        0,
+        1
+      )
+    );
+
+  }
+
+  function leftValue(
+    index
+  ) {
+
+    return (
+      target[index] === 0
+      ?
+      pairs[index][0]
+      :
+      pairs[index][1]
+    );
+
+  }
+
+  function rightValue(
+    index
+  ) {
+
+    return (
+      target[index] === 0
+      ?
+      pairs[index][1]
+      :
+      pairs[index][0]
+    );
+
+  }
+
+  const leftHalf =
+    [0,1,2,3]
+      .reduce(
+        (
+          sum,
+          i
+        ) =>
+          sum
+          +
+          leftValue(i),
+        0
+      );
+
+  const rightHalf =
+    [4,5,6,7]
+      .reduce(
+        (
+          sum,
+          i
+        ) =>
+          sum
+          +
+          rightValue(i),
+        0
+      );
+
+  const allLeft =
+    pairs
+      .reduce(
+        (
+          sum,
+          _,
+          i
+        ) =>
+          sum
+          +
+          leftValue(i),
+        0
+      );
+
+  const oddRight =
+    [1,3,5,7]
+      .reduce(
+        (
+          sum,
+          i
+        ) =>
+          sum
+          +
+          rightValue(i),
+        0
+      );
+
+  return {
+
+    type:
+      "circuit",
+
+    pairs,
+
+    target,
+
+    constraints: [
+
+      `Left values of pieces 1–4 total ${leftHalf}.`,
+
+      `Right values of pieces 5–8 total ${rightHalf}.`,
+
+      `All left-facing values total ${allLeft}.`,
+
+      `Right values of pieces 2, 4, 6 and 8 total ${oddRight}.`
+
+    ],
+
+    prompt:
+      "Orient all eight pairs.",
+
+    description:
+      "Flip each pair until every network condition is true simultaneously.",
+
+    explanation:
+      "Each flip changes which number contributes to the left and right totals, so the constraints have to be solved together."
+
+  };
+
+}
+
+
+/* ==========================================================
+   ROUTE GENERATOR
+   ========================================================== */
+
+function createRoutePuzzle(
+  token
+) {
+
+  const rng =
+    rngFrom(
+      token + ":route"
+    );
+
+  const size =
+    7;
+
+  let path =
+    [];
+
+  /*
+    Build a snake-style valid path,
+    then take a long segment from it.
+  */
+
+  const snake =
+    [];
+
+  for (
+    let row = 0;
+    row < size;
+    row++
+  ) {
+
+    const cols =
+      row % 2 === 0
+      ?
+      [
+        0,1,2,3,4,5,6
+      ]
+      :
+      [
+        6,5,4,3,2,1,0
+      ];
+
+    cols.forEach(
+
+      col =>
+        snake.push(
+          row * size + col
+        )
+
+    );
+
+  }
+
+  const startIndex =
+    randomInt(
+      rng,
+      0,
+      5
+    );
+
+  const length =
+    randomInt(
+      rng,
+      24,
+      34
+    );
+
+  path =
+    snake.slice(
+      startIndex,
+      startIndex + length
+    );
+
+  const start =
+    path[0];
+
+  const end =
+    path[
+      path.length - 1
+    ];
+
+  const checkpoints = [
+
+    path[
+      Math.floor(
+        path.length * 0.25
+      )
+    ],
+
+    path[
+      Math.floor(
+        path.length * 0.52
+      )
+    ],
+
+    path[
+      Math.floor(
+        path.length * 0.77
+      )
+    ]
+
+  ];
+
+  const safe =
+    new Set(
+      path
+    );
+
+  const blockedCandidates =
+    [];
+
+  for (
+    let i = 0;
+    i < size * size;
+    i++
+  ) {
+
+    if (
+      !safe.has(i)
+    ) {
+
+      blockedCandidates.push(
+        i
+      );
+
+    }
+
+  }
+
+  const blocked =
+    shuffle(
+      blockedCandidates,
+      rng
+    ).slice(
+      0,
+      8
+    );
+
+  return {
+
+    type:
+      "route",
+
+    size,
+
+    start,
+
+    end,
+
+    checkpoints,
+
+    blocked,
+
+    requiredLength:
+      path.length,
+
+    solution:
+      path,
+
+    prompt:
+      "Build the exact route.",
+
+    description:
+      `Reach B through ①, ② and ③ in order using exactly ${path.length} cells.`,
+
+    explanation:
+      "The path works because it reaches every checkpoint in order while meeting the exact length constraint."
+
+  };
+
+}
+
+
+/* ==========================================================
+   CIPHER GENERATOR
+   ========================================================== */
+
+function createCipherPuzzle(
+  token
+) {
+
+  const rng =
+    rngFrom(
+      token + ":cipher"
+    );
+
+  const symbolSets = [
+
+    ["▲","●","■","◆","★"],
+
+    ["☀","☾","✦","◇","○"],
+
+    ["A","K","M","R","X"],
+
+    ["♠","♥","♣","♦","●"]
+
+  ];
+
+  const symbols =
+    clone(
+      symbolSets[
+        randomInt(
+          rng,
+          0,
+          symbolSets.length - 1
+        )
+      ]
+    );
+
+  const answer =
+    shuffle(
+      symbols,
+      rng
+    );
+
+  const clues =
+    [];
+
+  clues.push(
+    `${answer[0]} is first.`
+  );
+
+  clues.push(
+    `${answer[4]} is last.`
+  );
+
+  clues.push(
+    `${answer[1]} is immediately after ${answer[0]}.`
+  );
+
+  clues.push(
+    `${answer[3]} is immediately before ${answer[4]}.`
+  );
+
+  clues.push(
+    `${answer[2]} sits between ${answer[1]} and ${answer[3]}.`
+  );
+
+  return {
+
+    type:
+      "cipher",
+
+    symbols,
+
+    answer,
+
+    clues,
+
+    prompt:
+      "Decode the five-symbol sequence.",
+
+    description:
+      "Use all positional clues to determine the only valid ordering.",
+
+    explanation:
+      "The clues lock the two ends first, then force the remaining symbols into the only positions that satisfy adjacency and ordering."
+
+  };
+
+}
+
+
+/* ==========================================================
+   SHIFT GENERATOR
+   ========================================================== */
+
+function createShiftPuzzle(
+  token
+) {
+
+  const rng =
+    rngFrom(
+      token + ":shift"
+    );
+
+  const symbols =
+    shuffle(
+      [
+        "●",
+        "▲",
+        "■",
+        "◆",
+        "✦",
+        "○"
+      ],
+      rng
+    );
+
+  const target =
+    [];
+
+  const start =
+    [];
+
+  for (
+    let row = 0;
+    row < 6;
+    row++
+  ) {
+
+    target.push(
+      [...symbols]
+    );
+
+    const amount =
+      randomInt(
+        rng,
+        1,
+        5
+      );
+
+    start.push(
+      [
+        ...symbols.slice(
+          amount
+        ),
+        ...symbols.slice(
+          0,
+          amount
+        )
+      ]
+    );
+
+  }
+
+  return {
+
+    type:
+      "shift",
+
+    target,
+
+    start,
+
+    prompt:
+      "Reconstruct the six-row pattern.",
+
+    description:
+      "Shift whole rows left or right. Symbols wrap around.",
+
+    explanation:
+      "Each row is a cyclic permutation of the same sequence; finding its offset restores the full grid."
+
+  };
+
+}
+
+
+/* ==========================================================
+   BALANCE GENERATOR
+   ========================================================== */
+
+function createBalancePuzzle(
+  token
+) {
+
+  const rng =
+    rngFrom(
+      token + ":balance"
+    );
+
+  const weights =
+    shuffle(
+
+      [
+        randomInt(rng,2,8),
+        randomInt(rng,3,10),
+        randomInt(rng,5,12),
+        randomInt(rng,7,14),
+        randomInt(rng,9,16),
+        randomInt(rng,11,18)
+      ],
+
+      rng
+
+    );
+
+  const leftAnswer =
+    [
+      weights[0],
+      weights[2],
+      weights[5]
+    ];
+
+  const rightAnswer =
+    [
+      weights[1],
+      weights[3],
+      weights[4]
+    ];
+
+  const leftTarget =
+    leftAnswer.reduce(
+      (
+        a,
+        b
+      ) =>
+        a + b,
+      0
+    );
+
+  const rightTarget =
+    rightAnswer.reduce(
+      (
+        a,
+        b
+      ) =>
+        a + b,
+      0
+    );
+
+  return {
+
+    type:
+      "balance",
+
+    weights,
+
+    leftTarget,
+
+    rightTarget,
+
+    prompt:
+      "Build both target trays.",
+
+    description:
+      `Choose three weights for LEFT = ${leftTarget} and three for RIGHT = ${rightTarget}.`,
+
+    explanation:
+      "Every weight must be used exactly once, turning two independent sums into one linked partition problem."
+
+  };
+
+}
+
+
+/* ==========================================================
+   SIGNAL GENERATOR
+   ========================================================== */
+
+function createSignalPuzzle(
+  token
+) {
+
+  const rng =
+    rngFrom(
+      token + ":signal"
+    );
+
+  const type =
+    randomInt(
+      rng,
+      0,
+      2
+    );
+
+  if (
+    type === 0
+  ) {
+
+    const n =
+      randomInt(
+        rng,
+        2,
+        6
+      );
+
+    const sequence =
+      [];
+
+    for (
+      let i = 1;
+      i <= 5;
+      i++
+    ) {
+
+      sequence.push(
+        i * (
+          i + n
+        )
+      );
+
+    }
+
+    const answer =
+      6 * (
+        6 + n
+      );
+
+    return {
+
+      type:
+        "signal-input",
+
+      prompt:
+        `${sequence.join(" · ")} · ?`,
+
+      description:
+        "Find the next number in the sequence.",
+
+      answer:
+        String(
+          answer
+        ),
+
+      hint:
+        "Look at each position number as part of the calculation.",
+
+      explanation:
+        `The nth term is n × (n + ${n}).`
+
+    };
+
+  }
+
+
+  if (
+    type === 1
+  ) {
+
+    const shift =
+      randomInt(
+        rng,
+        1,
+        3
+      );
+
+    const source =
+      [
+        "CAR",
+        "DOG",
+        "MAP"
+      ];
+
+    const encode =
+      word =>
+        word
+          .split("")
+          .map(
+
+            letter => {
+
+              const base =
+                letter.charCodeAt(
+                  0
+                )
+                -
+                65;
+
+              return String.fromCharCode(
+                65
+                +
+                (
+                  base
+                  +
+                  shift
+                )
+                %
+                26
+              );
+
+            }
+
+          )
+          .join("");
+
+    return {
+
+      type:
+        "signal-input",
+
+      prompt:
+        `${source[0]} → ${encode(source[0])}
+${source[1]} → ${encode(source[1])}
+${source[2]} → ?`,
+
+      description:
+        "Infer the letter transformation.",
+
+      answer:
+        encode(
+          source[2]
+        ),
+
+      hint:
+        "Every letter moves by the same amount.",
+
+      explanation:
+        `Each letter shifts forward ${shift} place${shift === 1 ? "" : "s"} in the alphabet.`
+
+    };
+
+  }
+
+
+  const words =
+    shuffle(
+      [
+        "EMBER",
+        "FROST",
+        "IVORY",
+        "MOSS",
+        "SLATE"
+      ],
+      rng
+    );
+
+  const answer =
+    [
+      "EMBER",
+      "FROST",
+      "IVORY",
+      "MOSS",
+      "SLATE"
+    ];
+
+  return {
+
+    type:
+      "signal-order",
+
+    words,
+
+    answer,
+
+    prompt:
+      "Put the five signals in the only valid order.",
+
+    description:
+      "EMBER is before IVORY. FROST is immediately after EMBER. SLATE is last. MOSS is immediately before SLATE.",
+
+    hint:
+      "Start with the two forced adjacent pairs.",
+
+    explanation:
+      "EMBER–FROST and MOSS–SLATE form locked pairs. IVORY is forced between those pairs."
+
+  };
+
+}
+
+
+/* ==========================================================
+   SPECIALS
+   ========================================================== */
+
+const SPECIAL_BANK = [
+
+  {
+    title:
+      "Grid Legends",
+
+    prompt:
+      "Which four belong on a modern Formula 1 grid?",
+
+    items:
+      [
+        "FERRARI",
+        "MCLAREN",
+        "MERCEDES",
+        "RED BULL",
+        "BUGATTI",
+        "PAGANI",
+        "BENTLEY",
+        "KOENIGSEGG",
+        "VOLVO",
+        "LEXUS",
+        "JEEP",
+        "MINI"
+      ],
+
+    answer:
+      [
+        "FERRARI",
+        "MCLAREN",
+        "MERCEDES",
+        "RED BULL"
+      ],
+
+    description:
+      "Select the four Formula 1 names.",
+
+    explanation:
+      "Ferrari, McLaren, Mercedes and Red Bull are major Formula 1 team or constructor names.",
+
+    hint:
+      "Think race grid, not road-car brands."
+  },
+
+  {
+    title:
+      "Seven Kingdoms",
+
+    prompt:
+      "Find the four major Westeros houses.",
+
+    items:
+      [
+        "STARK",
+        "LANNISTER",
+        "TARGARYEN",
+        "BARATHEON",
+        "BAGGINS",
+        "POTTER",
+        "SKYWALKER",
+        "CORLEONE",
+        "WAYNE",
+        "BOND",
+        "DRAKE",
+        "SHELBY"
+      ],
+
+    answer:
+      [
+        "STARK",
+        "LANNISTER",
+        "TARGARYEN",
+        "BARATHEON"
+      ],
+
+    description:
+      "Select four names belonging to the same fantasy world.",
+
+    explanation:
+      "Stark, Lannister, Targaryen and Baratheon are major noble houses in Westeros.",
+
+    hint:
+      "Think Game of Thrones."
+  },
+
+  {
+    title:
+      "Italian Icons",
+
+    prompt:
+      "Find four Italian performance marques.",
+
+    items:
+      [
+        "FERRARI",
+        "LAMBORGHINI",
+        "PAGANI",
+        "MASERATI",
+        "PORSCHE",
+        "MCLAREN",
+        "ASTON MARTIN",
+        "BUGATTI",
+        "BMW",
+        "AUDI",
+        "LEXUS",
+        "VOLVO"
+      ],
+
+    answer:
+      [
+        "FERRARI",
+        "LAMBORGHINI",
+        "PAGANI",
+        "MASERATI"
+      ],
+
+    description:
+      "Select the four Italian marques.",
+
+    explanation:
+      "Ferrari, Lamborghini, Pagani and Maserati are Italian performance-car marques.",
+
+    hint:
+      "Country of origin matters."
+  }
+
+];
+
+
+/* ==========================================================
+   GET PUZZLE
+   ========================================================== */
+
+function getPuzzle(
+  gameKey,
+  dateKey,
+  mode
+) {
+
+  if (
+    mode === "practice"
+  ) {
+
+    state.practiceCounter +=
+      1;
+
+  }
+
   const token =
-    `${dateKey}:${gameKey}`;
-
+    puzzleToken(
+      gameKey,
+      dateKey,
+      mode
+    );
 
   if (
-    gameKey === "signal"
+    gameKey === "queens"
   ) {
 
-    return clone(
-
-      SIGNAL_BANK[
-
-        seededIndex(
-          token,
-          SIGNAL_BANK.length
-        )
-
-      ]
-
+    return createQueensPuzzle(
+      token
     );
 
   }
-
-
-  if (
-    gameKey === "shift"
-  ) {
-
-    return clone(
-
-      SHIFT_BANK[
-
-        seededIndex(
-          token,
-          SHIFT_BANK.length
-        )
-
-      ]
-
-    );
-
-  }
-
-
-  if (
-    gameKey === "balance"
-  ) {
-
-    return clone(
-
-      BALANCE_BANK[
-
-        seededIndex(
-          token,
-          BALANCE_BANK.length
-        )
-
-      ]
-
-    );
-
-  }
-
-
-  if (
-    gameKey === "route"
-  ) {
-
-    return clone(
-
-      ROUTE_BANK[
-
-        seededIndex(
-          token,
-          ROUTE_BANK.length
-        )
-
-      ]
-
-    );
-
-  }
-
-
-  if (
-    gameKey === "cipher"
-  ) {
-
-    return clone(
-
-      CIPHER_BANK[
-
-        seededIndex(
-          token,
-          CIPHER_BANK.length
-        )
-
-      ]
-
-    );
-
-  }
-
 
   if (
     gameKey === "circuit"
   ) {
 
-    return clone(
-
-      CIRCUIT_BANK[
-
-        seededIndex(
-          token,
-          CIRCUIT_BANK.length
-        )
-
-      ]
-
+    return createCircuitPuzzle(
+      token
     );
 
   }
 
+  if (
+    gameKey === "route"
+  ) {
+
+    return createRoutePuzzle(
+      token
+    );
+
+  }
+
+  if (
+    gameKey === "cipher"
+  ) {
+
+    return createCipherPuzzle(
+      token
+    );
+
+  }
+
+  if (
+    gameKey === "shift"
+  ) {
+
+    return createShiftPuzzle(
+      token
+    );
+
+  }
+
+  if (
+    gameKey === "balance"
+  ) {
+
+    return createBalancePuzzle(
+      token
+    );
+
+  }
+
+  if (
+    gameKey === "signal"
+  ) {
+
+    return createSignalPuzzle(
+      token
+    );
+
+  }
 
   if (
     gameKey === "special"
   ) {
 
+    const rng =
+      rngFrom(
+        token
+      );
+
     return clone(
-
       SPECIAL_BANK[
-
-        seededIndex(
-          token,
-          SPECIAL_BANK.length
+        randomInt(
+          rng,
+          0,
+          SPECIAL_BANK.length - 1
         )
-
       ]
-
     );
 
   }
 
 }
-
-
-
-function getPracticePuzzle(
-  gameKey
-) {
-
-  state.practiceCounter +=
-    1;
-
-
-  const token =
-    `${Date.now()}:${gameKey}:${state.practiceCounter}`;
-
-
-  let bank;
-
-
-  if (
-    gameKey === "signal"
-  ) {
-
-    bank =
-      SIGNAL_BANK;
-
-  }
-
-  else if (
-    gameKey === "shift"
-  ) {
-
-    bank =
-      SHIFT_BANK;
-
-  }
-
-  else if (
-    gameKey === "balance"
-  ) {
-
-    bank =
-      BALANCE_BANK;
-
-  }
-
-  else if (
-    gameKey === "route"
-  ) {
-
-    bank =
-      ROUTE_BANK;
-
-  }
-
-  else if (
-    gameKey === "cipher"
-  ) {
-
-    bank =
-      CIPHER_BANK;
-
-  }
-
-  else if (
-    gameKey === "circuit"
-  ) {
-
-    bank =
-      CIRCUIT_BANK;
-
-  }
-
-  else {
-
-    bank =
-      SPECIAL_BANK;
-
-  }
-
-
-  return clone(
-
-    bank[
-
-      seededIndex(
-        token,
-        bank.length
-      )
-
-    ]
-
-  );
-
-}
-
 
 
 /* ==========================================================
@@ -2509,95 +2539,80 @@ function openGame(
 
   mode = "daily",
 
-  dateKey = state.dateKey
+  dateKey = todayKey()
 
 ) {
 
   stopTimer();
 
-
   state.gameKey =
     gameKey;
-
 
   state.mode =
     mode;
 
-
   state.dateKey =
     dateKey;
 
-
-  if (
-    mode === "practice"
-  ) {
-
-    state.puzzle =
-      getPracticePuzzle(
-        gameKey
-      );
-
-  }
-
-  else {
-
-    state.puzzle =
-      getDailyPuzzle(
-        gameKey,
-        dateKey
-      );
-
-  }
-
+  state.puzzle =
+    getPuzzle(
+      gameKey,
+      dateKey,
+      mode
+    );
 
   state.selected =
     [];
 
-
   state.attempts =
     0;
-
 
   state.hints =
     0;
 
-
   state.elapsed =
     0;
 
-
-  state.shiftRows =
+  state.queensMarks =
     null;
-
-
-  state.balanceSelected =
-    null;
-
 
   state.circuitRotations =
     null;
 
+  state.routePath =
+    null;
+
+  state.cipherGuess =
+    null;
+
+  state.shiftRows =
+    null;
+
+  state.balanceLeft =
+    [];
+
+  state.balanceRight =
+    [];
+
+  state.signalAnswer =
+    "";
 
   $("#timer").textContent =
     "00:00";
 
+  $("#gameTitle").textContent =
 
-  if (
     gameKey === "special"
-  ) {
 
-    $("#gameTitle").textContent =
-      state.puzzle.title;
+    ?
 
-  }
+    state.puzzle.title
 
-  else {
+    :
 
-    $("#gameTitle").textContent =
-      GAME_META[gameKey].title;
-
-  }
-
+    GAME_META[
+      gameKey
+    ].title;
 
   $("#gameModeLabel").textContent =
 
@@ -2609,10 +2624,11 @@ function openGame(
 
     :
 
-    prettyDate(
+    `DAY ${dailyNumber(
       dateKey
-    ).toUpperCase();
-
+    )} · ${prettyDate(
+      dateKey
+    ).toUpperCase()}`;
 
   $("#difficultyChip").textContent =
 
@@ -2624,30 +2640,26 @@ function openGame(
 
     :
 
-    GAME_META[gameKey].difficulty;
-
+    GAME_META[
+      gameKey
+    ].difficulty;
 
   $("#attemptsChip").textContent =
     "0 checks";
 
-
   clearFeedback();
 
-
   renderCurrentGame();
-
 
   showScreen(
     "game"
   );
-
 
   openRulesModal(
     true
   );
 
 }
-
 
 
 /* ==========================================================
@@ -2659,67 +2671,18 @@ function renderCurrentGame() {
   const area =
     $("#gameArea");
 
-
   area.innerHTML =
     "";
 
-
   if (
-    state.gameKey === "signal"
-    ||
-    state.gameKey === "special"
+    state.gameKey === "queens"
   ) {
 
-    renderSignal(
+    renderQueens(
       area
     );
 
   }
-
-
-  else if (
-    state.gameKey === "route"
-  ) {
-
-    renderRoute(
-      area
-    );
-
-  }
-
-
-  else if (
-    state.gameKey === "cipher"
-  ) {
-
-    renderCipher(
-      area
-    );
-
-  }
-
-
-  else if (
-    state.gameKey === "shift"
-  ) {
-
-    renderShift(
-      area
-    );
-
-  }
-
-
-  else if (
-    state.gameKey === "balance"
-  ) {
-
-    renderBalance(
-      area
-    );
-
-  }
-
 
   else if (
     state.gameKey === "circuit"
@@ -2731,71 +2694,487 @@ function renderCurrentGame() {
 
   }
 
+  else if (
+    state.gameKey === "route"
+  ) {
+
+    renderRoute(
+      area
+    );
+
+  }
+
+  else if (
+    state.gameKey === "cipher"
+  ) {
+
+    renderCipher(
+      area
+    );
+
+  }
+
+  else if (
+    state.gameKey === "shift"
+  ) {
+
+    renderShift(
+      area
+    );
+
+  }
+
+  else if (
+    state.gameKey === "balance"
+  ) {
+
+    renderBalance(
+      area
+    );
+
+  }
+
+  else if (
+    state.gameKey === "signal"
+  ) {
+
+    renderSignal(
+      area
+    );
+
+  }
+
+  else if (
+    state.gameKey === "special"
+  ) {
+
+    renderSpecial(
+      area
+    );
+
+  }
+
 }
 
 
-
 /* ==========================================================
-   SIGNAL
+   QUEENS
    ========================================================== */
 
-function renderSignal(
+function renderQueens(
   area
 ) {
 
   const puzzle =
     state.puzzle;
 
-
   $("#puzzlePrompt").textContent =
     puzzle.prompt;
 
-
   $("#puzzleDescription").textContent =
-    "Select exactly four tiles that share one precise hidden property.";
+    puzzle.description;
 
+  if (
+    !state.queensMarks
+  ) {
 
-  const grid =
+    state.queensMarks =
+      Array(
+        puzzle.size
+        *
+        puzzle.size
+      ).fill(
+        0
+      );
+
+  }
+
+  const board =
     document.createElement(
       "div"
     );
 
+  board.className =
+    "queens-board";
 
-  grid.className =
-    "choice-grid";
+  board.style.setProperty(
+    "--queens-size",
+    puzzle.size
+  );
 
+  for (
+    let i = 0;
+    i <
+    puzzle.size * puzzle.size;
+    i++
+  ) {
 
-  const items =
-    shuffleSeeded(
+    const cell =
+      document.createElement(
+        "button"
+      );
 
-      puzzle.items,
+    cell.type =
+      "button";
 
-      `${state.dateKey}:${state.gameKey}:${state.mode}`
+    cell.className =
+      `queens-cell queen-region-${puzzle.regions[i]}`;
+
+    const mark =
+      state.queensMarks[i];
+
+    if (
+      mark === 1
+    ) {
+
+      cell.classList.add(
+        "has-queen"
+      );
+
+      cell.textContent =
+        "♛";
+
+    }
+
+    else if (
+      mark === 2
+    ) {
+
+      cell.classList.add(
+        "has-cross"
+      );
+
+      cell.textContent =
+        "×";
+
+    }
+
+    cell.addEventListener(
+
+      "click",
+
+      () => {
+
+        state.queensMarks[i] =
+          (
+            state.queensMarks[i]
+            +
+            1
+          )
+          %
+          3;
+
+        renderCurrentGame();
+
+      }
 
     );
 
+    board.appendChild(
+      cell
+    );
 
-  items.forEach(
+  }
 
-    item => {
+  area.appendChild(
+    board
+  );
+
+  const info =
+    document.createElement(
+      "div"
+    );
+
+  info.className =
+    "queens-counter";
+
+  info.textContent =
+    `${
+      state.queensMarks.filter(
+        value =>
+          value === 1
+      ).length
+    } / ${puzzle.size} queens placed`;
+
+  area.appendChild(
+    info
+  );
+
+}
+
+
+function checkQueens() {
+
+  const puzzle =
+    state.puzzle;
+
+  const queens =
+    state.queensMarks
+      .map(
+        (
+          value,
+          index
+        ) =>
+          value === 1
+          ?
+          index
+          :
+          -1
+      )
+      .filter(
+        index =>
+          index >= 0
+      );
+
+  if (
+    queens.length !==
+    puzzle.size
+  ) {
+
+    return false;
+
+  }
+
+  const rows =
+    new Set();
+
+  const columns =
+    new Set();
+
+  const regions =
+    new Set();
+
+  for (
+    const idx of queens
+  ) {
+
+    const row =
+      Math.floor(
+        idx /
+        puzzle.size
+      );
+
+    const col =
+      idx %
+      puzzle.size;
+
+    const region =
+      puzzle.regions[idx];
+
+    if (
+      rows.has(
+        row
+      )
+      ||
+      columns.has(
+        col
+      )
+      ||
+      regions.has(
+        region
+      )
+    ) {
+
+      return false;
+
+    }
+
+    rows.add(
+      row
+    );
+
+    columns.add(
+      col
+    );
+
+    regions.add(
+      region
+    );
+
+  }
+
+  for (
+    let i = 0;
+    i < queens.length;
+    i++
+  ) {
+
+    const r1 =
+      Math.floor(
+        queens[i] /
+        puzzle.size
+      );
+
+    const c1 =
+      queens[i]
+      %
+      puzzle.size;
+
+    for (
+      let j = i + 1;
+      j < queens.length;
+      j++
+    ) {
+
+      const r2 =
+        Math.floor(
+          queens[j] /
+          puzzle.size
+        );
+
+      const c2 =
+        queens[j]
+        %
+        puzzle.size;
+
+      if (
+        Math.abs(
+          r1 - r2
+        )
+        ===
+        1
+        &&
+        Math.abs(
+          c1 - c2
+        )
+        ===
+        1
+      ) {
+
+        return false;
+
+      }
+
+    }
+
+  }
+
+  return (
+    rows.size === puzzle.size
+    &&
+    columns.size === puzzle.size
+    &&
+    regions.size === puzzle.size
+  );
+
+}
+
+
+/* ==========================================================
+   CIRCUIT
+   ========================================================== */
+
+function renderCircuit(
+  area
+) {
+
+  const puzzle =
+    state.puzzle;
+
+  $("#puzzlePrompt").textContent =
+    puzzle.prompt;
+
+  $("#puzzleDescription").textContent =
+    puzzle.description;
+
+  if (
+    !state.circuitRotations
+  ) {
+
+    state.circuitRotations =
+      Array(
+        puzzle.pairs.length
+      ).fill(
+        0
+      );
+
+  }
+
+  const rules =
+    document.createElement(
+      "div"
+    );
+
+  rules.className =
+    "logic-list";
+
+  puzzle.constraints.forEach(
+
+    text => {
+
+      const rule =
+        document.createElement(
+          "div"
+        );
+
+      rule.className =
+        "logic-note";
+
+      rule.textContent =
+        text;
+
+      rules.appendChild(
+        rule
+      );
+
+    }
+
+  );
+
+  area.appendChild(
+    rules
+  );
+
+  const pieces =
+    document.createElement(
+      "div"
+    );
+
+  pieces.className =
+    "circuit-hard-grid";
+
+  puzzle.pairs.forEach(
+
+    (
+      pair,
+      index
+    ) => {
 
       const button =
         document.createElement(
           "button"
         );
 
-
       button.type =
         "button";
 
-
       button.className =
-        "choice-tile";
+        "circuit-pair";
 
+      const flipped =
+        state.circuitRotations[index]
+        ===
+        1;
 
-      button.textContent =
-        item;
+      const left =
+        flipped
+        ?
+        pair[1]
+        :
+        pair[0];
 
+      const right =
+        flipped
+        ?
+        pair[0]
+        :
+        pair[1];
+
+      button.innerHTML = `
+        <span>${left}</span>
+        <i></i>
+        <span>${right}</span>
+      `;
 
       button.addEventListener(
 
@@ -2803,50 +3182,20 @@ function renderSignal(
 
         () => {
 
-          const index =
-            state.selected.indexOf(
-              item
-            );
+          state.circuitRotations[index] =
+            state.circuitRotations[index]
+            ?
+            0
+            :
+            1;
 
-
-          if (
-            index >= 0
-          ) {
-
-            state.selected.splice(
-              index,
-              1
-            );
-
-
-            button.classList.remove(
-              "selected"
-            );
-
-          }
-
-
-          else if (
-            state.selected.length < 4
-          ) {
-
-            state.selected.push(
-              item
-            );
-
-
-            button.classList.add(
-              "selected"
-            );
-
-          }
+          renderCurrentGame();
 
         }
 
       );
 
-
-      grid.appendChild(
+      pieces.appendChild(
         button
       );
 
@@ -2854,13 +3203,29 @@ function renderSignal(
 
   );
 
-
   area.appendChild(
-    grid
+    pieces
   );
 
 }
 
+
+function checkCircuit() {
+
+  return state
+    .circuitRotations
+    .every(
+
+      (
+        value,
+        index
+      ) =>
+        value ===
+        state.puzzle.target[index]
+
+    );
+
+}
 
 
 /* ==========================================================
@@ -2874,239 +3239,226 @@ function renderRoute(
   const puzzle =
     state.puzzle;
 
-
   $("#puzzlePrompt").textContent =
-    "Connect A to B through every ★.";
-
+    puzzle.prompt;
 
   $("#puzzleDescription").textContent =
-    "Tap adjacent cells to grow one continuous path. Blocked cells cannot be used.";
+    puzzle.description;
 
+  if (
+    !state.routePath
+  ) {
 
-  state.selected =
-    [puzzle.start];
+    state.routePath =
+      [
+        puzzle.start
+      ];
 
+  }
 
   const board =
     document.createElement(
       "div"
     );
 
-
   board.className =
     "route-board";
 
+  board.style.gridTemplateColumns =
+    `repeat(${puzzle.size},1fr)`;
 
   for (
-
     let i = 0;
-
-    i <
-    puzzle.size
-    *
-    puzzle.size;
-
+    i < puzzle.size * puzzle.size;
     i++
-
   ) {
 
-    const button =
+    const cell =
       document.createElement(
         "button"
       );
 
-
-    button.type =
+    cell.type =
       "button";
 
-
-    button.className =
+    cell.className =
       "route-cell";
 
-
-    button.dataset.index =
-      String(i);
-
-
     if (
-      puzzle.blocked.includes(i)
+      puzzle.blocked.includes(
+        i
+      )
     ) {
 
-      button.classList.add(
+      cell.classList.add(
         "blocked"
       );
 
-
-      button.textContent =
+      cell.textContent =
         "■";
 
-
-      button.disabled =
+      cell.disabled =
         true;
 
     }
-
 
     else if (
       i === puzzle.start
     ) {
 
-      button.classList.add(
-        "start",
-        "path"
+      cell.classList.add(
+        "start"
       );
 
-
-      button.textContent =
+      cell.textContent =
         "A";
 
     }
-
 
     else if (
       i === puzzle.end
     ) {
 
-      button.classList.add(
+      cell.classList.add(
         "end"
       );
 
-
-      button.textContent =
+      cell.textContent =
         "B";
 
     }
 
-
-    else if (
-      puzzle.checkpoints.includes(i)
-    ) {
-
-      button.classList.add(
-        "checkpoint"
-      );
-
-
-      button.textContent =
-        "★";
-
-    }
-
-
     else {
 
-      button.textContent =
-        "·";
+      const checkpointIndex =
+        puzzle.checkpoints.indexOf(
+          i
+        );
+
+      if (
+        checkpointIndex >= 0
+      ) {
+
+        cell.classList.add(
+          "checkpoint"
+        );
+
+        cell.textContent =
+          String(
+            checkpointIndex + 1
+          );
+
+      }
+
+      else {
+
+        cell.textContent =
+          "·";
+
+      }
 
     }
 
-
     if (
-      !puzzle.blocked.includes(i)
+      state.routePath.includes(
+        i
+      )
     ) {
 
-      button.addEventListener(
+      cell.classList.add(
+        "path"
+      );
+
+    }
+
+    if (
+      !puzzle.blocked.includes(
+        i
+      )
+    ) {
+
+      cell.addEventListener(
 
         "click",
 
         () => {
 
-          const index =
-            Number(
-              button.dataset.index
-            );
-
-
           const current =
-            state.selected[
-              state.selected.length - 1
+            state.routePath[
+              state.routePath.length - 1
             ];
 
-
           if (
-            index === current
+            i === current
           ) {
 
             return;
 
           }
 
-
           if (
-
-            state.selected.length > 1
-
+            state.routePath.length > 1
             &&
-
-            index ===
-            state.selected[
-              state.selected.length - 2
+            i ===
+            state.routePath[
+              state.routePath.length - 2
             ]
-
           ) {
 
-            state.selected.pop();
+            state.routePath.pop();
 
-
-            redrawRoute(
-              board,
-              puzzle
-            );
-
+            renderCurrentGame();
 
             return;
 
           }
 
-
-          if (
-            state.selected.includes(index)
-          ) {
-
-            setFeedback(
-              "Your path cannot cross itself.",
-              true
-            );
-
-
-            return;
-
-          }
-
-
-          if (
-
-            !isAdjacent(
-              current,
-              index,
+          const currentRow =
+            Math.floor(
+              current /
               puzzle.size
-            )
-
-          ) {
-
-            setFeedback(
-              "Move one cell at a time: up, down, left or right.",
-              true
             );
 
+          const currentCol =
+            current %
+            puzzle.size;
 
-            return;
+          const row =
+            Math.floor(
+              i /
+              puzzle.size
+            );
+
+          const col =
+            i %
+            puzzle.size;
+
+          const adjacent =
+            Math.abs(
+              currentRow - row
+            )
+            +
+            Math.abs(
+              currentCol - col
+            )
+            ===
+            1;
+
+          if (
+            adjacent
+            &&
+            !state.routePath.includes(
+              i
+            )
+          ) {
+
+            state.routePath.push(
+              i
+            );
+
+            renderCurrentGame();
 
           }
-
-
-          state.selected.push(
-            index
-          );
-
-
-          clearFeedback();
-
-
-          redrawRoute(
-            board,
-            puzzle
-          );
 
         }
 
@@ -3114,140 +3466,95 @@ function renderRoute(
 
     }
 
-
     board.appendChild(
-      button
+      cell
     );
 
   }
-
 
   area.appendChild(
     board
   );
 
-
-  const note =
+  const counter =
     document.createElement(
       "div"
     );
 
+  counter.className =
+    "route-counter";
 
-  note.className =
-    "logic-note";
-
-
-  note.style.marginTop =
-    "14px";
-
-
-  note.textContent =
-    "Tip: tapping the previous cell removes your last step.";
-
+  counter.textContent =
+    `${state.routePath.length} / ${puzzle.requiredLength} cells`;
 
   area.appendChild(
-    note
+    counter
   );
 
 }
 
 
+function checkRoute() {
 
-function redrawRoute(
-  board,
-  puzzle
-) {
+  const puzzle =
+    state.puzzle;
 
-  [...board.children]
-    .forEach(
+  const path =
+    state.routePath;
 
-      (cell,index) => {
+  if (
+    path[
+      path.length - 1
+    ]
+    !==
+    puzzle.end
+  ) {
 
-        cell.classList.toggle(
+    return false;
 
-          "path",
+  }
 
-          state.selected.includes(
-            index
-          )
+  if (
+    path.length !==
+    puzzle.requiredLength
+  ) {
 
-        );
+    return false;
 
+  }
 
-        if (
-          index === puzzle.start
-        ) {
+  let previousPosition =
+    -1;
 
-          cell.classList.add(
-            "start"
-          );
+  for (
+    const checkpoint
+    of
+    puzzle.checkpoints
+  ) {
 
-        }
+    const position =
+      path.indexOf(
+        checkpoint
+      );
 
+    if (
+      position === -1
+      ||
+      position <= previousPosition
+    ) {
 
-        if (
-          index === puzzle.end
-        ) {
+      return false;
 
-          cell.classList.add(
-            "end"
-          );
+    }
 
-        }
+    previousPosition =
+      position;
 
-      }
+  }
 
-    );
-
-}
-
-
-
-function isAdjacent(
-  first,
-  second,
-  size
-) {
-
-  const firstRow =
-    Math.floor(
-      first / size
-    );
-
-
-  const firstColumn =
-    first % size;
-
-
-  const secondRow =
-    Math.floor(
-      second / size
-    );
-
-
-  const secondColumn =
-    second % size;
-
-
-  return (
-
-    Math.abs(
-      firstRow - secondRow
-    )
-
-    +
-
-    Math.abs(
-      firstColumn - secondColumn
-    )
-
-    ===
-    1
-
-  );
+  return true;
 
 }
-
 
 
 /* ==========================================================
@@ -3261,28 +3568,28 @@ function renderCipher(
   const puzzle =
     state.puzzle;
 
-
   $("#puzzlePrompt").textContent =
-    "Decode the four-symbol code.";
-
+    puzzle.prompt;
 
   $("#puzzleDescription").textContent =
-    "Every clue uses all four symbols. Placed means correct symbol in the correct position.";
+    puzzle.description;
 
+  if (
+    !state.cipherGuess
+  ) {
 
-  state.selected =
-    [];
+    state.cipherGuess =
+      [];
 
+  }
 
   const clues =
     document.createElement(
       "div"
     );
 
-
   clues.className =
     "clue-list";
-
 
   puzzle.clues.forEach(
 
@@ -3293,33 +3600,11 @@ function renderCipher(
           "div"
         );
 
-
       row.className =
         "cipher-clue";
 
-
-      row.innerHTML = `
-
-        <strong>
-          ${clue.guess.join(" ")}
-        </strong>
-
-        <br>
-
-        <span class="muted">
-
-          ${clue.correct}
-          correct symbols
-
-          ·
-
-          ${clue.placed}
-          correctly placed
-
-        </span>
-
-      `;
-
+      row.textContent =
+        clue;
 
       clues.appendChild(
         row
@@ -3329,28 +3614,29 @@ function renderCipher(
 
   );
 
+  area.appendChild(
+    clues
+  );
 
   const display =
     document.createElement(
       "button"
     );
 
-
   display.type =
     "button";
 
-
-  display.id =
-    "codeDisplay";
-
-
   display.className =
-    "code-display";
-
+    "code-display cipher-five";
 
   display.textContent =
-    "_ _ _ _";
-
+    state.cipherGuess.length
+    ?
+    state.cipherGuess.join(
+      " "
+    )
+    :
+    "• • • • •";
 
   display.addEventListener(
 
@@ -3358,26 +3644,26 @@ function renderCipher(
 
     () => {
 
-      state.selected =
+      state.cipherGuess =
         [];
 
-
-      updateCodeDisplay();
+      renderCurrentGame();
 
     }
 
   );
 
+  area.appendChild(
+    display
+  );
 
   const keypad =
     document.createElement(
       "div"
     );
 
-
   keypad.className =
-    "keypad";
-
+    "keypad cipher-five-keypad";
 
   puzzle.symbols.forEach(
 
@@ -3388,18 +3674,26 @@ function renderCipher(
           "button"
         );
 
-
       button.type =
         "button";
-
 
       button.className =
         "symbol-key";
 
-
       button.textContent =
         symbol;
 
+      if (
+        state.cipherGuess.includes(
+          symbol
+        )
+      ) {
+
+        button.classList.add(
+          "selected"
+        );
+
+      }
 
       button.addEventListener(
 
@@ -3408,30 +3702,31 @@ function renderCipher(
         () => {
 
           if (
-
-            state.selected.length < 4
-
-            &&
-
-            !state.selected.includes(
+            state.cipherGuess.includes(
               symbol
             )
-
           ) {
 
-            state.selected.push(
+            return;
+
+          }
+
+          if (
+            state.cipherGuess.length <
+            5
+          ) {
+
+            state.cipherGuess.push(
               symbol
             );
 
-
-            updateCodeDisplay();
+            renderCurrentGame();
 
           }
 
         }
 
       );
-
 
       keypad.appendChild(
         button
@@ -3441,53 +3736,26 @@ function renderCipher(
 
   );
 
-
-  area.append(
-    clues,
-    display,
+  area.appendChild(
     keypad
   );
 
 }
 
 
+function checkCipher() {
 
-function updateCodeDisplay() {
-
-  const display =
-    $("#codeDisplay");
-
-
-  if (
-    !display
-  ) {
-
-    return;
-
-  }
-
-
-  const blanks =
-    Array(
-
-      Math.max(
-        0,
-        4 - state.selected.length
-      )
-
+  return (
+    JSON.stringify(
+      state.cipherGuess
     )
-    .fill("_");
-
-
-  display.textContent =
-    [
-      ...state.selected,
-      ...blanks
-    ]
-    .join(" ");
+    ===
+    JSON.stringify(
+      state.puzzle.answer
+    )
+  );
 
 }
-
 
 
 /* ==========================================================
@@ -3501,14 +3769,11 @@ function renderShift(
   const puzzle =
     state.puzzle;
 
-
   $("#puzzlePrompt").textContent =
-    "Rebuild the target pattern.";
-
+    puzzle.prompt;
 
   $("#puzzleDescription").textContent =
-    "Shift entire rows left or right. Symbols wrap around the row.";
-
+    puzzle.description;
 
   if (
     !state.shiftRows
@@ -3521,48 +3786,62 @@ function renderShift(
 
   }
 
+  const target =
+    document.createElement(
+      "div"
+    );
+
+  target.className =
+    "shift-target";
+
+  target.innerHTML =
+    `
+      <span>TARGET</span>
+      <strong>
+        ${puzzle.target[0].join(" ")}
+      </strong>
+    `;
+
+  area.appendChild(
+    target
+  );
 
   const board =
     document.createElement(
       "div"
     );
 
-
   board.className =
     "shift-board";
 
-
   state.shiftRows.forEach(
 
-    (rowData,rowIndex) => {
+    (
+      row,
+      rowIndex
+    ) => {
 
-      const row =
+      const wrapper =
         document.createElement(
           "div"
         );
 
-
-      row.className =
+      wrapper.className =
         "shift-row";
-
 
       const left =
         document.createElement(
           "button"
         );
 
-
       left.type =
         "button";
-
 
       left.className =
         "shift-button";
 
-
       left.textContent =
         "←";
-
 
       left.addEventListener(
 
@@ -3570,16 +3849,16 @@ function renderShift(
 
         () => {
 
+          const first =
+            state.shiftRows[
+              rowIndex
+            ].shift();
+
           state.shiftRows[
             rowIndex
           ].push(
-
-            state.shiftRows[
-              rowIndex
-            ].shift()
-
+            first
           );
-
 
           renderCurrentGame();
 
@@ -3593,28 +3872,23 @@ function renderShift(
           "div"
         );
 
-
       cells.className =
-        "shift-cells";
+        "shift-cells shift-six";
 
+      row.forEach(
 
-      rowData.forEach(
-
-        value => {
+        symbol => {
 
           const cell =
             document.createElement(
               "div"
             );
 
-
           cell.className =
             "shift-cell";
 
-
           cell.textContent =
-            value;
-
+            symbol;
 
           cells.appendChild(
             cell
@@ -3630,18 +3904,14 @@ function renderShift(
           "button"
         );
 
-
       right.type =
         "button";
-
 
       right.className =
         "shift-button";
 
-
       right.textContent =
         "→";
-
 
       right.addEventListener(
 
@@ -3649,16 +3919,16 @@ function renderShift(
 
         () => {
 
+          const last =
+            state.shiftRows[
+              rowIndex
+            ].pop();
+
           state.shiftRows[
             rowIndex
           ].unshift(
-
-            state.shiftRows[
-              rowIndex
-            ].pop()
-
+            last
           );
-
 
           renderCurrentGame();
 
@@ -3666,55 +3936,46 @@ function renderShift(
 
       );
 
+      wrapper.appendChild(
+        left
+      );
 
-      row.append(
-        left,
-        cells,
+      wrapper.appendChild(
+        cells
+      );
+
+      wrapper.appendChild(
         right
       );
 
-
       board.appendChild(
-        row
+        wrapper
       );
 
     }
 
   );
 
-
-  const target =
-    document.createElement(
-      "div"
-    );
-
-
-  target.className =
-    "logic-note";
-
-
-  target.style.marginTop =
-    "14px";
-
-
-  target.innerHTML = `
-
-    <strong>
-      Target row:
-    </strong>
-
-    ${puzzle.target[0].join("  ")}
-
-  `;
-
-
-  area.append(
-    board,
-    target
+  area.appendChild(
+    board
   );
 
 }
 
+
+function checkShift() {
+
+  return (
+    JSON.stringify(
+      state.shiftRows
+    )
+    ===
+    JSON.stringify(
+      state.puzzle.target
+    )
+  );
+
+}
 
 
 /* ==========================================================
@@ -3728,109 +3989,155 @@ function renderBalance(
   const puzzle =
     state.puzzle;
 
-
   $("#puzzlePrompt").textContent =
-    `Make both trays equal ${puzzle.target}.`;
-
+    puzzle.prompt;
 
   $("#puzzleDescription").textContent =
-    "Select four different weights. The first two go LEFT and the next two go RIGHT.";
-
-
-  if (
-    !state.balanceSelected
-  ) {
-
-    state.balanceSelected =
-      [];
-
-  }
-
+    puzzle.description;
 
   const trays =
     document.createElement(
       "div"
     );
 
-
   trays.className =
     "balance-trays";
 
-
-  trays.innerHTML = `
-
-    <div class="tray">
-
-      <strong>
-        LEFT = ${puzzle.target}
-      </strong>
-
-      <div
-        id="leftTrayValues"
-        class="tray-values"
-      >
-        —
-      </div>
-
-    </div>
-
-
-    <div class="tray">
-
-      <strong>
-        RIGHT = ${puzzle.target}
-      </strong>
-
-      <div
-        id="rightTrayValues"
-        class="tray-values"
-      >
-        —
-      </div>
-
-    </div>
-
-  `;
-
-
-  const grid =
+  const left =
     document.createElement(
       "div"
     );
 
+  left.className =
+    "tray balance-hard-tray";
 
-  grid.className =
+  left.innerHTML = `
+    <strong>
+      LEFT = ${puzzle.leftTarget}
+    </strong>
+
+    <div class="tray-values">
+      ${
+        state.balanceLeft.length
+        ?
+        state.balanceLeft.join(
+          " + "
+        )
+        :
+        "—"
+      }
+    </div>
+
+    <small>
+      total ${
+        state.balanceLeft.reduce(
+          (
+            a,
+            b
+          ) =>
+            a + b,
+          0
+        )
+      }
+    </small>
+  `;
+
+
+  const right =
+    document.createElement(
+      "div"
+    );
+
+  right.className =
+    "tray balance-hard-tray";
+
+  right.innerHTML = `
+    <strong>
+      RIGHT = ${puzzle.rightTarget}
+    </strong>
+
+    <div class="tray-values">
+      ${
+        state.balanceRight.length
+        ?
+        state.balanceRight.join(
+          " + "
+        )
+        :
+        "—"
+      }
+    </div>
+
+    <small>
+      total ${
+        state.balanceRight.reduce(
+          (
+            a,
+            b
+          ) =>
+            a + b,
+          0
+        )
+      }
+    </small>
+  `;
+
+  trays.appendChild(
+    left
+  );
+
+  trays.appendChild(
+    right
+  );
+
+  area.appendChild(
+    trays
+  );
+
+
+  const weights =
+    document.createElement(
+      "div"
+    );
+
+  weights.className =
     "weight-grid";
-
 
   puzzle.weights.forEach(
 
-    weight => {
+    (
+      value,
+      index
+    ) => {
 
       const button =
         document.createElement(
           "button"
         );
 
-
       button.type =
         "button";
-
 
       button.className =
         "weight-button";
 
-
       button.textContent =
-        String(weight);
+        value;
 
+      const leftIndex =
+        state.balanceLeft.indexOf(
+          value
+        );
+
+      const rightIndex =
+        state.balanceRight.indexOf(
+          value
+        );
 
       if (
-
-        state.balanceSelected.includes(
-          weight
-        )
-
+        leftIndex >= 0
+        ||
+        rightIndex >= 0
       ) {
 
         button.classList.add(
@@ -3839,40 +4146,55 @@ function renderBalance(
 
       }
 
-
       button.addEventListener(
 
         "click",
 
         () => {
 
-          const index =
-            state.balanceSelected.indexOf(
-              weight
-            );
-
-
           if (
-            index >= 0
+            leftIndex >= 0
           ) {
 
-            state.balanceSelected.splice(
-              index,
+            state.balanceLeft.splice(
+              leftIndex,
               1
             );
 
           }
 
           else if (
-            state.balanceSelected.length < 4
+            rightIndex >= 0
           ) {
 
-            state.balanceSelected.push(
-              weight
+            state.balanceRight.splice(
+              rightIndex,
+              1
             );
 
           }
 
+          else if (
+            state.balanceLeft.length <
+            3
+          ) {
+
+            state.balanceLeft.push(
+              value
+            );
+
+          }
+
+          else if (
+            state.balanceRight.length <
+            3
+          ) {
+
+            state.balanceRight.push(
+              value
+            );
+
+          }
 
           renderCurrentGame();
 
@@ -3880,6 +4202,415 @@ function renderBalance(
 
       );
 
+      weights.appendChild(
+        button
+      );
+
+    }
+
+  );
+
+  area.appendChild(
+    weights
+  );
+
+}
+
+
+function checkBalance() {
+
+  if (
+    state.balanceLeft.length !==
+    3
+    ||
+    state.balanceRight.length !==
+    3
+  ) {
+
+    return false;
+
+  }
+
+  const leftTotal =
+    state.balanceLeft.reduce(
+      (
+        a,
+        b
+      ) =>
+        a + b,
+      0
+    );
+
+  const rightTotal =
+    state.balanceRight.reduce(
+      (
+        a,
+        b
+      ) =>
+        a + b,
+      0
+    );
+
+  return (
+    leftTotal ===
+    state.puzzle.leftTarget
+    &&
+    rightTotal ===
+    state.puzzle.rightTarget
+  );
+
+}
+
+
+/* ==========================================================
+   SIGNAL
+   ========================================================== */
+
+function renderSignal(
+  area
+) {
+
+  const puzzle =
+    state.puzzle;
+
+  $("#puzzlePrompt").textContent =
+    puzzle.prompt;
+
+  $("#puzzleDescription").textContent =
+    puzzle.description;
+
+  if (
+    puzzle.type ===
+    "signal-input"
+  ) {
+
+    const input =
+      document.createElement(
+        "input"
+      );
+
+    input.className =
+      "signal-input";
+
+    input.type =
+      "text";
+
+    input.placeholder =
+      "Your answer";
+
+    input.value =
+      state.signalAnswer;
+
+    input.addEventListener(
+
+      "input",
+
+      () => {
+
+        state.signalAnswer =
+          input.value
+            .trim()
+            .toUpperCase();
+
+      }
+
+    );
+
+    area.appendChild(
+      input
+    );
+
+    return;
+
+  }
+
+
+  if (
+    puzzle.type ===
+    "signal-order"
+  ) {
+
+    if (
+      !state.selected.length
+    ) {
+
+      state.selected =
+        [...puzzle.words];
+
+    }
+
+    const list =
+      document.createElement(
+        "div"
+      );
+
+    list.className =
+      "signal-order";
+
+    state.selected.forEach(
+
+      (
+        word,
+        index
+      ) => {
+
+        const row =
+          document.createElement(
+            "div"
+          );
+
+        row.className =
+          "signal-order-row";
+
+        row.innerHTML = `
+
+          <strong>
+            ${index + 1}.
+            ${word}
+          </strong>
+
+          <div>
+
+            <button
+              type="button"
+              data-dir="-1"
+            >
+              ↑
+            </button>
+
+            <button
+              type="button"
+              data-dir="1"
+            >
+              ↓
+            </button>
+
+          </div>
+
+        `;
+
+        row.querySelectorAll(
+          "button"
+        ).forEach(
+
+          button => {
+
+            button.addEventListener(
+
+              "click",
+
+              () => {
+
+                const direction =
+                  Number(
+                    button.dataset.dir
+                  );
+
+                const target =
+                  index
+                  +
+                  direction;
+
+                if (
+                  target < 0
+                  ||
+                  target >=
+                  state.selected.length
+                ) {
+
+                  return;
+
+                }
+
+                [
+                  state.selected[index],
+                  state.selected[target]
+                ]
+
+                =
+
+                [
+                  state.selected[target],
+                  state.selected[index]
+                ];
+
+                renderCurrentGame();
+
+              }
+
+            );
+
+          }
+
+        );
+
+        list.appendChild(
+          row
+        );
+
+      }
+
+    );
+
+    area.appendChild(
+      list
+    );
+
+  }
+
+}
+
+
+function checkSignal() {
+
+  const puzzle =
+    state.puzzle;
+
+  if (
+    puzzle.type ===
+    "signal-input"
+  ) {
+
+    return (
+      state.signalAnswer
+        .trim()
+        .toUpperCase()
+      ===
+      puzzle.answer
+        .trim()
+        .toUpperCase()
+    );
+
+  }
+
+  if (
+    puzzle.type ===
+    "signal-order"
+  ) {
+
+    return (
+      JSON.stringify(
+        state.selected
+      )
+      ===
+      JSON.stringify(
+        puzzle.answer
+      )
+    );
+
+  }
+
+  return false;
+
+}
+
+
+/* ==========================================================
+   SPECIAL
+   ========================================================== */
+
+function renderSpecial(
+  area
+) {
+
+  const puzzle =
+    state.puzzle;
+
+  $("#puzzlePrompt").textContent =
+    puzzle.prompt;
+
+  $("#puzzleDescription").textContent =
+    puzzle.description;
+
+  const rng =
+    rngFrom(
+      state.dateKey
+      +
+      state.gameKey
+    );
+
+  const items =
+    shuffle(
+      puzzle.items,
+      rng
+    );
+
+  const grid =
+    document.createElement(
+      "div"
+    );
+
+  grid.className =
+    "choice-grid";
+
+  items.forEach(
+
+    item => {
+
+      const button =
+        document.createElement(
+          "button"
+        );
+
+      button.type =
+        "button";
+
+      button.className =
+        "choice-tile";
+
+      button.textContent =
+        item;
+
+      if (
+        state.selected.includes(
+          item
+        )
+      ) {
+
+        button.classList.add(
+          "selected"
+        );
+
+      }
+
+      button.addEventListener(
+
+        "click",
+
+        () => {
+
+          const position =
+            state.selected.indexOf(
+              item
+            );
+
+          if (
+            position >= 0
+          ) {
+
+            state.selected.splice(
+              position,
+              1
+            );
+
+          }
+
+          else if (
+            state.selected.length <
+            4
+          ) {
+
+            state.selected.push(
+              item
+            );
+
+          }
+
+          renderCurrentGame();
+
+        }
+
+      );
 
       grid.appendChild(
         button
@@ -3889,388 +4620,34 @@ function renderBalance(
 
   );
 
-
-  area.append(
-    trays,
+  area.appendChild(
     grid
   );
 
-
-  updateBalanceTrays();
-
 }
 
 
-
-function updateBalanceTrays() {
-
-  const left =
-    $("#leftTrayValues");
-
-
-  const right =
-    $("#rightTrayValues");
-
-
-  if (
-    !left
-    ||
-    !right
-  ) {
-
-    return;
-
-  }
-
-
-  const firstPair =
-    state.balanceSelected.slice(
-      0,
-      2
-    );
-
-
-  const secondPair =
-    state.balanceSelected.slice(
-      2,
-      4
-    );
-
-
-  left.textContent =
-
-    firstPair.length
-
-    ?
-
-    firstPair.join(" + ")
-
-    :
-
-    "—";
-
-
-  right.textContent =
-
-    secondPair.length
-
-    ?
-
-    secondPair.join(" + ")
-
-    :
-
-    "—";
-
-}
-
-
-
-/* ==========================================================
-   CIRCUIT
-   ========================================================== */
-
-function renderCircuit(
-  area
-) {
-
-  const puzzle =
-    state.puzzle;
-
-
-  $("#puzzlePrompt").textContent =
-    "Make every region true.";
-
-
-  $("#puzzleDescription").textContent =
-    "Tap each number-pair to rotate it. All listed conditions must be satisfied simultaneously.";
-
-
-  if (
-    !state.circuitRotations
-  ) {
-
-    state.circuitRotations =
-      puzzle.pairs.map(
-        () => 0
-      );
-
-  }
-
-
-  const regions =
-    document.createElement(
-      "div"
-    );
-
-
-  regions.className =
-    "circuit-board";
-
-
-  puzzle.regions.forEach(
-
-    region => {
-
-      const box =
-        document.createElement(
-          "div"
-        );
-
-
-      box.className =
-        `circuit-region ${region.className}`;
-
-
-      box.innerHTML = `
-
-        <div>
-
-          <strong>
-            ${region.label}
-          </strong>
-
-          <span>
-            ${region.rule}
-          </span>
-
-        </div>
-
-      `;
-
-
-      regions.appendChild(
-        box
-      );
-
-    }
-
-  );
-
-
-  const dominoes =
-    document.createElement(
-      "div"
-    );
-
-
-  dominoes.className =
-    "domino-list";
-
-
-  puzzle.pairs.forEach(
-
-    (pair,index) => {
-
-      const rotation =
-        state.circuitRotations[index];
-
-
-      const values =
-
-        rotation === 0
-
-        ?
-
-        pair
-
-        :
-
-        [
-          pair[1],
-          pair[0]
-        ];
-
-
-      const button =
-        document.createElement(
-          "button"
-        );
-
-
-      button.type =
-        "button";
-
-
-      button.className =
-        "domino-button";
-
-
-      button.innerHTML = `
-
-        <span>
-          ${values[0]}
-        </span>
-
-        <span>
-          ${values[1]}
-        </span>
-
-      `;
-
-
-      button.addEventListener(
-
-        "click",
-
-        () => {
-
-          state.circuitRotations[
-            index
-          ]
-
-          =
-
-          state.circuitRotations[
-            index
-          ]
-
-          ?
-
-          0
-
-          :
-
-          1;
-
-
-          renderCurrentGame();
-
-        }
-
-      );
-
-
-      dominoes.appendChild(
-        button
-      );
-
-    }
-
-  );
-
-
-  const note =
-    document.createElement(
-      "div"
-    );
-
-
-  note.className =
-    "logic-note";
-
-
-  note.style.marginTop =
-    "14px";
-
-
-  note.textContent =
-    "Tap the dominoes to rotate them. One orientation combination satisfies the complete system.";
-
-
-  area.append(
-    regions,
-    dominoes,
-    note
+function checkSpecial() {
+
+  const selected =
+    [...state.selected]
+      .sort();
+
+  const answer =
+    [...state.puzzle.answer]
+      .sort();
+
+  return (
+    JSON.stringify(
+      selected
+    )
+    ===
+    JSON.stringify(
+      answer
+    )
   );
 
 }
-
-
-
-/* ==========================================================
-   RULES MODAL
-   ========================================================== */
-
-function openRulesModal(
-  initial = false
-) {
-
-  stopTimer();
-
-
-  let ruleKey;
-
-
-  if (
-    state.gameKey === "special"
-  ) {
-
-    ruleKey =
-      "special";
-
-  }
-
-  else {
-
-    ruleKey =
-      state.gameKey;
-
-  }
-
-
-  if (
-    state.gameKey === "special"
-  ) {
-
-    $("#rulesHeading").textContent =
-      state.puzzle.title;
-
-  }
-
-  else {
-
-    $("#rulesHeading").textContent =
-      GAME_META[
-        state.gameKey
-      ].title;
-
-  }
-
-
-  $("#rulesBody").innerHTML =
-    RULES[ruleKey];
-
-
-  $("#startFromRulesButton").textContent =
-
-    initial
-
-    ?
-
-    "Got it — play"
-
-    :
-
-    "Back to puzzle";
-
-
-  $("#rulesOverlay")
-    .classList.remove(
-      "hidden"
-    );
-
-}
-
-
-
-function closeRulesAndPlay() {
-
-  $("#rulesOverlay")
-    .classList.add(
-      "hidden"
-    );
-
-
-  showScreen(
-    "game"
-  );
-
-
-  startTimer();
-
-}
-
 
 
 /* ==========================================================
@@ -4282,297 +4659,108 @@ function checkPuzzle() {
   state.attempts +=
     1;
 
-
   $("#attemptsChip").textContent =
-
-    `${state.attempts} check`
-
-    +
-
-    (
+    `${state.attempts} check${
       state.attempts === 1
       ?
       ""
       :
       "s"
-    );
-
+    }`;
 
   let solved =
     false;
 
-
-
-  /* SIGNAL */
-
   if (
-
-    state.gameKey === "signal"
-
-    ||
-
-    state.gameKey === "special"
-
-  ) {
-
-    const answer =
-      state.puzzle.answer;
-
-
-    if (
-      state.selected.length !== answer.length
-    ) {
-
-      setFeedback(
-        `Select exactly ${answer.length} tiles first.`,
-        true
-      );
-
-
-      return;
-
-    }
-
-
-    solved =
-
-      state.selected.every(
-
-        value =>
-          answer.includes(
-            value
-          )
-
-      );
-
-  }
-
-
-
-  /* ROUTE */
-
-  if (
-    state.gameKey === "route"
-  ) {
-
-    const puzzle =
-      state.puzzle;
-
-
-    const endsAtB =
-
-      state.selected[
-        state.selected.length - 1
-      ]
-
-      ===
-      puzzle.end;
-
-
-    const hasAllCheckpoints =
-
-      puzzle.checkpoints.every(
-
-        checkpoint =>
-          state.selected.includes(
-            checkpoint
-          )
-
-      );
-
-
-    if (
-      !endsAtB
-    ) {
-
-      setFeedback(
-        "Your route has not reached B yet.",
-        true
-      );
-
-
-      return;
-
-    }
-
-
-    if (
-      !hasAllCheckpoints
-    ) {
-
-      setFeedback(
-        "You reached B but missed at least one ★ checkpoint.",
-        true
-      );
-
-
-      return;
-
-    }
-
-
-    solved =
-      true;
-
-  }
-
-
-
-  /* CIPHER */
-
-  if (
-    state.gameKey === "cipher"
-  ) {
-
-    if (
-      state.selected.length !== 4
-    ) {
-
-      setFeedback(
-        "Enter all four symbols first.",
-        true
-      );
-
-
-      return;
-
-    }
-
-
-    solved =
-
-      state.selected.join("|")
-
-      ===
-
-      state.puzzle.answer.join("|");
-
-  }
-
-
-
-  /* SHIFT */
-
-  if (
-    state.gameKey === "shift"
+    state.gameKey === "queens"
   ) {
 
     solved =
-
-      state.shiftRows.every(
-
-        (row,index) =>
-
-          row.join("|")
-
-          ===
-
-          state.puzzle
-            .target[index]
-            .join("|")
-
-      );
+      checkQueens();
 
   }
 
-
-
-  /* BALANCE */
-
-  if (
-    state.gameKey === "balance"
-  ) {
-
-    const chosen =
-      state.balanceSelected
-      ||
-      [];
-
-
-    if (
-      chosen.length !== 4
-    ) {
-
-      setFeedback(
-        "Choose exactly four weights first.",
-        true
-      );
-
-
-      return;
-
-    }
-
-
-    const left =
-      chosen[0]
-      +
-      chosen[1];
-
-
-    const right =
-      chosen[2]
-      +
-      chosen[3];
-
-
-    solved =
-
-      left ===
-      state.puzzle.target
-
-      &&
-
-      right ===
-      state.puzzle.target;
-
-  }
-
-
-
-  /* CIRCUIT */
-
-  if (
+  else if (
     state.gameKey === "circuit"
   ) {
 
     solved =
-
-      state.circuitRotations.every(
-
-        (rotation,index) =>
-
-          rotation
-
-          ===
-
-          state.puzzle.target[index]
-
-      );
+      checkCircuit();
 
   }
 
+  else if (
+    state.gameKey === "route"
+  ) {
 
+    solved =
+      checkRoute();
+
+  }
+
+  else if (
+    state.gameKey === "cipher"
+  ) {
+
+    solved =
+      checkCipher();
+
+  }
+
+  else if (
+    state.gameKey === "shift"
+  ) {
+
+    solved =
+      checkShift();
+
+  }
+
+  else if (
+    state.gameKey === "balance"
+  ) {
+
+    solved =
+      checkBalance();
+
+  }
+
+  else if (
+    state.gameKey === "signal"
+  ) {
+
+    solved =
+      checkSignal();
+
+  }
+
+  else if (
+    state.gameKey === "special"
+  ) {
+
+    solved =
+      checkSpecial();
+
+  }
 
   if (
     solved
   ) {
 
-    completePuzzle();
+    finishPuzzle();
 
   }
 
   else {
 
     setFeedback(
-      "Not solved yet — at least one condition still fails.",
+      "Not quite. At least one condition is still broken.",
       true
     );
 
   }
 
 }
-
 
 
 /* ==========================================================
@@ -4584,117 +4772,200 @@ function useHint() {
   state.hints +=
     1;
 
+  const puzzle =
+    state.puzzle;
 
   if (
-
-    state.gameKey === "signal"
-
-    ||
-
-    state.gameKey === "special"
-
+    state.gameKey ===
+    "queens"
   ) {
 
-    const hints =
-      state.puzzle.hints
-      ||
-      [];
+    const size =
+      puzzle.size;
 
+    let emptyRow =
+      -1;
 
-    const hint =
+    for (
+      let row = 0;
+      row < size;
+      row++
+    ) {
 
-      hints[
+      const values =
+        state.queensMarks.slice(
+          row * size,
+          row * size + size
+        );
 
-        Math.min(
-
-          state.hints - 1,
-
-          hints.length - 1
-
+      if (
+        !values.includes(
+          1
         )
+      ) {
 
-      ]
+        emptyRow =
+          row;
 
-      ||
+        break;
 
-      "Look for the most restrictive relationship first.";
+      }
 
+    }
 
-    setFeedback(
-      `Hint: ${hint}`
-    );
+    if (
+      emptyRow >= 0
+    ) {
 
+      const col =
+        puzzle.solution[
+          emptyRow
+        ];
+
+      setFeedback(
+        `Focus on row ${emptyRow + 1}. Its queen belongs in the region containing column ${col + 1}.`
+      );
+
+    }
 
     return;
 
   }
 
 
-  const hintMap = {
+  if (
+    state.gameKey ===
+    "circuit"
+  ) {
 
-    route:
-      "Hint: work backwards from B as well as forwards from A. Avoid creating a pocket you cannot escape.",
+    const wrong =
+      state.circuitRotations
+        .findIndex(
+          (
+            value,
+            index
+          ) =>
+            value !==
+            puzzle.target[index]
+        );
+
+    setFeedback(
+      wrong >= 0
+      ?
+      `Piece ${wrong + 1} is currently facing the wrong way.`
+      :
+      "Re-check all four totals."
+    );
+
+    return;
+
+  }
 
 
-    cipher:
-      "Hint: compare the clue rows position by position. A clue with zero correctly placed symbols is especially useful.",
+  if (
+    state.gameKey ===
+    "route"
+  ) {
+
+    setFeedback(
+      `The final route uses exactly ${puzzle.requiredLength} cells. Check checkpoint order before heading for B.`
+    );
+
+    return;
+
+  }
 
 
-    shift:
-      "Hint: compare each row directly to the target. Every row is only a cyclic shift away.",
+  if (
+    state.gameKey ===
+    "cipher"
+  ) {
+
+    setFeedback(
+      `Start with: ${puzzle.clues[0]}`
+    );
+
+    return;
+
+  }
 
 
-    balance:
-      "Hint: write down all number pairs that make the target, then choose two pairs that do not reuse a number.",
+  if (
+    state.gameKey ===
+    "shift"
+  ) {
+
+    setFeedback(
+      "Compare the first symbol in each row with the first symbol of the target."
+    );
+
+    return;
+
+  }
 
 
-    circuit:
-      "Hint: begin with the condition that leaves the fewest possible orientations."
+  if (
+    state.gameKey ===
+    "balance"
+  ) {
 
-  };
+    setFeedback(
+      `LEFT must total ${puzzle.leftTarget} using exactly three weights.`
+    );
+
+    return;
+
+  }
 
 
-  setFeedback(
+  if (
+    state.gameKey ===
+    "signal"
+  ) {
 
-    hintMap[
-      state.gameKey
-    ]
+    setFeedback(
+      puzzle.hint
+      ||
+      "Look for the smallest rule that explains every example."
+    );
 
-    ||
+    return;
 
-    "Try the most restrictive clue first."
+  }
 
-  );
+
+  if (
+    state.gameKey ===
+    "special"
+  ) {
+
+    setFeedback(
+      puzzle.hint
+    );
+
+  }
 
 }
 
 
-
 /* ==========================================================
-   COMPLETE PUZZLE
+   FINISH
    ========================================================== */
 
-function completePuzzle() {
+function finishPuzzle() {
 
   stopTimer();
-
 
   stats.solved +=
     1;
 
-
   stats.played +=
     1;
 
-
   if (
-
-    state.attempts === 1
-
-    &&
-
     state.hints === 0
-
+    &&
+    state.attempts === 1
   ) {
 
     stats.perfect +=
@@ -4702,16 +4973,11 @@ function completePuzzle() {
 
   }
 
-
   if (
-
     stats.bestSeconds === null
-
     ||
-
     state.elapsed <
     stats.bestSeconds
-
   ) {
 
     stats.bestSeconds =
@@ -4719,9 +4985,9 @@ function completePuzzle() {
 
   }
 
-
   if (
-    state.mode === "daily"
+    state.mode ===
+    "daily"
   ) {
 
     if (
@@ -4732,21 +4998,17 @@ function completePuzzle() {
 
       stats.completedDaily[
         state.dateKey
-      ]
-      =
-      {};
+      ] =
+        {};
 
     }
-
 
     stats.completedDaily[
       state.dateKey
     ][
       state.gameKey
-    ]
-    =
-    true;
-
+    ] =
+      true;
 
     updateStreak(
       state.dateKey
@@ -4754,84 +5016,49 @@ function completePuzzle() {
 
   }
 
-
   saveStats();
 
+  $("#winHeadline").textContent =
 
-  if (
+    state.gameKey ===
+    "queens"
 
-    state.attempts === 1
+    ?
 
-    &&
+    "Crowned."
 
-    state.hints === 0
+    :
 
-  ) {
-
-    $("#winHeadline").textContent =
-      "Perfect solve.";
-
-  }
-
-  else {
-
-    $("#winHeadline").textContent =
-      "Nicely done, Deans.";
-
-  }
-
+    "Brilliant.";
 
   $("#winMeta").textContent =
-
-    `${formatTime(state.elapsed)}`
-
-    +
-
-    ` · ${state.attempts} check`
-
-    +
-
-    (
-      state.attempts === 1
-      ?
-      ""
-      :
-      "s"
-    )
-
-    +
-
-    ` · ${state.hints} hint`
-
-    +
-
-    (
+    `${formatTime(
+      state.elapsed
+    )} · ${state.hints} hint${
       state.hints === 1
       ?
       ""
       :
       "s"
-    );
-
+    } · ${state.attempts} check${
+      state.attempts === 1
+      ?
+      ""
+      :
+      "s"
+    }`;
 
   $("#winExplanation").textContent =
     state.puzzle.explanation;
-
 
   showScreen(
     "win"
   );
 
-
   launchConfetti();
 
 }
 
-
-
-/* ==========================================================
-   STREAK
-   ========================================================== */
 
 function updateStreak(
   dateKey
@@ -4844,74 +5071,62 @@ function updateStreak(
     stats.lastSolvedDate =
       dateKey;
 
-
     stats.streak =
       1;
-
 
     return;
 
   }
 
-
   if (
-    stats.lastSolvedDate === dateKey
+    stats.lastSolvedDate ===
+    dateKey
   ) {
 
     return;
 
   }
 
-
   const previous =
-    new Date(
-      `${stats.lastSolvedDate}T12:00:00`
+    dateFromKey(
+      stats.lastSolvedDate
     );
-
 
   const current =
-    new Date(
-      `${dateKey}T12:00:00`
+    dateFromKey(
+      dateKey
     );
-
 
   const difference =
     Math.round(
 
       (
-        current
-        -
+        current -
         previous
       )
 
       /
+
       86400000
 
     );
 
+  stats.streak =
 
-  if (
     difference === 1
-  ) {
 
-    stats.streak +=
-      1;
+    ?
 
-  }
+    stats.streak + 1
 
-  else {
+    :
 
-    stats.streak =
-      1;
-
-  }
-
+    1;
 
   stats.lastSolvedDate =
     dateKey;
 
 }
-
 
 
 /* ==========================================================
@@ -4923,10 +5138,8 @@ function launchConfetti() {
   const layer =
     $("#confettiLayer");
 
-
   layer.innerHTML =
     "";
-
 
   const colors = [
 
@@ -4944,7 +5157,6 @@ function launchConfetti() {
 
   ];
 
-
   for (
     let i = 0;
     i < 54;
@@ -4956,28 +5168,26 @@ function launchConfetti() {
         "i"
       );
 
-
     piece.className =
       "confetti-piece";
-
 
     piece.style.left =
       `${Math.random() * 100}%`;
 
-
     piece.style.top =
-      `${-20 - Math.random() * 50}px`;
-
+      `${
+        -20
+        -
+        Math.random() * 50
+      }px`;
 
     piece.style.background =
       colors[
         i % colors.length
       ];
 
-
     piece.style.animationDelay =
       `${Math.random() * 0.35}s`;
-
 
     layer.appendChild(
       piece
@@ -4988,9 +5198,8 @@ function launchConfetti() {
 }
 
 
-
 /* ==========================================================
-   STATS PAGE
+   STATS
    ========================================================== */
 
 function renderStats() {
@@ -4998,18 +5207,14 @@ function renderStats() {
   $("#statSolved").textContent =
     stats.solved;
 
-
   $("#statPlayed").textContent =
     stats.played;
-
 
   $("#statPerfect").textContent =
     stats.perfect;
 
-
   $("#statStreak").textContent =
     stats.streak;
-
 
   $("#statBest").textContent =
 
@@ -5028,7 +5233,6 @@ function renderStats() {
 }
 
 
-
 /* ==========================================================
    ARCHIVE
    ========================================================== */
@@ -5038,51 +5242,95 @@ function renderArchive() {
   const container =
     $("#archiveList");
 
-
   container.innerHTML =
     "";
 
+  const start =
+    dateFromKey(
+      START_DATE
+    );
+
+  const today =
+    dateFromKey(
+      todayKey()
+    );
+
+  const elapsedDays =
+    Math.floor(
+
+      (
+        today -
+        start
+      )
+
+      /
+
+      86400000
+
+    );
+
+  const maxOffset =
+    Math.min(
+
+      TOTAL_DAILY_DAYS - 1,
+
+      Math.max(
+        elapsedDays,
+        0
+      )
+
+    );
 
   for (
     let offset = 0;
-    offset < 14;
+    offset <= maxOffset;
     offset++
   ) {
 
     const date =
-      new Date();
-
+      new Date(
+        today
+      );
 
     date.setDate(
-
       date.getDate()
       -
       offset
-
     );
 
+    if (
+      date <
+      start
+    ) {
+
+      break;
+
+    }
 
     const key =
       todayKey(
         date
       );
 
-
     const day =
       document.createElement(
         "article"
       );
 
-
     day.className =
       "archive-day";
-
 
     day.innerHTML = `
 
       <h3>
 
-        ${prettyDate(key)}
+        Day ${dailyNumber(
+          key
+        )}
+        ·
+        ${prettyDate(
+          key
+        )}
 
         ${
           offset === 0
@@ -5096,56 +5344,50 @@ function renderArchive() {
 
     `;
 
-
     const games =
       document.createElement(
         "div"
       );
 
-
     games.className =
       "archive-games";
 
-
     Object.keys(
       GAME_META
-    )
-    .forEach(
+    ).forEach(
 
       gameKey => {
 
         const completed =
           Boolean(
 
-            stats.completedDaily
+            stats
+              .completedDaily
               ?.[key]
               ?.[gameKey]
 
           );
-
 
         const button =
           document.createElement(
             "button"
           );
 
-
         button.type =
           "button";
-
 
         button.className =
           "archive-game-button";
 
-
         button.innerHTML = `
 
           <strong>
-            ${GAME_META[gameKey].title}
+            ${GAME_META[
+              gameKey
+            ].title}
           </strong>
 
           <span>
-
             ${
               completed
               ?
@@ -5153,11 +5395,9 @@ function renderArchive() {
               :
               "Replay"
             }
-
           </span>
 
         `;
-
 
         button.addEventListener(
 
@@ -5166,19 +5406,14 @@ function renderArchive() {
           () => {
 
             openGame(
-
               gameKey,
-
               "daily",
-
               key
-
             );
 
           }
 
         );
-
 
         games.appendChild(
           button
@@ -5188,11 +5423,9 @@ function renderArchive() {
 
     );
 
-
     day.appendChild(
       games
     );
-
 
     container.appendChild(
       day
@@ -5203,14 +5436,91 @@ function renderArchive() {
 }
 
 
+/* ==========================================================
+   RULES
+   ========================================================== */
+
+function openRulesModal(
+  initial
+) {
+
+  stopTimer();
+
+  const ruleKey =
+
+    state.gameKey ===
+    "special"
+
+    ?
+
+    "special"
+
+    :
+
+    state.gameKey;
+
+  $("#rulesHeading").textContent =
+
+    state.gameKey ===
+    "special"
+
+    ?
+
+    state.puzzle.title
+
+    :
+
+    GAME_META[
+      state.gameKey
+    ].title;
+
+  $("#rulesBody").innerHTML =
+    RULES[
+      ruleKey
+    ];
+
+  $("#startFromRulesButton").textContent =
+
+    initial
+
+    ?
+
+    "Got it — play"
+
+    :
+
+    "Back to puzzle";
+
+  $("#rulesOverlay")
+    .classList.remove(
+      "hidden"
+    );
+
+}
+
+
+function closeRulesAndPlay() {
+
+  $("#rulesOverlay")
+    .classList.add(
+      "hidden"
+    );
+
+  showScreen(
+    "game"
+  );
+
+  startTimer();
+
+}
+
 
 /* ==========================================================
-   CONFIRM DIALOG
+   CONFIRM
    ========================================================== */
 
 let confirmAction =
   null;
-
 
 
 function openConfirm(
@@ -5222,14 +5532,11 @@ function openConfirm(
   $("#confirmTitle").textContent =
     title;
 
-
   $("#confirmText").textContent =
     text;
 
-
   confirmAction =
     action;
-
 
   $("#confirmOverlay")
     .classList.remove(
@@ -5239,7 +5546,6 @@ function openConfirm(
 }
 
 
-
 function closeConfirm() {
 
   $("#confirmOverlay")
@@ -5247,100 +5553,266 @@ function closeConfirm() {
       "hidden"
     );
 
-
   confirmAction =
     null;
 
 }
 
 
-
 /* ==========================================================
    EVENTS
    ========================================================== */
 
-
-/* Logo */
-
 $("#logoButton")
-.addEventListener(
+  .addEventListener(
 
-  "click",
+    "click",
 
-  () => {
+    () => {
 
-    stopTimer();
+      stopTimer();
 
+      renderHome();
 
-    state.dateKey =
-      todayKey();
+      showScreen(
+        "home"
+      );
 
+    }
 
-    renderHome();
+  );
 
-
-    showScreen(
-      "home"
-    );
-
-  }
-
-);
-
-
-
-/* Profile */
 
 $("#profileButton")
-.addEventListener(
+  .addEventListener(
 
-  "click",
+    "click",
 
-  () => {
+    () => {
 
-    stopTimer();
+      stopTimer();
 
+      showScreen(
+        "stats"
+      );
 
-    showScreen(
-      "stats"
-    );
+    }
 
-  }
+  );
 
-);
-
-
-
-/* Bottom navigation */
 
 $$(".nav-button")
-.forEach(
+  .forEach(
 
-  button => {
+    button => {
 
-    button.addEventListener(
+      button.addEventListener(
 
-      "click",
+        "click",
 
-      () => {
+        () => {
 
-        stopTimer();
+          stopTimer();
+
+          const target =
+            button.dataset.screen;
+
+          if (
+            target ===
+            "homeScreen"
+          ) {
+
+            renderHome();
+
+            showScreen(
+              "home"
+            );
+
+          }
+
+          if (
+            target ===
+            "archiveScreen"
+          ) {
+
+            showScreen(
+              "archive"
+            );
+
+          }
+
+          if (
+            target ===
+            "statsScreen"
+          ) {
+
+            showScreen(
+              "stats"
+            );
+
+          }
+
+        }
+
+      );
+
+    }
+
+  );
 
 
-        const target =
-          button.dataset.screen;
+$("#specialButton")
+  .addEventListener(
+
+    "click",
+
+    () => {
+
+      openGame(
+        "special",
+        "daily",
+        todayKey()
+      );
+
+    }
+
+  );
 
 
-        if (
-          target === "homeScreen"
-        ) {
+$("#rulesButton")
+  .addEventListener(
 
-          state.dateKey =
-            todayKey();
+    "click",
 
+    () => {
+
+      openRulesModal(
+        false
+      );
+
+    }
+
+  );
+
+
+$("#closeRulesButton")
+  .addEventListener(
+    "click",
+    closeRulesAndPlay
+  );
+
+
+$("#startFromRulesButton")
+  .addEventListener(
+    "click",
+    closeRulesAndPlay
+  );
+
+
+$("#checkButton")
+  .addEventListener(
+    "click",
+    checkPuzzle
+  );
+
+
+$("#hintButton")
+  .addEventListener(
+    "click",
+    useHint
+  );
+
+
+$("#pauseButton")
+  .addEventListener(
+
+    "click",
+
+    () => {
+
+      stopTimer();
+
+      showScreen(
+        "pause"
+      );
+
+    }
+
+  );
+
+
+$("#resumeButton")
+  .addEventListener(
+
+    "click",
+
+    () => {
+
+      showScreen(
+        "game"
+      );
+
+      startTimer();
+
+    }
+
+  );
+
+
+$("#resetButton")
+  .addEventListener(
+
+    "click",
+
+    () => {
+
+      openGame(
+        state.gameKey,
+        state.mode,
+        state.dateKey
+      );
+
+    }
+
+  );
+
+
+$("#restartFromPause")
+  .addEventListener(
+
+    "click",
+
+    () => {
+
+      openGame(
+        state.gameKey,
+        state.mode,
+        state.dateKey
+      );
+
+    }
+
+  );
+
+
+$("#leaveGame")
+  .addEventListener(
+
+    "click",
+
+    () => {
+
+      stopTimer();
+
+      openConfirm(
+
+        "Leave this round?",
+
+        "Starting another puzzle will replace this unfinished round.",
+
+        () => {
 
           renderHome();
-
 
           showScreen(
             "home"
@@ -5348,501 +5820,172 @@ $$(".nav-button")
 
         }
 
+      );
 
-        if (
-          target === "archiveScreen"
-        ) {
+    }
 
-          showScreen(
-            "archive"
-          );
+  );
 
-        }
-
-
-        if (
-          target === "statsScreen"
-        ) {
-
-          showScreen(
-            "stats"
-          );
-
-        }
-
-      }
-
-    );
-
-  }
-
-);
-
-
-
-/* Jack special */
-
-$("#specialButton")
-.addEventListener(
-
-  "click",
-
-  () => {
-
-    openGame(
-
-      "special",
-
-      "daily",
-
-      todayKey()
-
-    );
-
-  }
-
-);
-
-
-
-/* Rules */
-
-$("#rulesButton")
-.addEventListener(
-
-  "click",
-
-  () => {
-
-    openRulesModal(
-      false
-    );
-
-  }
-
-);
-
-
-
-$("#closeRulesButton")
-.addEventListener(
-
-  "click",
-
-  closeRulesAndPlay
-
-);
-
-
-
-$("#startFromRulesButton")
-.addEventListener(
-
-  "click",
-
-  closeRulesAndPlay
-
-);
-
-
-
-/* Check */
-
-$("#checkButton")
-.addEventListener(
-
-  "click",
-
-  checkPuzzle
-
-);
-
-
-
-/* Hint */
-
-$("#hintButton")
-.addEventListener(
-
-  "click",
-
-  useHint
-
-);
-
-
-
-/* Pause */
-
-$("#pauseButton")
-.addEventListener(
-
-  "click",
-
-  () => {
-
-    stopTimer();
-
-
-    showScreen(
-      "pause"
-    );
-
-  }
-
-);
-
-
-
-/* Resume */
-
-$("#resumeButton")
-.addEventListener(
-
-  "click",
-
-  () => {
-
-    showScreen(
-      "game"
-    );
-
-
-    startTimer();
-
-  }
-
-);
-
-
-
-/* Reset */
-
-$("#resetButton")
-.addEventListener(
-
-  "click",
-
-  () => {
-
-    openGame(
-
-      state.gameKey,
-
-      state.mode,
-
-      state.dateKey
-
-    );
-
-  }
-
-);
-
-
-
-/* Restart from pause */
-
-$("#restartFromPause")
-.addEventListener(
-
-  "click",
-
-  () => {
-
-    openGame(
-
-      state.gameKey,
-
-      state.mode,
-
-      state.dateKey
-
-    );
-
-  }
-
-);
-
-
-
-/* Leave game */
-
-$("#leaveGame")
-.addEventListener(
-
-  "click",
-
-  () => {
-
-    stopTimer();
-
-
-    openConfirm(
-
-      "Leave this round?",
-
-      "You can leave whenever you want. Starting another puzzle will replace this unfinished round.",
-
-      () => {
-
-        state.dateKey =
-          todayKey();
-
-
-        renderHome();
-
-
-        showScreen(
-          "home"
-        );
-
-      }
-
-    );
-
-  }
-
-);
-
-
-
-/* Leave pause */
 
 $("#leaveFromPause")
-.addEventListener(
+  .addEventListener(
 
-  "click",
+    "click",
 
-  () => {
+    () => {
 
-    stopTimer();
+      stopTimer();
 
+      renderHome();
 
-    state.dateKey =
-      todayKey();
+      showScreen(
+        "home"
+      );
 
+    }
 
-    renderHome();
+  );
 
-
-    showScreen(
-      "home"
-    );
-
-  }
-
-);
-
-
-
-/* Confirmation cancel */
 
 $("#confirmCancel")
-.addEventListener(
+  .addEventListener(
 
-  "click",
+    "click",
 
-  () => {
+    () => {
 
-    closeConfirm();
+      closeConfirm();
 
+      if (
+        screens.game
+          .classList.contains(
+            "active"
+          )
+      ) {
 
-    if (
-      screens.game.classList.contains(
-        "active"
-      )
-    ) {
-
-      startTimer();
-
-    }
-
-  }
-
-);
-
-
-
-/* Confirmation OK */
-
-$("#confirmOkay")
-.addEventListener(
-
-  "click",
-
-  () => {
-
-    const action =
-      confirmAction;
-
-
-    closeConfirm();
-
-
-    if (
-      action
-    ) {
-
-      action();
-
-    }
-
-  }
-
-);
-
-
-
-/* Unlimited new round */
-
-$("#playAnotherButton")
-.addEventListener(
-
-  "click",
-
-  () => {
-
-    openGame(
-
-      state.gameKey,
-
-      "practice",
-
-      todayKey()
-
-    );
-
-  }
-
-);
-
-
-
-/* Replay */
-
-$("#replayButton")
-.addEventListener(
-
-  "click",
-
-  () => {
-
-    openGame(
-
-      state.gameKey,
-
-      state.mode,
-
-      state.dateKey
-
-    );
-
-  }
-
-);
-
-
-
-/* Win → home */
-
-$("#winHomeButton")
-.addEventListener(
-
-  "click",
-
-  () => {
-
-    state.dateKey =
-      todayKey();
-
-
-    renderHome();
-
-
-    showScreen(
-      "home"
-    );
-
-  }
-
-);
-
-
-
-/* Reset stats */
-
-$("#resetStatsButton")
-.addEventListener(
-
-  "click",
-
-  () => {
-
-    openConfirm(
-
-      "Reset all stats?",
-
-      "This removes saved times, streaks and completion marks from this browser.",
-
-      () => {
-
-        stats = {
-
-          solved:
-            0,
-
-          played:
-            0,
-
-          perfect:
-            0,
-
-          bestSeconds:
-            null,
-
-          completedDaily:
-            {},
-
-          lastSolvedDate:
-            null,
-
-          streak:
-            0
-
-        };
-
-
-        saveStats();
-
-
-        renderStats();
-
-
-        renderHome();
+        startTimer();
 
       }
 
-    );
+    }
 
-  }
+  );
 
-);
 
+$("#confirmOkay")
+  .addEventListener(
+
+    "click",
+
+    () => {
+
+      const action =
+        confirmAction;
+
+      closeConfirm();
+
+      if (
+        action
+      ) {
+
+        action();
+
+      }
+
+    }
+
+  );
+
+
+$("#playAnotherButton")
+  .addEventListener(
+
+    "click",
+
+    () => {
+
+      openGame(
+        state.gameKey,
+        "practice",
+        todayKey()
+      );
+
+    }
+
+  );
+
+
+$("#replayButton")
+  .addEventListener(
+
+    "click",
+
+    () => {
+
+      openGame(
+        state.gameKey,
+        state.mode,
+        state.dateKey
+      );
+
+    }
+
+  );
+
+
+$("#winHomeButton")
+  .addEventListener(
+
+    "click",
+
+    () => {
+
+      renderHome();
+
+      showScreen(
+        "home"
+      );
+
+    }
+
+  );
+
+
+$("#resetStatsButton")
+  .addEventListener(
+
+    "click",
+
+    () => {
+
+      openConfirm(
+
+        "Reset local stats?",
+
+        "This removes solved counts, streak and best time from this browser.",
+
+        () => {
+
+          stats =
+            defaultStats();
+
+          saveStats();
+
+          renderStats();
+
+        }
+
+      );
+
+    }
+
+  );
 
 
 /* ==========================================================
-   INITIALIZE APP
+   START
    ========================================================== */
-
-state.dateKey =
-  todayKey();
-
 
 renderHome();
 
-
-renderStats();
-
-
-})(); 
+})();
