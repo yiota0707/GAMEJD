@@ -89,7 +89,7 @@ const GAME_META = {
   },
 
   eclipse: {
-    title: "Eclipse",
+    title: "Tango",
     icon: "◐",
     color: "#efdcd7",
     difficulty: "VERY HARD",
@@ -2249,7 +2249,7 @@ function createEclipsePuzzle(token) {
 
   if (!solution) {
     throw new Error(
-      "Could not generate Eclipse solution."
+      "Could not generate Tango solution."
     );
   }
 
