@@ -1211,6 +1211,601 @@ and (
 }
 
 </style>
+
+<style id="deans-gp-one-screen-mobile">
+
+/* ==========================================================
+   DEANS GP — ONE SCREEN PHONE MODE
+
+   Track + question + A/B/C/D all visible together.
+   ========================================================== */
+
+@media (max-width: 600px) {
+
+  html,
+  body {
+    width: 100%;
+    height: 100%;
+    min-height: 100%;
+    overflow-x: hidden;
+  }
+
+  body {
+    background: #f7f2e8;
+  }
+
+  .app {
+    width: 100%;
+    min-height: 100dvh;
+    padding: 0;
+  }
+
+
+  /* --------------------------------
+     VERY SMALL HEADER
+     -------------------------------- */
+
+  .topbar {
+    height: 42px;
+    margin: 0;
+    padding: 5px 10px;
+
+    background: #f7f2e8;
+  }
+
+  .brand {
+    gap: 6px;
+    font-size: .72rem;
+  }
+
+  .brand-mark {
+    width: 28px;
+    height: 28px;
+    font-size: .52rem;
+  }
+
+  .back {
+    padding: 5px 9px;
+    font-size: .61rem;
+  }
+
+
+  /* Hide big intro on phone.
+
+     We want the GAME itself filling
+     the screen, not the title.
+  */
+
+  .title-row {
+    display: none !important;
+  }
+
+
+  .hero {
+    width: 100%;
+    height: calc(100dvh - 42px);
+
+    border: 0;
+    border-radius: 0;
+    box-shadow: none;
+
+    overflow: hidden;
+  }
+
+
+  /* --------------------------------
+     ONE SCREEN LAYOUT
+     -------------------------------- */
+
+  .race-layout {
+    width: 100%;
+    height: 100%;
+
+    display: grid;
+
+    grid-template-rows:
+      minmax(0, 44%)
+      minmax(0, 56%);
+
+    gap: 0;
+
+    padding: 0;
+  }
+
+
+  /* ======================================================
+     TOP — TRACK
+     ====================================================== */
+
+  .track-card {
+    position: relative;
+
+    width: 100%;
+    height: 100%;
+    min-height: 0;
+
+    aspect-ratio: auto;
+
+    border-radius: 0;
+
+    overflow: hidden;
+  }
+
+  .track-wrap {
+    position: absolute;
+    inset: 0;
+  }
+
+  .track-svg {
+    width: 100%;
+    height: 100%;
+
+    display: block;
+  }
+
+
+  /* --------------------------------
+     Race Control
+     -------------------------------- */
+
+  .race-control {
+    top: 5px;
+
+    min-width: 0;
+    max-width: calc(100% - 18px);
+
+    padding: 5px 10px;
+
+    border-radius: 999px;
+
+    font-size: .58rem;
+
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+
+  /* --------------------------------
+     Compact broadcast HUD
+     -------------------------------- */
+
+  .hud {
+    left: 5px;
+    right: 5px;
+    bottom: 5px;
+
+    display: grid;
+
+    grid-template-columns:
+      repeat(3, minmax(0, 1fr));
+
+    gap: 3px;
+  }
+
+  .hud-item {
+    min-width: 0;
+
+    padding: 3px 5px;
+
+    border-radius: 7px;
+
+    background:
+      rgba(5, 25, 18, .92);
+  }
+
+  .hud-item small {
+    font-size: .36rem;
+    line-height: 1;
+
+    letter-spacing: .04em;
+  }
+
+  .hud-item strong {
+    margin-top: 1px;
+
+    font-size: .55rem;
+    line-height: 1.1;
+  }
+
+
+  /* Keep DEANS visible */
+
+  .car-label {
+    font-size: 11px;
+    stroke-width: 3px;
+  }
+
+
+  /* ======================================================
+     BOTTOM — QUESTION
+     ====================================================== */
+
+  .question-card {
+    width: 100%;
+    height: 100%;
+    min-height: 0;
+
+    display: flex;
+    flex-direction: column;
+
+    padding:
+      8px
+      10px
+      max(
+        8px,
+        env(safe-area-inset-bottom)
+      );
+
+    border-radius: 0;
+
+    border-top:
+      3px solid #173f32;
+
+    background: #fffaf0;
+
+    overflow: hidden;
+  }
+
+
+  /* Phase + category on same compact area */
+
+  .phase-badge {
+    min-height: 19px;
+
+    padding: 2px 7px;
+
+    font-size: .48rem;
+    line-height: 1;
+
+    border-radius: 999px;
+  }
+
+  .category {
+    margin-top: 5px;
+
+    font-size: .48rem;
+    line-height: 1;
+
+    letter-spacing: .09em;
+  }
+
+
+  /* --------------------------------
+     Question
+     -------------------------------- */
+
+  .question {
+    margin:
+      4px
+      0
+      5px;
+
+    font-size:
+      clamp(
+        .92rem,
+        4.1vw,
+        1.13rem
+      );
+
+    line-height: 1.06;
+
+    display: -webkit-box;
+
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+
+    overflow: hidden;
+  }
+
+
+  /* --------------------------------
+     Timer
+     -------------------------------- */
+
+  .timer-row {
+    position: static;
+
+    flex: 0 0 auto;
+
+    gap: 7px;
+
+    margin:
+      0
+      0
+      6px;
+
+    padding: 0;
+
+    background: transparent;
+
+    backdrop-filter: none;
+  }
+
+  .timer-number {
+    width: 43px;
+
+    font-size: .94rem;
+    line-height: 1;
+
+    font-weight: 950;
+  }
+
+  .timer-track {
+    height: 7px;
+  }
+
+
+  /* ======================================================
+     FOUR ANSWERS ALWAYS VISIBLE
+     ====================================================== */
+
+  .answers {
+    flex: 1 1 auto;
+
+    min-height: 0;
+
+    display: grid;
+
+    grid-template-columns:
+      repeat(2, minmax(0, 1fr));
+
+    grid-template-rows:
+      repeat(2, minmax(0, 1fr));
+
+    gap: 5px;
+  }
+
+  .answer {
+    width: 100%;
+    height: 100%;
+
+    min-height: 0;
+
+    padding: 5px 6px;
+
+    display: flex;
+    align-items: center;
+
+    border-radius: 9px;
+
+    font-size:
+      clamp(
+        .64rem,
+        2.8vw,
+        .78rem
+      );
+
+    line-height: 1.08;
+
+    overflow: hidden;
+  }
+
+  .answer-letter {
+    width: 25px;
+    height: 25px;
+
+    flex:
+      0
+      0
+      25px;
+
+    border-radius: 7px;
+
+    font-size: .62rem;
+  }
+
+  .answer span:last-child {
+    display: -webkit-box;
+
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+
+    overflow: hidden;
+  }
+
+
+  /* --------------------------------
+     Feedback
+     -------------------------------- */
+
+  .answer-feedback {
+    flex: 0 0 auto;
+
+    min-height: 16px;
+
+    margin-top: 4px;
+
+    font-size: .55rem;
+    line-height: 1.1;
+  }
+
+
+  /* --------------------------------
+     Start + results
+     -------------------------------- */
+
+  .start-overlay,
+  .results-overlay {
+    padding: 10px;
+  }
+
+  .overlay-panel {
+    width: min(340px, 94%);
+
+    max-height: 94%;
+
+    padding: 15px;
+
+    border-radius: 18px;
+
+    overflow-y: auto;
+  }
+
+  .overlay-panel h2 {
+    font-size: 1.7rem;
+  }
+
+  .overlay-panel p {
+    margin: 7px 0 12px;
+
+    font-size: .7rem;
+  }
+
+  .lights {
+    margin-bottom: 9px;
+  }
+
+  .light {
+    width: 23px;
+    height: 23px;
+  }
+
+  .primary {
+    min-height: 42px;
+
+    padding: 8px 18px;
+
+    font-size: .72rem;
+  }
+
+
+  /* Footer would waste game space */
+
+  .footer-note {
+    display: none;
+  }
+
+}
+
+
+/* ==========================================================
+   SHORTER PHONES
+   ========================================================== */
+
+@media
+(max-width: 600px)
+and
+(max-height: 750px) {
+
+  .topbar {
+    height: 36px;
+  }
+
+  .brand-mark {
+    width: 24px;
+    height: 24px;
+  }
+
+  .hero {
+    height:
+      calc(100dvh - 36px);
+  }
+
+  .race-layout {
+    grid-template-rows:
+      minmax(0, 42%)
+      minmax(0, 58%);
+  }
+
+  .question-card {
+    padding:
+      6px
+      8px
+      max(
+        6px,
+        env(safe-area-inset-bottom)
+      );
+  }
+
+  .question {
+    font-size: .88rem;
+
+    margin:
+      3px
+      0
+      4px;
+  }
+
+  .phase-badge {
+    min-height: 17px;
+
+    font-size: .43rem;
+  }
+
+  .category {
+    margin-top: 3px;
+
+    font-size: .43rem;
+  }
+
+  .timer-row {
+    margin-bottom: 4px;
+  }
+
+  .timer-number {
+    font-size: .82rem;
+  }
+
+  .answer {
+    padding: 3px 5px;
+
+    font-size: .62rem;
+  }
+
+  .answer-letter {
+    width: 22px;
+    height: 22px;
+
+    flex-basis: 22px;
+  }
+
+  .answer-feedback {
+    margin-top: 2px;
+
+    font-size: .5rem;
+  }
+
+}
+
+
+/* ==========================================================
+   TALL MODERN PHONES
+   Give slightly more room to the race.
+   ========================================================== */
+
+@media
+(max-width: 600px)
+and
+(min-height: 850px) {
+
+  .race-layout {
+    grid-template-rows:
+      minmax(0, 47%)
+      minmax(0, 53%);
+  }
+
+  .question {
+    font-size:
+      clamp(
+        1rem,
+        4.4vw,
+        1.2rem
+      );
+  }
+
+  .answer {
+    font-size:
+      clamp(
+        .7rem,
+        3vw,
+        .82rem
+      );
+  }
+
+}
+
+</style>
 </head>
 
 <body>
