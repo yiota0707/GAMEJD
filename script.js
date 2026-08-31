@@ -55,6 +55,17 @@ const GAME_META = {
       "Place one queen in every row, column and coloured region — without queens touching diagonally."
   },
 
+  connections: {
+    title: "Connections",
+    icon: "\u229E",
+    color: "linear-gradient(135deg,#eee4a8,#bdd8a8)",
+    difficulty: "VERY HARD",
+    time: "5\u201315 min",
+    tags: "Words \u00B7 Categories \u00B7 Lateral",
+    blurb:
+      "Sixteen words. Four hidden connections. Find all four groups before your mistakes run out."
+  },
+
   circuit: {
     title: "Circuit",
     icon: "◫",
@@ -128,6 +139,53 @@ const GAME_META = {
    ========================================================== */
 
 const RULES = {
+
+  connections: `
+    <div class="rule-row">
+      <div class="rule-icon">4</div>
+      <div>
+        <strong>Find four groups of four.</strong>
+        <br>
+        Sixteen shuffled words hide four different connections.
+      </div>
+    </div>
+
+    <div class="rule-row">
+      <div class="rule-icon">?</div>
+      <div>
+        <strong>Select exactly four words.</strong>
+        <br>
+        Tap four tiles and press Check to submit your guess.
+      </div>
+    </div>
+
+    <div class="rule-row">
+      <div class="rule-icon">!</div>
+      <div>
+        <strong>You have four mistakes.</strong>
+        <br>
+        An incorrect group uses one mistake. After four, the board locks until you reset or reveal the solution.
+      </div>
+    </div>
+
+    <div class="rule-row">
+      <div class="rule-icon">1-4</div>
+      <div>
+        <strong>Connections vary in difficulty.</strong>
+        <br>
+        Yellow is easier, green is medium, blue is hard and purple is tricky.
+      </div>
+    </div>
+
+    <div class="rule-row">
+      <div class="rule-icon">*</div>
+      <div>
+        <strong>Expect red herrings.</strong>
+        <br>
+        Some words may appear to fit more than one possible connection.
+      </div>
+    </div>
+  `,
 
   queens: `
     <div class="rule-row">
@@ -409,6 +467,10 @@ const state = {
   timerBase: 0,
 
   practiceCounter: 0,
+
+  connectionsSolved: [],
+
+  connectionsMistakes: 0,
 
   queensMarks: null,
 
@@ -2995,6 +3057,717 @@ const SPECIAL_BANK = [
 
 
 /* ==========================================================
+   CONNECTIONS
+   ========================================================== */
+
+const CONNECTION_GROUPS = {
+
+  yellow: [
+
+    {
+      label: "COFFEE ORDERS",
+      words: [
+        "LATTE",
+        "MOCHA",
+        "ESPRESSO",
+        "AMERICANO"
+      ]
+    },
+
+    {
+      label: "CARD SUITS",
+      words: [
+        "HEARTS",
+        "DIAMONDS",
+        "CLUBS",
+        "SPADES"
+      ]
+    },
+
+    {
+      label: "CHESS PIECES",
+      words: [
+        "ROOK",
+        "BISHOP",
+        "KNIGHT",
+        "PAWN"
+      ]
+    },
+
+    {
+      label: "WAYS TO COOK EGGS",
+      words: [
+        "POACHED",
+        "SCRAMBLED",
+        "FRIED",
+        "BOILED"
+      ]
+    }
+
+  ],
+
+  green: [
+
+    {
+      label: "CAN FOLLOW BOOK",
+      words: [
+        "CLUB",
+        "CASE",
+        "MARK",
+        "WORM"
+      ]
+    },
+
+    {
+      label: "CAN BE BROKEN",
+      words: [
+        "PROMISE",
+        "RECORD",
+        "CODE",
+        "SILENCE"
+      ]
+    },
+
+    {
+      label: "KINDS OF COURT",
+      words: [
+        "TENNIS",
+        "ROYAL",
+        "FOOD",
+        "SUPREME"
+      ]
+    },
+
+    {
+      label: "THINGS WITH KEYS",
+      words: [
+        "PIANO",
+        "MAP",
+        "KEYBOARD",
+        "LOCK"
+      ]
+    }
+
+  ],
+
+  blue: [
+
+    {
+      label: "___ LIGHT",
+      words: [
+        "GREEN",
+        "FLASH",
+        "SPOT",
+        "DAY"
+      ]
+    },
+
+    {
+      label: "___ BALL",
+      words: [
+        "CANNON",
+        "FIRE",
+        "CRYSTAL",
+        "SNOW"
+      ]
+    },
+
+    {
+      label: "___ POINT",
+      words: [
+        "MATCH",
+        "VIEW",
+        "BREAKING",
+        "POWER"
+      ]
+    },
+
+    {
+      label: "___ TRACK",
+      words: [
+        "SOUND",
+        "RACE",
+        "FAST",
+        "BACK"
+      ]
+    }
+
+  ],
+
+  purple: [
+
+    {
+      label: "WORDS WITH SILENT FIRST LETTERS",
+      words: [
+        "KNIFE",
+        "GNOME",
+        "WRIST",
+        "PSALM"
+      ]
+    },
+
+    {
+      label: "REMOVE THE FIRST LETTER TO MAKE ANOTHER WORD",
+      words: [
+        "PLANE",
+        "CHARM",
+        "SCOLD",
+        "STONE"
+      ]
+    },
+
+    {
+      label: "BEGIN WITH SOLFEGE SYLLABLES",
+      words: [
+        "DOMAIN",
+        "REMOTE",
+        "MIMIC",
+        "FAMILY"
+      ]
+    },
+
+    {
+      label: "PALINDROMES",
+      words: [
+        "LEVEL",
+        "RADAR",
+        "CIVIC",
+        "REFER"
+      ]
+    }
+
+  ]
+
+};
+
+
+function createConnectionsPuzzle(
+  token,
+  dateKey,
+  mode
+) {
+
+  const rng =
+    rngFrom(
+      token + ":connections"
+    );
+
+  const levels = [
+    {
+      level: "yellow",
+      difficulty: "EASIER"
+    },
+    {
+      level: "green",
+      difficulty: "MEDIUM"
+    },
+    {
+      level: "blue",
+      difficulty: "HARD"
+    },
+    {
+      level: "purple",
+      difficulty: "TRICKY"
+    }
+  ];
+
+  let indexes;
+
+  /*
+   * Four banks x four choices = 256 possible combinations.
+   * The daily number is encoded in base 4, which means
+   * Daily 1 through Daily 200 each gets a different set
+   * of four groups.
+   */
+
+  if (
+    mode === "daily"
+  ) {
+
+    const day =
+      dailyNumber(dateKey) - 1;
+
+    indexes = [
+      day % 4,
+      Math.floor(day / 4) % 4,
+      Math.floor(day / 16) % 4,
+      Math.floor(day / 64) % 4
+    ];
+
+  }
+
+  else {
+
+    indexes =
+      levels.map(
+        () =>
+          Math.floor(
+            rng() * 4
+          )
+      );
+
+  }
+
+  const groups =
+    levels.map(
+      (info, index) => {
+
+        const source =
+          CONNECTION_GROUPS[
+            info.level
+          ][
+            indexes[index]
+          ];
+
+        return {
+          level:
+            info.level,
+
+          difficulty:
+            info.difficulty,
+
+          label:
+            source.label,
+
+          words:
+            [...source.words]
+        };
+
+      }
+    );
+
+  const words =
+    groups.flatMap(
+      group =>
+        group.words
+    );
+
+  for (
+    let i =
+      words.length - 1;
+
+    i > 0;
+
+    i--
+  ) {
+
+    const j =
+      Math.floor(
+        rng() * (i + 1)
+      );
+
+    [
+      words[i],
+      words[j]
+    ] = [
+      words[j],
+      words[i]
+    ];
+
+  }
+
+  return {
+
+    prompt:
+      "Find the four hidden connections.",
+
+    description:
+      "Sort all sixteen words into four groups of four. You have four mistakes.",
+
+    groups,
+
+    words
+
+  };
+
+}
+
+
+function renderConnections(
+  area
+) {
+
+  const puzzle =
+    state.puzzle;
+
+  $("#puzzlePrompt").textContent =
+    puzzle.prompt;
+
+  $("#puzzleDescription").textContent =
+    puzzle.description;
+
+  const solvedWords =
+    new Set(
+
+      state.connectionsSolved
+        .flatMap(
+          index =>
+            puzzle.groups[index].words
+        )
+
+    );
+
+  const shell =
+    document.createElement(
+      "div"
+    );
+
+  shell.className =
+    "connections-shell";
+
+  const mistakes =
+    document.createElement(
+      "div"
+    );
+
+  mistakes.className =
+    "connections-mistakes";
+
+  const remaining =
+    Math.max(
+      0,
+      4 -
+      state.connectionsMistakes
+    );
+
+  mistakes.innerHTML =
+    `<strong>Mistakes remaining</strong>
+     <span>${"&#9679;".repeat(remaining)}${"&#9675;".repeat(4 - remaining)}</span>`;
+
+  shell.appendChild(
+    mistakes
+  );
+
+  const solvedArea =
+    document.createElement(
+      "div"
+    );
+
+  solvedArea.className =
+    "connections-solved";
+
+  state.connectionsSolved
+    .forEach(
+      index => {
+
+        const group =
+          puzzle.groups[index];
+
+        const card =
+          document.createElement(
+            "div"
+          );
+
+        card.className =
+          `connections-group connections-${group.level}`;
+
+        card.innerHTML =
+          `<strong>${group.label}</strong>
+           <span>${group.words.join(", ")}</span>`;
+
+        solvedArea.appendChild(
+          card
+        );
+
+      }
+    );
+
+  shell.appendChild(
+    solvedArea
+  );
+
+  const grid =
+    document.createElement(
+      "div"
+    );
+
+  grid.className =
+    "connections-grid";
+
+  puzzle.words
+    .forEach(
+      word => {
+
+        if (
+          solvedWords.has(word)
+        ) {
+          return;
+        }
+
+        const button =
+          document.createElement(
+            "button"
+          );
+
+        button.type =
+          "button";
+
+        button.className =
+          "connections-word";
+
+        button.textContent =
+          word;
+
+        button.disabled =
+          state.connectionsMistakes >= 4;
+
+        if (
+          state.selected.includes(
+            word
+          )
+        ) {
+
+          button.classList.add(
+            "selected"
+          );
+
+        }
+
+        button.addEventListener(
+          "click",
+          () => {
+
+            if (
+              state.connectionsMistakes >= 4
+            ) {
+              return;
+            }
+
+            if (
+              state.selected.includes(
+                word
+              )
+            ) {
+
+              state.selected =
+                state.selected.filter(
+                  item =>
+                    item !== word
+                );
+
+            }
+
+            else {
+
+              if (
+                state.selected.length >= 4
+              ) {
+
+                setFeedback(
+                  "You can select exactly four words at a time.",
+                  true
+                );
+
+                return;
+
+              }
+
+              state.selected.push(
+                word
+              );
+
+            }
+
+            renderCurrentGame();
+
+          }
+        );
+
+        grid.appendChild(
+          button
+        );
+
+      }
+    );
+
+  shell.appendChild(
+    grid
+  );
+
+  const counter =
+    document.createElement(
+      "div"
+    );
+
+  counter.className =
+    "connections-counter";
+
+  counter.textContent =
+    state.connectionsMistakes >= 4
+      ?
+      "Board locked - reset, hint or reveal the solution."
+      :
+      `${state.selected.length} / 4 selected`;
+
+  shell.appendChild(
+    counter
+  );
+
+  area.appendChild(
+    shell
+  );
+
+}
+
+
+function checkConnections() {
+
+  const puzzle =
+    state.puzzle;
+
+  if (
+    state.connectionsMistakes >= 4
+  ) {
+
+    setFeedback(
+      "No mistakes remaining. Reset the puzzle or reveal the solution.",
+      true
+    );
+
+    return false;
+
+  }
+
+  if (
+    state.selected.length !== 4
+  ) {
+
+    setFeedback(
+      "Select exactly four words before checking.",
+      true
+    );
+
+    return false;
+
+  }
+
+  const guess =
+    [...state.selected]
+      .sort();
+
+  const matchIndex =
+    puzzle.groups.findIndex(
+      (group, index) => {
+
+        if (
+          state.connectionsSolved
+            .includes(index)
+        ) {
+          return false;
+        }
+
+        const answer =
+          [...group.words]
+            .sort();
+
+        return answer.every(
+          (word, i) =>
+            word === guess[i]
+        );
+
+      }
+    );
+
+  if (
+    matchIndex >= 0
+  ) {
+
+    const group =
+      puzzle.groups[
+        matchIndex
+      ];
+
+    state.connectionsSolved
+      .push(
+        matchIndex
+      );
+
+    state.selected =
+      [];
+
+    renderCurrentGame();
+
+    setFeedback(
+      `${group.difficulty}: ${group.label}`
+    );
+
+    if (
+      state.connectionsSolved.length === 4
+    ) {
+
+      finishPuzzle();
+
+      return true;
+
+    }
+
+    return false;
+
+  }
+
+  const oneAway =
+    puzzle.groups.some(
+      (group, index) => {
+
+        if (
+          state.connectionsSolved
+            .includes(index)
+        ) {
+          return false;
+        }
+
+        const matching =
+          state.selected.filter(
+            word =>
+              group.words.includes(
+                word
+              )
+          ).length;
+
+        return matching === 3;
+
+      }
+    );
+
+  state.connectionsMistakes +=
+    1;
+
+  state.selected =
+    [];
+
+  renderCurrentGame();
+
+  const remaining =
+    4 -
+    state.connectionsMistakes;
+
+  if (
+    remaining <= 0
+  ) {
+
+    setFeedback(
+      "Four mistakes used. The board is locked. Reset, use a hint, or reveal the solution.",
+      true
+    );
+
+    return false;
+
+  }
+
+  setFeedback(
+    oneAway
+      ?
+      `One away! ${remaining} mistake${remaining === 1 ? "" : "s"} remaining.`
+      :
+      `Not a group. ${remaining} mistake${remaining === 1 ? "" : "s"} remaining.`,
+    true
+  );
+
+  return false;
+
+}
+
+/* ==========================================================
    GET PUZZLE
    ========================================================== */
 
@@ -3016,6 +3789,16 @@ function getPuzzle(
       dateKey,
       mode
     );
+
+  if (
+    gameKey === "connections"
+  ) {
+    return createConnectionsPuzzle(
+      token,
+      dateKey,
+      mode
+    );
+  }
 
   if (
     gameKey === "queens"
@@ -3115,6 +3898,12 @@ function openGame(
     0;
 
   state.elapsed =
+    0;
+
+    state.connectionsSolved =
+    [];
+
+    state.connectionsMistakes =
     0;
 
     state.queensMarks =
@@ -3224,6 +4013,12 @@ function renderCurrentGame() {
   area.innerHTML = "";
 
   if (
+    state.gameKey === "connections"
+  ) {
+    renderConnections(area);
+  }
+
+  else if (
     state.gameKey === "queens"
   ) {
     renderQueens(area);
@@ -5419,7 +6214,17 @@ function revealSolution() {
 
   stopTimer();
 
-  if (state.gameKey === "queens") {
+  if (state.gameKey === "connections") {
+
+    state.connectionsSolved =
+      [0, 1, 2, 3];
+
+    state.selected =
+      [];
+
+  }
+
+  else if (state.gameKey === "queens") {
 
     state.queensMarks =
       Array(
@@ -5538,6 +6343,13 @@ function checkPuzzle() {
   let solved = false;
 
   if (
+    state.gameKey === "connections"
+  ) {
+    checkConnections();
+    return;
+  }
+
+  if (
     state.gameKey === "queens"
   ) {
     solved = checkQueens();
@@ -5607,6 +6419,37 @@ function useHint() {
 
   const puzzle =
     state.puzzle;
+
+  if (
+    state.gameKey === "connections"
+  ) {
+
+    const unsolvedIndex =
+      puzzle.groups.findIndex(
+        (_, index) =>
+          !state.connectionsSolved.includes(
+            index
+          )
+      );
+
+    if (
+      unsolvedIndex >= 0
+    ) {
+
+      const group =
+        puzzle.groups[
+          unsolvedIndex
+        ];
+
+      setFeedback(
+        `Hint: ${group.words[0]} and ${group.words[1]} belong together.`
+      );
+
+    }
+
+    return;
+
+  }
 
   if (
     state.gameKey === "queens"

@@ -4061,3 +4061,153 @@ small {
     font-size: 20px;
   }
 }
+/* ==========================================================
+   CONNECTIONS
+   ========================================================== */
+
+.connections-shell {
+  width: 100%;
+  max-width: 720px;
+  margin: 0 auto;
+}
+
+.connections-mistakes {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  margin: 8px 0 18px;
+  font-size: 0.9rem;
+}
+
+.connections-mistakes span {
+  color: #173f32;
+  font-size: 1rem;
+  letter-spacing: 5px;
+}
+
+.connections-solved {
+  display: grid;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.connections-group {
+  display: flex;
+  min-height: 84px;
+  padding: 14px 12px;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  border-radius: 16px;
+  color: #1b3028;
+  text-align: center;
+}
+
+.connections-group strong {
+  margin-bottom: 5px;
+  font-size: 0.9rem;
+  letter-spacing: 0.055em;
+}
+
+.connections-group span {
+  font-size: 0.82rem;
+  line-height: 1.35;
+}
+
+.connections-yellow {
+  background: #f2df77;
+}
+
+.connections-green {
+  background: #a7c98d;
+}
+
+.connections-blue {
+  background: #98bad2;
+}
+
+.connections-purple {
+  background: #b7a2ca;
+}
+
+.connections-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.connections-word {
+  min-width: 0;
+  min-height: 76px;
+  padding: 8px 4px;
+  border: 0;
+  border-radius: 13px;
+  background: #f0eee6;
+  color: #18352b;
+  font-family: inherit;
+  font-size: clamp(0.67rem, 2.25vw, 0.88rem);
+  font-weight: 800;
+  line-height: 1.1;
+  overflow-wrap: anywhere;
+  cursor: pointer;
+  transition:
+    transform 0.12s ease,
+    background 0.12s ease,
+    color 0.12s ease;
+}
+
+.connections-word:hover {
+  transform: translateY(-1px);
+}
+
+.connections-word:active {
+  transform: scale(0.96);
+}
+
+.connections-word.selected {
+  background: #173f32;
+  color: #fffdf5;
+  transform: scale(0.97);
+}
+
+.connections-word:disabled {
+  cursor: default;
+  opacity: 0.55;
+}
+
+.connections-counter {
+  margin-top: 13px;
+  color: #496158;
+  font-size: 0.78rem;
+  font-weight: 700;
+  text-align: center;
+}
+
+@media (max-width: 520px) {
+
+  .connections-grid {
+    gap: 6px;
+  }
+
+  .connections-word {
+    min-height: 65px;
+    padding: 6px 3px;
+    border-radius: 11px;
+    font-size: 0.63rem;
+  }
+
+  .connections-group {
+    min-height: 74px;
+    border-radius: 13px;
+  }
+
+  .connections-group strong {
+    font-size: 0.8rem;
+  }
+
+  .connections-group span {
+    font-size: 0.74rem;
+  }
+
+}
