@@ -269,16 +269,16 @@ const RULES = {
       <div>
         <strong>Fill every square with a sun or moon.</strong>
         <br>
-        Tap once for ☀, twice for ☾, and a third time to clear.
+        Tap once for Sun, twice for Moon, and a third time to clear.
       </div>
     </div>
 
     <div class="rule-row">
       <div class="rule-icon">2</div>
       <div>
-        <strong>Never make three identical symbols in a row.</strong>
+        <strong>No more than two matching symbols may touch in a line.</strong>
         <br>
-        This applies horizontally and vertically.
+        Three Suns or three Moons can never appear consecutively, horizontally or vertically.
       </div>
     </div>
 
@@ -287,16 +287,16 @@ const RULES = {
       <div>
         <strong>Every row and column is balanced.</strong>
         <br>
-        Each contains exactly four suns and four moons.
+        On the 8×8 board, each row and column contains exactly four Suns and four Moons.
       </div>
     </div>
 
     <div class="rule-row">
-      <div class="rule-icon">≠</div>
+      <div class="rule-icon">✓</div>
       <div>
-        <strong>No duplicate completed lines.</strong>
+        <strong>There is one correct answer.</strong>
         <br>
-        No two completed rows or columns may be identical.
+        Use deduction from the fixed clues. You never need an extra row-uniqueness rule.
       </div>
     </div>
   `,
@@ -2109,6 +2109,15 @@ function createEclipsePuzzle(token) {
   const size = 8;
   const half = size / 2;
 
+  /*
+    Eclipse uses the same core logic as the sun/moon game:
+    - every cell is Sun or Moon
+    - no three identical symbols consecutively
+    - every row and column has an equal number of each symbol
+
+    There is deliberately NO "all rows/columns must be unique" rule.
+  */
+
   function lineOkay(line) {
 
     let suns = 0;
@@ -2183,37 +2192,6 @@ function createEclipsePuzzle(token) {
       return values;
     }
 
-    function completedLinesUnique() {
-
-      const rows = new Set();
-      const cols = new Set();
-
-      for (
-        let i = 0;
-        i < size;
-        i++
-      ) {
-
-        const row = rowValues(i);
-        const col = colValues(i);
-
-        if (!row.includes(0)) {
-          const key = row.join("");
-          if (rows.has(key)) return false;
-          rows.add(key);
-        }
-
-        if (!col.includes(0)) {
-          const key = col.join("");
-          if (cols.has(key)) return false;
-          cols.add(key);
-        }
-
-      }
-
-      return true;
-    }
-
     function fill(index = 0) {
 
       if (
@@ -2242,7 +2220,6 @@ function createEclipsePuzzle(token) {
         if (
           lineOkay(rowValues(row)) &&
           lineOkay(colValues(col)) &&
-          completedLinesUnique() &&
           fill(index + 1)
         ) {
           return true;
@@ -2276,6 +2253,12 @@ function createEclipsePuzzle(token) {
     );
   }
 
+  /*
+    Count valid solutions using ONLY the real Eclipse rules.
+    This is used while removing clues so the final puzzle has
+    exactly one answer without inventing any extra rule.
+  */
+
   function countSolutions(
     starting,
     limit = 2
@@ -2308,36 +2291,6 @@ function createEclipsePuzzle(token) {
       }
 
       return values;
-    }
-
-    function completedLinesUnique() {
-
-      const rows = new Set();
-      const cols = new Set();
-
-      for (
-        let i = 0;
-        i < size;
-        i++
-      ) {
-
-        const row = rowValues(i);
-        const col = colValues(i);
-
-        if (!row.includes(0)) {
-          const key = row.join("");
-          if (rows.has(key)) return false;
-          rows.add(key);
-        }
-
-        if (!col.includes(0)) {
-          const key = col.join("");
-          if (cols.has(key)) return false;
-          cols.add(key);
-        }
-      }
-
-      return true;
     }
 
     function search() {
@@ -2379,8 +2332,7 @@ function createEclipsePuzzle(token) {
 
           if (
             lineOkay(rowValues(row)) &&
-            lineOkay(colValues(col)) &&
-            completedLinesUnique()
+            lineOkay(colValues(col))
           ) {
             possible.push(value);
           }
@@ -2445,11 +2397,16 @@ function createEclipsePuzzle(token) {
       rng
     );
 
+  /*
+    Hard mode: aim for roughly 20-24 fixed cells.
+    A clue is removed only when the puzzle still has exactly
+    one solution under the real sun/moon rules.
+  */
   const targetClues =
     randomInt(
       rng,
-      23,
-      27
+      20,
+      24
     );
 
   for (
@@ -2487,9 +2444,9 @@ function createEclipsePuzzle(token) {
     prompt:
       "Balance the suns and moons.",
     description:
-      "Complete the 8×8 grid. Every row and column needs four suns and four moons, no triples are allowed, and completed lines cannot repeat.",
+      "Fill the 8×8 grid with suns and moons. Every row and column must contain four of each, and three matching symbols can never appear consecutively horizontally or vertically.",
     explanation:
-      "The unique solution follows from equal symbol counts, the no-three rule, fixed clues and non-duplicate rows and columns."
+      "The unique solution follows only from the fixed clues, equal sun/moon counts in every row and column, and the rule that no three identical symbols may appear consecutively."
   };
 }
 
@@ -4427,9 +4384,6 @@ function checkEclipse() {
     return true;
   }
 
-  const rows = [];
-  const columns = [];
-
   for (
     let row = 0;
     row < size;
@@ -4445,8 +4399,6 @@ function checkEclipse() {
     if (!validLine(values)) {
       return false;
     }
-
-    rows.push(values.join(""));
   }
 
   for (
@@ -4470,16 +4422,9 @@ function checkEclipse() {
     if (!validLine(values)) {
       return false;
     }
-
-    columns.push(
-      values.join("")
-    );
   }
 
-  return (
-    new Set(rows).size === size &&
-    new Set(columns).size === size
-  );
+  return true;
 }
 
 /* ==========================================================
