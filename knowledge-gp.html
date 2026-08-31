@@ -638,6 +638,579 @@ h1{
   }
 }
 </style>
+
+<style id="deans-gp-mobile-v2">
+
+/* ==========================================================
+   DEANS GP MOBILE V2
+   ========================================================== */
+
+html,
+body {
+  max-width: 100%;
+  overflow-x: hidden;
+}
+
+button {
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+}
+
+/* Tablet */
+
+@media (max-width: 900px) {
+
+  body {
+    background: #e6eadc;
+  }
+
+  .app {
+    width: 100%;
+    padding: 10px;
+  }
+
+  .hero {
+    border-radius: 22px;
+  }
+
+  .title-row {
+    padding: 18px 18px 14px;
+  }
+
+  .title-row h1 {
+    font-size: clamp(2rem, 8vw, 3.3rem);
+  }
+
+  .subtitle {
+    max-width: 520px;
+    font-size: .9rem;
+  }
+
+  .race-layout {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 0 10px 10px;
+  }
+
+  .track-card {
+    width: 100%;
+    min-height: 0;
+    height: auto;
+    aspect-ratio: 4 / 3;
+  }
+
+  .question-card {
+    width: 100%;
+    min-height: 0;
+  }
+
+}
+
+
+/* ==========================================================
+   PHONE
+   ========================================================== */
+
+@media (max-width: 600px) {
+
+  body {
+    background: #f1eee5;
+  }
+
+  .app {
+    padding: 0;
+  }
+
+  .topbar {
+    margin: 0;
+    padding: 10px 12px;
+    background: #f7f2e8;
+  }
+
+  .brand {
+    font-size: .88rem;
+  }
+
+  .brand-mark {
+    width: 32px;
+    height: 32px;
+    font-size: .62rem;
+  }
+
+  .back {
+    padding: 7px 11px;
+    font-size: .72rem;
+    background: #ebe7dc;
+  }
+
+  .hero {
+    border: 0;
+    border-radius: 0;
+    box-shadow: none;
+  }
+
+
+  /* --------------------------
+     Compact title
+     -------------------------- */
+
+  .title-row {
+    display: block;
+    padding: 14px 14px 12px;
+  }
+
+  .eyebrow {
+    margin-bottom: 3px;
+    font-size: .58rem;
+  }
+
+  h1 {
+    font-size: clamp(2rem, 10vw, 2.8rem);
+    line-height: .94;
+  }
+
+  .subtitle {
+    margin-top: 7px;
+    max-width: 95%;
+    font-size: .78rem;
+    line-height: 1.35;
+  }
+
+  .daily-chip {
+    display: none;
+  }
+
+
+  /* --------------------------
+     Main layout
+     -------------------------- */
+
+  .race-layout {
+    display: flex;
+    flex-direction: column;
+    padding: 0;
+    gap: 0;
+  }
+
+
+  /* --------------------------
+     Race broadcast
+     -------------------------- */
+
+  .track-card {
+    width: 100%;
+    height: auto;
+    min-height: 0;
+    aspect-ratio: 1.08 / 1;
+    border-radius: 0;
+  }
+
+  .track-wrap {
+    inset: 0;
+  }
+
+  .track-svg {
+    width: 100%;
+    height: 100%;
+  }
+
+
+  /* Race Control */
+
+  .race-control {
+    top: 8px;
+    min-width: 0;
+    width: auto;
+    max-width: calc(100% - 28px);
+
+    padding: 7px 12px;
+
+    font-size: .68rem;
+    line-height: 1.15;
+
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+
+  /* --------------------------
+     Mobile HUD
+     -------------------------- */
+
+  .hud {
+    left: 7px;
+    right: 7px;
+    bottom: 7px;
+
+    display: grid;
+    grid-template-columns:
+      repeat(3, minmax(0, 1fr));
+
+    gap: 4px;
+  }
+
+  .hud-item {
+    min-width: 0;
+    padding: 5px 6px;
+
+    border-radius: 8px;
+
+    background:
+      rgba(5, 24, 17, .91);
+  }
+
+  .hud-item small {
+    font-size: .43rem;
+    letter-spacing: .06em;
+  }
+
+  .hud-item strong {
+    margin-top: 1px;
+
+    font-size: .66rem;
+
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+
+  /* --------------------------
+     Make DEANS readable
+     -------------------------- */
+
+  .car-label {
+    font-size: 11px;
+    stroke-width: 3px;
+  }
+
+
+  /* --------------------------
+     Question panel
+     -------------------------- */
+
+  .question-card {
+    min-height: 0;
+
+    padding:
+      16px
+      14px
+      calc(20px + env(safe-area-inset-bottom));
+
+    border-radius: 0;
+
+    border-top:
+      4px solid #173f32;
+
+    background: #fffaf0;
+  }
+
+  .phase-badge {
+    min-height: 25px;
+
+    padding: 4px 9px;
+
+    font-size: .61rem;
+  }
+
+  .category {
+    margin-top: 13px;
+    font-size: .6rem;
+  }
+
+  .question {
+    margin:
+      6px
+      0
+      13px;
+
+    font-size:
+      clamp(1.28rem, 6vw, 1.65rem);
+
+    line-height: 1.12;
+  }
+
+
+  /* --------------------------
+     Big mobile timer
+     -------------------------- */
+
+  .timer-row {
+    position: sticky;
+    top: 0;
+
+    z-index: 10;
+
+    gap: 9px;
+
+    margin:
+      0
+      -4px
+      13px;
+
+    padding:
+      7px
+      4px;
+
+    background:
+      rgba(255, 250, 240, .96);
+
+    backdrop-filter:
+      blur(8px);
+  }
+
+  .timer-number {
+    width: 55px;
+
+    font-size: 1.35rem;
+
+    font-weight: 950;
+  }
+
+  .timer-track {
+    height: 10px;
+  }
+
+
+  /* --------------------------
+     Thumb-friendly answers
+     -------------------------- */
+
+  .answers {
+    gap: 8px;
+  }
+
+  .answer {
+    min-height: 57px;
+
+    padding: 9px 10px;
+
+    border-radius: 13px;
+
+    font-size: .87rem;
+
+    line-height: 1.22;
+  }
+
+  .answer-letter {
+    width: 34px;
+    height: 34px;
+
+    flex: 0 0 34px;
+
+    border-radius: 9px;
+
+    font-size: .8rem;
+  }
+
+  .answer:active:not(:disabled) {
+    transform: scale(.985);
+  }
+
+  .answer-feedback {
+    min-height: 36px;
+
+    margin-top: 10px;
+
+    font-size: .76rem;
+  }
+
+
+  /* --------------------------
+     Start/results overlays
+     -------------------------- */
+
+  .start-overlay,
+  .results-overlay {
+    position: absolute;
+
+    padding: 15px;
+  }
+
+  .overlay-panel {
+    max-height:
+      calc(100% - 20px);
+
+    overflow-y: auto;
+
+    padding: 20px 17px;
+
+    border-radius: 20px;
+  }
+
+  .overlay-panel h2 {
+    font-size: 2rem;
+  }
+
+  .overlay-panel p {
+    margin: 9px 0 15px;
+
+    font-size: .8rem;
+    line-height: 1.35;
+  }
+
+  .lights {
+    gap: 5px;
+    margin-bottom: 12px;
+  }
+
+  .light {
+    width: 27px;
+    height: 27px;
+  }
+
+  .primary {
+    min-height: 48px;
+
+    padding: 11px 22px;
+
+    font-size: .82rem;
+  }
+
+  .result-position {
+    margin: 6px 0;
+
+    font-size: 3rem;
+  }
+
+  .result-grid {
+    gap: 6px;
+
+    margin:
+      13px
+      0;
+  }
+
+  .result-stat {
+    padding: 8px;
+  }
+
+
+  /* --------------------------
+     Footer
+     -------------------------- */
+
+  .footer-note {
+    padding:
+      12px
+      16px
+      calc(14px + env(safe-area-inset-bottom));
+
+    font-size: .61rem;
+  }
+
+}
+
+
+/* ==========================================================
+   SMALL PHONES
+   ========================================================== */
+
+@media (max-width: 390px) {
+
+  .topbar {
+    padding:
+      8px
+      10px;
+  }
+
+  .title-row {
+    padding:
+      11px
+      12px
+      10px;
+  }
+
+  h1 {
+    font-size: 1.95rem;
+  }
+
+  .subtitle {
+    font-size: .72rem;
+  }
+
+  .track-card {
+    aspect-ratio: 1 / 1;
+  }
+
+  .race-control {
+    font-size: .61rem;
+  }
+
+  .hud-item {
+    padding:
+      4px
+      5px;
+  }
+
+  .hud-item strong {
+    font-size: .61rem;
+  }
+
+  .question-card {
+    padding-left: 11px;
+    padding-right: 11px;
+  }
+
+  .question {
+    font-size: 1.22rem;
+  }
+
+  .answer {
+    min-height: 54px;
+    font-size: .8rem;
+  }
+
+}
+
+
+/* ==========================================================
+   VERY SHORT LANDSCAPE PHONES
+   ========================================================== */
+
+@media (
+  max-height: 500px
+)
+and (
+  orientation: landscape
+) {
+
+  .title-row {
+    display: none;
+  }
+
+  .race-layout {
+    display: grid;
+    grid-template-columns:
+      minmax(0, 1.1fr)
+      minmax(280px, .9fr);
+  }
+
+  .track-card {
+    height:
+      calc(100vh - 58px);
+
+    aspect-ratio: auto;
+  }
+
+  .question-card {
+    max-height:
+      calc(100vh - 58px);
+
+    overflow-y: auto;
+
+    border-top: 0;
+  }
+
+  .footer-note {
+    display: none;
+  }
+
+}
+
+</style>
 </head>
 
 <body>
