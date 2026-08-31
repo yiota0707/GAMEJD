@@ -3687,3 +3687,265 @@ small {
   color: #000 !important;
   font-weight: 900 !important;
 }
+
+/* ==========================================================
+   ECLIPSE — SUN / MOON LOGIC
+   ========================================================== */
+
+.eclipse-board {
+  width: min(100%, 560px);
+  margin: 0 auto;
+  display: grid;
+  border: 2px solid var(--ink);
+  border-radius: 18px;
+  overflow: hidden;
+  background: var(--paper);
+}
+
+.eclipse-cell {
+  position: relative;
+  aspect-ratio: 1 / 1;
+  min-width: 0;
+  padding: 0;
+  border: 0;
+  border-right: 1px solid #d8d4ca;
+  border-bottom: 1px solid #d8d4ca;
+  background: #fffdf8;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  touch-action: manipulation;
+}
+
+.eclipse-cell:nth-child(8n) {
+  border-right: 0;
+}
+
+.eclipse-cell:nth-last-child(-n + 8) {
+  border-bottom: 0;
+}
+
+.eclipse-cell.sun {
+  background: #fbf4df;
+}
+
+.eclipse-cell.moon {
+  background: #eef2fa;
+}
+
+.eclipse-cell.fixed {
+  background: #efede8;
+  box-shadow: inset 0 0 0 1px rgba(24,35,30,0.11);
+  cursor: default;
+}
+
+.eclipse-cell:disabled {
+  opacity: 1;
+}
+
+.sun-symbol {
+  width: clamp(22px, 6.5vw, 38px);
+  aspect-ratio: 1;
+  display: block;
+  border-radius: 50%;
+  background: #f2ba43;
+  border: 4px solid #b97936;
+}
+
+.moon-symbol {
+  position: relative;
+  width: clamp(25px, 7vw, 42px);
+  aspect-ratio: 1;
+  display: block;
+  border-radius: 50%;
+  background: #587fd0;
+  border: 4px solid #3156a0;
+}
+
+.moon-symbol::after {
+  content: "";
+  position: absolute;
+  width: 78%;
+  height: 78%;
+  left: -7%;
+  top: -6%;
+  border-radius: 50%;
+  background: #eef2fa;
+}
+
+.eclipse-cell.fixed .moon-symbol::after {
+  background: #efede8;
+}
+
+.eclipse-key {
+  margin-top: 13px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+}
+
+.eclipse-key span {
+  min-height: 32px;
+  padding: 5px 10px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: rgba(255,255,255,0.65);
+  color: var(--muted);
+  font-size: 11px;
+  font-weight: 800;
+}
+
+.eclipse-key-sun {
+  width: 15px;
+  height: 15px;
+  display: inline-block;
+  border-radius: 50%;
+  background: #f2ba43;
+  border: 2px solid #b97936;
+}
+
+.eclipse-key-moon {
+  position: relative;
+  width: 16px;
+  height: 16px;
+  display: inline-block;
+  border-radius: 50%;
+  background: #587fd0;
+  border: 2px solid #3156a0;
+}
+
+.eclipse-key-moon::after {
+  content: "";
+  position: absolute;
+  width: 76%;
+  height: 76%;
+  left: -8%;
+  top: -7%;
+  border-radius: 50%;
+  background: #fffdf8;
+}
+
+/* ==========================================================
+   CIPHER — SIX SYMBOL HARD MODE
+   ========================================================== */
+
+.cipher-six {
+  letter-spacing: 0.08em;
+  font-size: clamp(25px, 7vw, 38px);
+}
+
+.cipher-six-keypad {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+/* ==========================================================
+   BALANCE — EIGHT WEIGHTS HARD MODE
+   ========================================================== */
+
+.balance-hard-clues {
+  margin-bottom: 14px;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.balance-hard-clues > div {
+  min-width: 0;
+  padding: 13px;
+  border: 1px solid var(--border);
+  border-radius: 17px;
+  background: #f7f5ef;
+  display: grid;
+  gap: 4px;
+}
+
+.balance-hard-clues strong {
+  color: var(--green-900);
+  font-size: 12px;
+  letter-spacing: 0.08em;
+}
+
+.balance-hard-clues span {
+  color: var(--ink);
+  font-size: 12px;
+}
+
+.balance-hard-tray {
+  min-height: 138px;
+}
+
+.weight-grid {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+/* ==========================================================
+   SIGNAL — VERY HARD MODE
+   ========================================================== */
+
+.signal-display {
+  margin-bottom: 14px;
+  padding: 18px 14px;
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  background: #f7f5ef;
+  text-align: center;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: clamp(20px, 5vw, 29px);
+  font-weight: 800;
+  line-height: 1.5;
+}
+
+.signal-clue-list {
+  margin-bottom: 14px;
+  display: grid;
+  gap: 8px;
+}
+
+.signal-clue-list > div {
+  padding: 10px 12px;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  background: #fafaf7;
+  line-height: 1.4;
+}
+
+@media (max-width: 430px) {
+  .eclipse-board {
+    border-radius: 14px;
+  }
+
+  .balance-hard-clues {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .cipher-six-keypad,
+  .weight-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .weight-grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+
+
+
+/* ==========================================================
+   SOLUTION BUTTON
+   ========================================================== */
+
+.solution-button {
+  border-color: #c8b98f;
+  background: #fff9e8;
+  color: var(--ink);
+}
+
+.solution-button:active {
+  background: #f7edcf;
+}

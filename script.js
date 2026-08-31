@@ -82,47 +82,46 @@ const GAME_META = {
     icon: "⌨",
     color: "#e8e0f1",
     difficulty: "VERY HARD",
-    time: "6–15 min",
+    time: "8–18 min",
     tags: "Deduction · Codes",
     blurb:
-      "Decode a five-symbol system from positional evidence."
+      "Decode a six-symbol system from overlapping positional evidence."
   },
 
-  shift: {
-    title: "Shift",
-    icon: "↔",
+  eclipse: {
+    title: "Eclipse",
+    icon: "◐",
     color: "#efdcd7",
-    difficulty: "HARD",
-    time: "5–12 min",
-    tags: "Transformation · Patterns",
+    difficulty: "VERY HARD",
+    time: "8–20 min",
+    tags: "Logic · Binary · Deduction",
     blurb:
-      "Shift complete rows until a scrambled pattern locks into place."
+      "Fill an 8×8 grid with suns and moons using balance and adjacency rules."
   },
 
   balance: {
     title: "Balance",
     icon: "⚖",
     color: "#efe4d3",
-    difficulty: "HARD",
-    time: "5–12 min",
-    tags: "Numbers · Combinations",
+    difficulty: "VERY HARD",
+    time: "8–18 min",
+    tags: "Numbers · Partition · Deduction",
     blurb:
-      "Partition six weights across two constrained trays."
+      "Partition eight weights using totals plus parity and spread constraints."
   },
 
   signal: {
     title: "Signal",
     icon: "⌁",
     color: "linear-gradient(135deg,#dfece4,#b8d4c5)",
-    difficulty: "HARD",
-    time: "4–12 min",
+    difficulty: "VERY HARD",
+    time: "7–18 min",
     tags: "Patterns · Maths · Lateral",
     blurb:
-      "Infer a hidden transformation, sequence or ordering rule."
+      "Crack multi-step transformations, second differences and chained ordering rules."
   }
 
 };
-
 
 /* ==========================================================
    RULES
@@ -237,9 +236,9 @@ const RULES = {
 
   cipher: `
     <div class="rule-row">
-      <div class="rule-icon">5</div>
+      <div class="rule-icon">6</div>
       <div>
-        <strong>Find the five-symbol code.</strong>
+        <strong>Find the six-symbol code.</strong>
         <br>
         Every symbol appears exactly once.
       </div>
@@ -248,47 +247,56 @@ const RULES = {
     <div class="rule-row">
       <div class="rule-icon">◎</div>
       <div>
-        <strong>Use the positional clues.</strong>
+        <strong>Combine all the clues.</strong>
         <br>
-        Some clues say before, after, adjacent or forbidden positions.
+        Clues can describe ordering, adjacency, distance and forbidden positions.
       </div>
     </div>
 
     <div class="rule-row">
-      <div class="rule-icon">⌫</div>
+      <div class="rule-icon">≠</div>
       <div>
-        <strong>Tap the code to clear.</strong>
+        <strong>No single clue gives the answer.</strong>
         <br>
-        Use deduction rather than trying every permutation.
+        The complete order appears only when the clues are used together.
       </div>
     </div>
   `,
 
-  shift: `
+  eclipse: `
     <div class="rule-row">
-      <div class="rule-icon">↔</div>
+      <div class="rule-icon">☀</div>
       <div>
-        <strong>Shift whole rows.</strong>
+        <strong>Fill every square with a sun or moon.</strong>
         <br>
-        Symbols wrap around from one side to the other.
+        Tap once for ☀, twice for ☾, and a third time to clear.
       </div>
     </div>
 
     <div class="rule-row">
-      <div class="rule-icon">▦</div>
+      <div class="rule-icon">2</div>
       <div>
-        <strong>Match the target pattern.</strong>
+        <strong>Never make three identical symbols in a row.</strong>
         <br>
-        Every row must become identical to the target.
+        This applies horizontally and vertically.
       </div>
     </div>
 
     <div class="rule-row">
-      <div class="rule-icon">#</div>
+      <div class="rule-icon">4·4</div>
       <div>
-        <strong>Watch your move count.</strong>
+        <strong>Every row and column is balanced.</strong>
         <br>
-        Hard rounds use larger patterns than before.
+        Each contains exactly four suns and four moons.
+      </div>
+    </div>
+
+    <div class="rule-row">
+      <div class="rule-icon">≠</div>
+      <div>
+        <strong>No duplicate completed lines.</strong>
+        <br>
+        No two completed rows or columns may be identical.
       </div>
     </div>
   `,
@@ -297,9 +305,9 @@ const RULES = {
     <div class="rule-row">
       <div class="rule-icon">⚖</div>
       <div>
-        <strong>Fill both trays.</strong>
+        <strong>Split all eight weights.</strong>
         <br>
-        Each tray requires exactly three weights.
+        Each tray must contain exactly four weights.
       </div>
     </div>
 
@@ -308,16 +316,25 @@ const RULES = {
       <div>
         <strong>Hit both target totals.</strong>
         <br>
-        LEFT and RIGHT can have different targets.
+        Both trays have an exact required sum.
       </div>
     </div>
 
     <div class="rule-row">
-      <div class="rule-icon">1×</div>
+      <div class="rule-icon">◐</div>
       <div>
-        <strong>Each weight can be used once.</strong>
+        <strong>Watch parity too.</strong>
         <br>
-        Tap a selected weight to remove it.
+        Each tray has a required number of odd weights.
+      </div>
+    </div>
+
+    <div class="rule-row">
+      <div class="rule-icon">↔</div>
+      <div>
+        <strong>Match the required spread.</strong>
+        <br>
+        The difference between the largest and smallest weight matters.
       </div>
     </div>
   `,
@@ -326,18 +343,27 @@ const RULES = {
     <div class="rule-row">
       <div class="rule-icon">?</div>
       <div>
-        <strong>Find the hidden rule.</strong>
+        <strong>Discover the hidden system.</strong>
         <br>
-        Signal now changes puzzle format rather than always asking for four tiles.
+        Each round can use a different type of reasoning.
       </div>
     </div>
 
     <div class="rule-row">
-      <div class="rule-icon">→</div>
+      <div class="rule-icon">∆</div>
       <div>
-        <strong>Look for transformations.</strong>
+        <strong>Look deeper than the first difference.</strong>
         <br>
-        Numbers, letters, sequences and ordering can all appear.
+        Second differences and alternating operations can appear.
+      </div>
+    </div>
+
+    <div class="rule-row">
+      <div class="rule-icon">⇄</div>
+      <div>
+        <strong>Some rules have multiple stages.</strong>
+        <br>
+        Ordering and transformations may need to be combined.
       </div>
     </div>
   `,
@@ -352,6 +378,7 @@ const RULES = {
       </div>
     </div>
   `
+
 };
 
 
@@ -391,7 +418,7 @@ const state = {
 
   cipherGuess: null,
 
-  shiftRows: null,
+  eclipseMarks: null,
 
   balanceLeft: [],
 
@@ -1808,28 +1835,21 @@ function createRoutePuzzle(
 
 
 /* ==========================================================
-   CIPHER GENERATOR
+   CIPHER GENERATOR — VERY HARD
    ========================================================== */
 
-function createCipherPuzzle(
-  token
-) {
+function createCipherPuzzle(token) {
 
   const rng =
     rngFrom(
-      token + ":cipher"
+      token + ":cipher-hard"
     );
 
   const symbolSets = [
-
-    ["▲","●","■","◆","★"],
-
-    ["☀","☾","✦","◇","○"],
-
-    ["A","K","M","R","X"],
-
-    ["♠","♥","♣","♦","●"]
-
+    ["◆","●","▲","■","✦","⬟"],
+    ["☀","☾","✦","◇","○","△"],
+    ["A","K","M","R","X","Z"],
+    ["♠","♥","♣","♦","●","★"]
   ];
 
   const symbols =
@@ -1849,433 +1869,1014 @@ function createCipherPuzzle(
       rng
     );
 
-  const clues =
-    [];
+  function permutations(array) {
 
-  clues.push(
-    `${answer[0]} is first.`
-  );
+    if (
+      array.length <= 1
+    ) {
+      return [array];
+    }
 
-  clues.push(
-    `${answer[4]} is last.`
-  );
+    const output = [];
 
-  clues.push(
-    `${answer[1]} is immediately after ${answer[0]}.`
-  );
+    array.forEach(
+      (value, index) => {
 
-  clues.push(
-    `${answer[3]} is immediately before ${answer[4]}.`
-  );
+        const remainder = [
+          ...array.slice(0, index),
+          ...array.slice(index + 1)
+        ];
 
-  clues.push(
-    `${answer[2]} sits between ${answer[1]} and ${answer[3]}.`
-  );
+        permutations(remainder)
+          .forEach(
+            tail => {
+              output.push([
+                value,
+                ...tail
+              ]);
+            }
+          );
 
-  return {
-
-    type:
-      "cipher",
-
-    symbols,
-
-    answer,
-
-    clues,
-
-    prompt:
-      "Decode the five-symbol sequence.",
-
-    description:
-      "Use all positional clues to determine the only valid ordering.",
-
-    explanation:
-      "The clues lock the two ends first, then force the remaining symbols into the only positions that satisfy adjacency and ordering."
-
-  };
-
-}
-
-
-/* ==========================================================
-   SHIFT GENERATOR
-   ========================================================== */
-
-function createShiftPuzzle(
-  token
-) {
-
-  const rng =
-    rngFrom(
-      token + ":shift"
+      }
     );
 
-  const symbols =
-    shuffle(
-      [
-        "●",
-        "▲",
-        "■",
-        "◆",
-        "✦",
-        "○"
-      ],
-      rng
-    );
-
-  const target =
-    [];
-
-  const start =
-    [];
-
-  for (
-    let row = 0;
-    row < 6;
-    row++
-  ) {
-
-    target.push(
-      [...symbols]
-    );
-
-    const amount =
-      randomInt(
-        rng,
-        1,
-        5
-      );
-
-    start.push(
-      [
-        ...symbols.slice(
-          amount
-        ),
-        ...symbols.slice(
-          0,
-          amount
-        )
-      ]
-    );
-
+    return output;
   }
 
-  return {
+  const allCandidates =
+    permutations(symbols);
 
-    type:
-      "shift",
+  const cluePool = [];
 
-    target,
+  function addClue(text, test) {
+    if (test(answer)) {
+      cluePool.push({text, test});
+    }
+  }
 
-    start,
-
-    prompt:
-      "Reconstruct the six-row pattern.",
-
-    description:
-      "Shift whole rows left or right. Symbols wrap around.",
-
-    explanation:
-      "Each row is a cyclic permutation of the same sequence; finding its offset restores the full grid."
-
-  };
-
-}
-
-
-/* ==========================================================
-   BALANCE GENERATOR
-   ========================================================== */
-
-function createBalancePuzzle(
-  token
-) {
-
-  const rng =
-    rngFrom(
-      token + ":balance"
-    );
-
-  const weights =
-    shuffle(
-
-      [
-        randomInt(rng,2,8),
-        randomInt(rng,3,10),
-        randomInt(rng,5,12),
-        randomInt(rng,7,14),
-        randomInt(rng,9,16),
-        randomInt(rng,11,18)
-      ],
-
-      rng
-
-    );
-
-  const leftAnswer =
-    [
-      weights[0],
-      weights[2],
-      weights[5]
-    ];
-
-  const rightAnswer =
-    [
-      weights[1],
-      weights[3],
-      weights[4]
-    ];
-
-  const leftTarget =
-    leftAnswer.reduce(
-      (
-        a,
-        b
-      ) =>
-        a + b,
-      0
-    );
-
-  const rightTarget =
-    rightAnswer.reduce(
-      (
-        a,
-        b
-      ) =>
-        a + b,
-      0
-    );
-
-  return {
-
-    type:
-      "balance",
-
-    weights,
-
-    leftTarget,
-
-    rightTarget,
-
-    prompt:
-      "Build both target trays.",
-
-    description:
-      `Choose three weights for LEFT = ${leftTarget} and three for RIGHT = ${rightTarget}.`,
-
-    explanation:
-      "Every weight must be used exactly once, turning two independent sums into one linked partition problem."
-
-  };
-
-}
-
-
-/* ==========================================================
-   SIGNAL GENERATOR
-   ========================================================== */
-
-function createSignalPuzzle(
-  token
-) {
-
-  const rng =
-    rngFrom(
-      token + ":signal"
-    );
-
-  const type =
-    randomInt(
-      rng,
-      0,
-      2
-    );
-
-  if (
-    type === 0
+  for (
+    let i = 0;
+    i < answer.length;
+    i++
   ) {
 
-    const n =
-      randomInt(
-        rng,
-        2,
-        6
-      );
-
-    const sequence =
-      [];
-
     for (
-      let i = 1;
-      i <= 5;
-      i++
+      let j = i + 1;
+      j < answer.length;
+      j++
     ) {
 
-      sequence.push(
-        i * (
-          i + n
-        )
+      const a = answer[i];
+      const b = answer[j];
+
+      addClue(
+        `${a} is before ${b}.`,
+        candidate =>
+          candidate.indexOf(a) <
+          candidate.indexOf(b)
+      );
+
+      if (
+        j - i === 1
+      ) {
+        addClue(
+          `${a} is immediately before ${b}.`,
+          candidate =>
+            candidate.indexOf(b) -
+            candidate.indexOf(a) === 1
+        );
+      }
+
+      if (
+        j - i === 2
+      ) {
+        addClue(
+          `Exactly one symbol is between ${a} and ${b}.`,
+          candidate =>
+            Math.abs(
+              candidate.indexOf(a) -
+              candidate.indexOf(b)
+            ) === 2
+        );
+      }
+
+      if (
+        j - i === 3
+      ) {
+        addClue(
+          `Exactly two symbols are between ${a} and ${b}.`,
+          candidate =>
+            Math.abs(
+              candidate.indexOf(a) -
+              candidate.indexOf(b)
+            ) === 3
+        );
+      }
+
+      if (
+        j - i > 1
+      ) {
+        addClue(
+          `${a} is not next to ${b}.`,
+          candidate =>
+            Math.abs(
+              candidate.indexOf(a) -
+              candidate.indexOf(b)
+            ) !== 1
+        );
+      }
+
+    }
+  }
+
+  answer.forEach(
+    (symbol, index) => {
+
+      const forbidden =
+        (index + 2) % answer.length;
+
+      addClue(
+        `${symbol} is not in position ${forbidden + 1}.`,
+        candidate =>
+          candidate[forbidden] !== symbol
       );
 
     }
+  );
 
-    const answer =
-      6 * (
-        6 + n
-      );
+  let candidates =
+    [...allCandidates];
 
-    return {
+  const clues = [];
+  const used = new Set();
 
-      type:
-        "signal-input",
-
-      prompt:
-        `${sequence.join(" · ")} · ?`,
-
-      description:
-        "Find the next number in the sequence.",
-
-      answer:
-        String(
-          answer
-        ),
-
-      hint:
-        "Look at each position number as part of the calculation.",
-
-      explanation:
-        `The nth term is n × (n + ${n}).`
-
-    };
-
-  }
-
-
-  if (
-    type === 1
+  while (
+    candidates.length > 1 &&
+    clues.length < 8
   ) {
 
-    const shift =
-      randomInt(
-        rng,
-        1,
-        3
+    let best = null;
+    let bestRemaining =
+      candidates.length;
+
+    for (
+      const clue of cluePool
+    ) {
+
+      if (
+        used.has(clue.text)
+      ) {
+        continue;
+      }
+
+      const remaining =
+        candidates.filter(
+          clue.test
+        );
+
+      if (
+        remaining.length > 0 &&
+        remaining.length < bestRemaining
+      ) {
+        best = clue;
+        bestRemaining =
+          remaining.length;
+      }
+
+    }
+
+    if (!best) {
+      break;
+    }
+
+    used.add(best.text);
+    clues.push(best.text);
+    candidates =
+      candidates.filter(
+        best.test
       );
-
-    const source =
-      [
-        "CAR",
-        "DOG",
-        "MAP"
-      ];
-
-    const encode =
-      word =>
-        word
-          .split("")
-          .map(
-
-            letter => {
-
-              const base =
-                letter.charCodeAt(
-                  0
-                )
-                -
-                65;
-
-              return String.fromCharCode(
-                65
-                +
-                (
-                  base
-                  +
-                  shift
-                )
-                %
-                26
-              );
-
-            }
-
-          )
-          .join("");
-
-    return {
-
-      type:
-        "signal-input",
-
-      prompt:
-        `${source[0]} → ${encode(source[0])}
-${source[1]} → ${encode(source[1])}
-${source[2]} → ?`,
-
-      description:
-        "Infer the letter transformation.",
-
-      answer:
-        encode(
-          source[2]
-        ),
-
-      hint:
-        "Every letter moves by the same amount.",
-
-      explanation:
-        `Each letter shifts forward ${shift} place${shift === 1 ? "" : "s"} in the alphabet.`
-
-    };
-
   }
 
+  let positionIndex = 0;
 
-  const words =
-    shuffle(
-      [
-        "EMBER",
-        "FROST",
-        "IVORY",
-        "MOSS",
-        "SLATE"
-      ],
-      rng
+  while (
+    candidates.length > 1 &&
+    positionIndex < answer.length
+  ) {
+
+    const symbol =
+      answer[positionIndex];
+
+    clues.push(
+      `${symbol} is in position ${positionIndex + 1}.`
     );
 
-  const answer =
-    [
-      "EMBER",
-      "FROST",
-      "IVORY",
-      "MOSS",
-      "SLATE"
-    ];
+    candidates =
+      candidates.filter(
+        candidate =>
+          candidate[positionIndex] === symbol
+      );
+
+    positionIndex++;
+  }
 
   return {
-
-    type:
-      "signal-order",
-
-    words,
-
+    type: "cipher",
+    symbols: shuffle(symbols, rng),
     answer,
-
+    clues,
     prompt:
-      "Put the five signals in the only valid order.",
-
+      "Crack the six-symbol code.",
     description:
-      "EMBER is before IVORY. FROST is immediately after EMBER. SLATE is last. MOSS is immediately before SLATE.",
-
-    hint:
-      "Start with the two forced adjacent pairs.",
-
+      "Arrange every symbol exactly once. Combine ordering, adjacency, distance and forbidden-position clues.",
     explanation:
-      "EMBER–FROST and MOSS–SLATE form locked pairs. IVORY is forced between those pairs."
-
+      "The six-symbol order is forced only when the overlapping positional restrictions are combined."
   };
 
 }
 
+/* ==========================================================
+   ECLIPSE GENERATOR
+   ========================================================== */
+
+function createEclipsePuzzle(token) {
+
+  const rng =
+    rngFrom(
+      token + ":eclipse"
+    );
+
+  const size = 8;
+  const half = size / 2;
+
+  function lineOkay(line) {
+
+    let suns = 0;
+    let moons = 0;
+
+    for (
+      let i = 0;
+      i < line.length;
+      i++
+    ) {
+
+      if (line[i] === 1) suns++;
+      if (line[i] === 2) moons++;
+
+      if (
+        i >= 2 &&
+        line[i] !== 0 &&
+        line[i] === line[i - 1] &&
+        line[i] === line[i - 2]
+      ) {
+        return false;
+      }
+
+    }
+
+    if (
+      suns > half ||
+      moons > half
+    ) {
+      return false;
+    }
+
+    if (
+      !line.includes(0) &&
+      (
+        suns !== half ||
+        moons !== half
+      )
+    ) {
+      return false;
+    }
+
+    return true;
+  }
+
+  function generateSolvedBoard() {
+
+    const board =
+      Array(size * size).fill(0);
+
+    function rowValues(row) {
+      return board.slice(
+        row * size,
+        row * size + size
+      );
+    }
+
+    function colValues(col) {
+
+      const values = [];
+
+      for (
+        let row = 0;
+        row < size;
+        row++
+      ) {
+        values.push(
+          board[row * size + col]
+        );
+      }
+
+      return values;
+    }
+
+    function completedLinesUnique() {
+
+      const rows = new Set();
+      const cols = new Set();
+
+      for (
+        let i = 0;
+        i < size;
+        i++
+      ) {
+
+        const row = rowValues(i);
+        const col = colValues(i);
+
+        if (!row.includes(0)) {
+          const key = row.join("");
+          if (rows.has(key)) return false;
+          rows.add(key);
+        }
+
+        if (!col.includes(0)) {
+          const key = col.join("");
+          if (cols.has(key)) return false;
+          cols.add(key);
+        }
+
+      }
+
+      return true;
+    }
+
+    function fill(index = 0) {
+
+      if (
+        index === board.length
+      ) {
+        return true;
+      }
+
+      const row =
+        Math.floor(index / size);
+
+      const col =
+        index % size;
+
+      const values =
+        rng() < 0.5
+        ? [1, 2]
+        : [2, 1];
+
+      for (
+        const value of values
+      ) {
+
+        board[index] = value;
+
+        if (
+          lineOkay(rowValues(row)) &&
+          lineOkay(colValues(col)) &&
+          completedLinesUnique() &&
+          fill(index + 1)
+        ) {
+          return true;
+        }
+
+        board[index] = 0;
+      }
+
+      return false;
+    }
+
+    return fill()
+      ? board
+      : null;
+  }
+
+  let solution = null;
+
+  for (
+    let attempt = 0;
+    attempt < 120 && !solution;
+    attempt++
+  ) {
+    solution =
+      generateSolvedBoard();
+  }
+
+  if (!solution) {
+    throw new Error(
+      "Could not generate Eclipse solution."
+    );
+  }
+
+  function countSolutions(
+    starting,
+    limit = 2
+  ) {
+
+    const board =
+      [...starting];
+
+    let count = 0;
+
+    function rowValues(row) {
+      return board.slice(
+        row * size,
+        row * size + size
+      );
+    }
+
+    function colValues(col) {
+
+      const values = [];
+
+      for (
+        let row = 0;
+        row < size;
+        row++
+      ) {
+        values.push(
+          board[row * size + col]
+        );
+      }
+
+      return values;
+    }
+
+    function completedLinesUnique() {
+
+      const rows = new Set();
+      const cols = new Set();
+
+      for (
+        let i = 0;
+        i < size;
+        i++
+      ) {
+
+        const row = rowValues(i);
+        const col = colValues(i);
+
+        if (!row.includes(0)) {
+          const key = row.join("");
+          if (rows.has(key)) return false;
+          rows.add(key);
+        }
+
+        if (!col.includes(0)) {
+          const key = col.join("");
+          if (cols.has(key)) return false;
+          cols.add(key);
+        }
+      }
+
+      return true;
+    }
+
+    function search() {
+
+      if (
+        count >= limit
+      ) {
+        return;
+      }
+
+      let bestIndex = -1;
+      let bestValues = null;
+
+      for (
+        let index = 0;
+        index < board.length;
+        index++
+      ) {
+
+        if (
+          board[index] !== 0
+        ) {
+          continue;
+        }
+
+        const row =
+          Math.floor(index / size);
+
+        const col =
+          index % size;
+
+        const possible = [];
+
+        for (
+          const value of [1, 2]
+        ) {
+
+          board[index] = value;
+
+          if (
+            lineOkay(rowValues(row)) &&
+            lineOkay(colValues(col)) &&
+            completedLinesUnique()
+          ) {
+            possible.push(value);
+          }
+
+          board[index] = 0;
+        }
+
+        if (
+          possible.length === 0
+        ) {
+          return;
+        }
+
+        if (
+          bestValues === null ||
+          possible.length < bestValues.length
+        ) {
+          bestIndex = index;
+          bestValues = possible;
+        }
+
+        if (
+          possible.length === 1
+        ) {
+          break;
+        }
+      }
+
+      if (
+        bestIndex === -1
+      ) {
+        count++;
+        return;
+      }
+
+      for (
+        const value of bestValues
+      ) {
+
+        board[bestIndex] = value;
+        search();
+        board[bestIndex] = 0;
+
+        if (
+          count >= limit
+        ) {
+          return;
+        }
+      }
+    }
+
+    search();
+    return count;
+  }
+
+  const clues =
+    [...solution];
+
+  const positions =
+    shuffle(
+      [...Array(size * size).keys()],
+      rng
+    );
+
+  const targetClues =
+    randomInt(
+      rng,
+      23,
+      27
+    );
+
+  for (
+    const index of positions
+  ) {
+
+    const clueCount =
+      clues.filter(
+        value => value !== 0
+      ).length;
+
+    if (
+      clueCount <= targetClues
+    ) {
+      break;
+    }
+
+    const previous =
+      clues[index];
+
+    clues[index] = 0;
+
+    if (
+      countSolutions(clues, 2) !== 1
+    ) {
+      clues[index] = previous;
+    }
+  }
+
+  return {
+    type: "eclipse",
+    size,
+    solution,
+    clues,
+    prompt:
+      "Balance the suns and moons.",
+    description:
+      "Complete the 8×8 grid. Every row and column needs four suns and four moons, no triples are allowed, and completed lines cannot repeat.",
+    explanation:
+      "The unique solution follows from equal symbol counts, the no-three rule, fixed clues and non-duplicate rows and columns."
+  };
+}
+
+/* ==========================================================
+   BALANCE GENERATOR — VERY HARD
+   ========================================================== */
+
+function createBalancePuzzle(token) {
+
+  const rng =
+    rngFrom(
+      token + ":balance-hard"
+    );
+
+  let weights = [];
+
+  while (
+    weights.length < 8
+  ) {
+
+    const value =
+      randomInt(
+        rng,
+        2,
+        24
+      );
+
+    if (
+      !weights.includes(value)
+    ) {
+      weights.push(value);
+    }
+  }
+
+  weights =
+    shuffle(weights, rng);
+
+  const shuffledIndices =
+    shuffle(
+      [...Array(8).keys()],
+      rng
+    );
+
+  const leftIndices =
+    shuffledIndices.slice(0, 4);
+
+  const leftSet =
+    new Set(leftIndices);
+
+  const rightIndices =
+    [...Array(8).keys()]
+      .filter(
+        index =>
+          !leftSet.has(index)
+      );
+
+  function valuesFor(indices) {
+    return indices.map(
+      index => weights[index]
+    );
+  }
+
+  function sum(values) {
+    return values.reduce(
+      (total, value) =>
+        total + value,
+      0
+    );
+  }
+
+  function oddCount(values) {
+    return values.filter(
+      value =>
+        value % 2 !== 0
+    ).length;
+  }
+
+  function spread(values) {
+    return (
+      Math.max(...values) -
+      Math.min(...values)
+    );
+  }
+
+  const leftValues =
+    valuesFor(leftIndices);
+
+  const rightValues =
+    valuesFor(rightIndices);
+
+  const leftTarget =
+    sum(leftValues);
+
+  const rightTarget =
+    sum(rightValues);
+
+  const leftOdd =
+    oddCount(leftValues);
+
+  const rightOdd =
+    oddCount(rightValues);
+
+  const leftSpread =
+    spread(leftValues);
+
+  const rightSpread =
+    spread(rightValues);
+
+  return {
+    type: "balance",
+    weights,
+    leftTarget,
+    rightTarget,
+    leftOdd,
+    rightOdd,
+    leftSpread,
+    rightSpread,
+    solutionLeft:
+      [...leftValues].sort((a,b) => a-b),
+    solutionRight:
+      [...rightValues].sort((a,b) => a-b),
+    prompt:
+      "Split all eight weights.",
+    description:
+      `LEFT: total ${leftTarget}, ${leftOdd} odd, spread ${leftSpread}. RIGHT: total ${rightTarget}, ${rightOdd} odd, spread ${rightSpread}. Four weights per tray.`,
+    explanation:
+      "The totals are only part of the puzzle: parity and spread constraints eliminate alternative four-and-four partitions."
+  };
+}
+
+/* ==========================================================
+   SIGNAL GENERATOR — VERY HARD
+   ========================================================== */
+
+function createSignalPuzzle(token) {
+
+  const rng =
+    rngFrom(
+      token + ":signal-hard"
+    );
+
+  const mode =
+    randomInt(
+      rng,
+      0,
+      4
+    );
+
+  if (
+    mode === 0
+  ) {
+
+    const start =
+      randomInt(rng, 2, 12);
+
+    const firstDifference =
+      randomInt(rng, 2, 7);
+
+    const secondDifference =
+      randomInt(rng, 2, 5);
+
+    const sequence = [start];
+    let difference =
+      firstDifference;
+
+    for (
+      let i = 1;
+      i < 6;
+      i++
+    ) {
+      sequence.push(
+        sequence[i - 1] +
+        difference
+      );
+      difference +=
+        secondDifference;
+    }
+
+    const answer =
+      sequence.pop();
+
+    return {
+      type: "signal",
+      mode: "number",
+      display:
+        sequence.join("  ·  ") +
+        "  ·  ?",
+      answer: String(answer),
+      prompt:
+        "Find the next signal.",
+      description:
+        "The gaps are changing too. Work out the pattern beneath the pattern.",
+      hint:
+        "Write down the difference between each neighbouring pair, then compare those differences.",
+      explanation:
+        `The first differences increase by ${secondDifference} each time, giving a constant second difference.`
+    };
+  }
+
+  if (
+    mode === 1
+  ) {
+
+    let value =
+      randomInt(rng, 3, 8);
+
+    const multiply =
+      randomInt(rng, 2, 3);
+
+    const add =
+      randomInt(rng, 2, 7);
+
+    const sequence = [value];
+
+    for (
+      let step = 0;
+      step < 5;
+      step++
+    ) {
+
+      value =
+        step % 2 === 0
+        ? value * multiply
+        : value + add;
+
+      sequence.push(value);
+    }
+
+    const answer =
+      sequence.pop();
+
+    return {
+      type: "signal",
+      mode: "number",
+      display:
+        sequence.join("  ·  ") +
+        "  ·  ?",
+      answer: String(answer),
+      prompt:
+        "Decode the alternating signal.",
+      description:
+        "The operation changes every step.",
+      hint:
+        "Try separating the odd-numbered transitions from the even-numbered transitions.",
+      explanation:
+        `The sequence alternates ×${multiply} and +${add}.`
+    };
+  }
+
+  if (
+    mode === 2
+  ) {
+
+    const a =
+      randomInt(rng, 2, 7);
+
+    const b =
+      randomInt(rng, 14, 24);
+
+    const addA =
+      randomInt(rng, 3, 6);
+
+    const subtractB =
+      randomInt(rng, 1, 4);
+
+    const shown = [
+      a,
+      b,
+      a + addA,
+      b - subtractB,
+      a + addA * 2,
+      b - subtractB * 2
+    ];
+
+    const answer =
+      a + addA * 3;
+
+    return {
+      type: "signal",
+      mode: "number",
+      display:
+        shown.join("  ·  ") +
+        "  ·  ?",
+      answer: String(answer),
+      prompt:
+        "Separate the two hidden signals.",
+      description:
+        "Odd and even positions follow different rules.",
+      hint:
+        "Read positions 1, 3, 5 separately from positions 2, 4, 6.",
+      explanation:
+        `The odd-position sequence rises by ${addA}; the even-position sequence falls by ${subtractB}.`
+    };
+  }
+
+  if (
+    mode === 3
+  ) {
+
+    const alphabet =
+      "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+
+    const start =
+      randomInt(rng, 0, 8);
+
+    const jumps =
+      shuffle(
+        [2,3,4,5],
+        rng
+      ).slice(0, 3);
+
+    let position = start;
+    const letters = [
+      alphabet[position]
+    ];
+
+    for (
+      let i = 0;
+      i < 5;
+      i++
+    ) {
+      const jump =
+        jumps[i % jumps.length];
+      position =
+        (position + jump) %
+        alphabet.length;
+      letters.push(
+        alphabet[position]
+      );
+    }
+
+    const answer =
+      letters.pop();
+
+    return {
+      type: "signal",
+      mode: "text",
+      display:
+        letters.join("  →  ") +
+        "  →  ?",
+      answer,
+      prompt:
+        "Follow the letter signal.",
+      description:
+        "The alphabet jumps repeat in a hidden cycle.",
+      hint:
+        "Convert each letter to its alphabet position and compare the jumps.",
+      explanation:
+        `The repeated jump cycle is +${jumps[0]}, +${jumps[1]}, +${jumps[2]}.`
+    };
+  }
+
+  const items =
+    shuffle(
+      ["A","B","C","D","E"],
+      rng
+    );
+
+  const solution =
+    shuffle(items, rng);
+
+  const clues = [
+    `${solution[0]} is before ${solution[2]}.`,
+    `${solution[1]} is immediately before ${solution[2]}.`,
+    `${solution[4]} is after ${solution[3]}.`,
+    `${solution[0]} is not beside ${solution[4]}.`,
+    `${solution[2]} appears before ${solution[4]}.`
+  ];
+
+  return {
+    type: "signal",
+    mode: "ordering",
+    items,
+    clues,
+    solution,
+    answer:
+      solution.join(""),
+    prompt:
+      "Reconstruct the signal order.",
+    description:
+      "Arrange A–E so every ordering clue is true.",
+    hint:
+      `Start with the immediate relationship: ${clues[1]}`,
+    explanation:
+      "Immediate adjacency and before/after restrictions combine to force the final order."
+  };
+}
 
 /* ==========================================================
    SPECIALS
@@ -2422,10 +3023,7 @@ function getPuzzle(
   if (
     mode === "practice"
   ) {
-
-    state.practiceCounter +=
-      1;
-
+    state.practiceCounter += 1;
   }
 
   const token =
@@ -2438,96 +3036,58 @@ function getPuzzle(
   if (
     gameKey === "queens"
   ) {
-
-    return createQueensPuzzle(
-      token
-    );
-
+    return createQueensPuzzle(token);
   }
 
   if (
     gameKey === "circuit"
   ) {
-
-    return createCircuitPuzzle(
-      token
-    );
-
+    return createCircuitPuzzle(token);
   }
 
   if (
     gameKey === "route"
   ) {
-
-    return createRoutePuzzle(
-      token
-    );
-
+    return createRoutePuzzle(token);
   }
 
   if (
     gameKey === "cipher"
   ) {
-
-    return createCipherPuzzle(
-      token
-    );
-
+    return createCipherPuzzle(token);
   }
 
   if (
-    gameKey === "shift"
+    gameKey === "eclipse"
   ) {
-
-    return createShiftPuzzle(
-      token
-    );
-
+    return createEclipsePuzzle(token);
   }
 
   if (
     gameKey === "balance"
   ) {
-
-    return createBalancePuzzle(
-      token
-    );
-
+    return createBalancePuzzle(token);
   }
 
   if (
     gameKey === "signal"
   ) {
-
-    return createSignalPuzzle(
-      token
-    );
-
+    return createSignalPuzzle(token);
   }
 
-  if (
-    gameKey === "special"
-  ) {
+  const rng =
+    rngFrom(token);
 
-    const rng =
-      rngFrom(
-        token
-      );
-
-    return clone(
-      SPECIAL_BANK[
-        randomInt(
-          rng,
-          0,
-          SPECIAL_BANK.length - 1
-        )
-      ]
-    );
-
-  }
-
+  return clone(
+    SPECIAL_BANK[
+      randomInt(
+        rng,
+        0,
+        SPECIAL_BANK.length - 1
+      )
+    ]
+  );
 }
-
 
 /* ==========================================================
    OPEN GAME
@@ -2573,28 +3133,28 @@ function openGame(
   state.elapsed =
     0;
 
-  state.queensMarks =
+    state.queensMarks =
+  null;
+
+    state.circuitRotations =
     null;
 
-  state.circuitRotations =
+    state.routePath =
     null;
 
-  state.routePath =
+    state.cipherGuess =
     null;
 
-  state.cipherGuess =
+    state.eclipseMarks =
     null;
 
-  state.shiftRows =
-    null;
-
-  state.balanceLeft =
+    state.balanceLeft =
     [];
 
-  state.balanceRight =
+    state.balanceRight =
     [];
 
-  state.signalAnswer =
+    state.signalAnswer =
     "";
 
   $("#timer").textContent =
@@ -2671,91 +3231,56 @@ function renderCurrentGame() {
   const area =
     $("#gameArea");
 
-  area.innerHTML =
-    "";
+  area.innerHTML = "";
 
   if (
     state.gameKey === "queens"
   ) {
-
-    renderQueens(
-      area
-    );
-
+    renderQueens(area);
   }
 
   else if (
     state.gameKey === "circuit"
   ) {
-
-    renderCircuit(
-      area
-    );
-
+    renderCircuit(area);
   }
 
   else if (
     state.gameKey === "route"
   ) {
-
-    renderRoute(
-      area
-    );
-
+    renderRoute(area);
   }
 
   else if (
     state.gameKey === "cipher"
   ) {
-
-    renderCipher(
-      area
-    );
-
+    renderCipher(area);
   }
 
   else if (
-    state.gameKey === "shift"
+    state.gameKey === "eclipse"
   ) {
-
-    renderShift(
-      area
-    );
-
+    renderEclipse(area);
   }
 
   else if (
     state.gameKey === "balance"
   ) {
-
-    renderBalance(
-      area
-    );
-
+    renderBalance(area);
   }
 
   else if (
     state.gameKey === "signal"
   ) {
-
-    renderSignal(
-      area
-    );
-
+    renderSignal(area);
   }
 
   else if (
     state.gameKey === "special"
   ) {
-
-    renderSpecial(
-      area
-    );
-
+    renderSpecial(area);
   }
-
 }
-
 
 /* ==========================================================
    QUEENS
@@ -3594,9 +4119,7 @@ function checkRoute() {
    CIPHER
    ========================================================== */
 
-function renderCipher(
-  area
-) {
+function renderCipher(area) {
 
   const puzzle =
     state.puzzle;
@@ -3610,194 +4133,122 @@ function renderCipher(
   if (
     !state.cipherGuess
   ) {
-
-    state.cipherGuess =
-      [];
-
+    state.cipherGuess = [];
   }
 
   const clues =
-    document.createElement(
-      "div"
-    );
+    document.createElement("div");
 
   clues.className =
     "clue-list";
 
   puzzle.clues.forEach(
-
     clue => {
-
       const row =
-        document.createElement(
-          "div"
-        );
-
+        document.createElement("div");
       row.className =
         "cipher-clue";
-
-      row.textContent =
-        clue;
-
-      clues.appendChild(
-        row
-      );
-
+      row.textContent = clue;
+      clues.appendChild(row);
     }
-
   );
 
-  area.appendChild(
-    clues
-  );
+  area.appendChild(clues);
 
   const display =
-    document.createElement(
-      "button"
-    );
+    document.createElement("button");
 
-  display.type =
-    "button";
-
+  display.type = "button";
   display.className =
-    "code-display cipher-five";
+    "code-display cipher-six";
 
   display.textContent =
     state.cipherGuess.length
-    ?
-    state.cipherGuess.join(
-      " "
-    )
-    :
-    "• • • • •";
+    ? state.cipherGuess.join(" ")
+    : "• • • • • •";
+
+  display.setAttribute(
+    "aria-label",
+    "Current six symbol guess. Tap to clear."
+  );
 
   display.addEventListener(
-
     "click",
-
     () => {
-
-      state.cipherGuess =
-        [];
-
+      state.cipherGuess = [];
       renderCurrentGame();
-
     }
-
   );
 
-  area.appendChild(
-    display
-  );
+  area.appendChild(display);
 
   const keypad =
-    document.createElement(
-      "div"
-    );
+    document.createElement("div");
 
   keypad.className =
-    "keypad cipher-five-keypad";
+    "keypad cipher-six-keypad";
 
   puzzle.symbols.forEach(
-
     symbol => {
 
       const button =
-        document.createElement(
-          "button"
-        );
+        document.createElement("button");
 
-      button.type =
-        "button";
-
+      button.type = "button";
       button.className =
         "symbol-key";
-
-      button.textContent =
-        symbol;
+      button.textContent = symbol;
 
       if (
-        state.cipherGuess.includes(
-          symbol
-        )
+        state.cipherGuess.includes(symbol)
       ) {
-
         button.classList.add(
           "selected"
         );
-
       }
 
       button.addEventListener(
-
         "click",
-
         () => {
 
           if (
-            state.cipherGuess.includes(
-              symbol
-            )
+            state.cipherGuess.includes(symbol)
           ) {
-
             return;
-
           }
 
           if (
-            state.cipherGuess.length <
-            5
+            state.cipherGuess.length < 6
           ) {
-
-            state.cipherGuess.push(
-              symbol
-            );
-
+            state.cipherGuess.push(symbol);
             renderCurrentGame();
-
           }
-
         }
-
       );
 
-      keypad.appendChild(
-        button
-      );
-
+      keypad.appendChild(button);
     }
-
   );
 
-  area.appendChild(
-    keypad
-  );
-
+  area.appendChild(keypad);
 }
 
-
 function checkCipher() {
-
   return (
     JSON.stringify(
       state.cipherGuess
-    )
-    ===
+    ) ===
     JSON.stringify(
       state.puzzle.answer
     )
   );
-
 }
 
-
 /* ==========================================================
-   SHIFT
+   ECLIPSE
    ========================================================== */
 
-function renderShift(
-  area
-) {
+function renderEclipse(area) {
 
   const puzzle =
     state.puzzle;
@@ -3809,215 +4260,233 @@ function renderShift(
     puzzle.description;
 
   if (
-    !state.shiftRows
+    !state.eclipseMarks
   ) {
-
-    state.shiftRows =
-      clone(
-        puzzle.start
-      );
-
+    state.eclipseMarks =
+      [...puzzle.clues];
   }
 
-  const target =
-    document.createElement(
-      "div"
-    );
-
-  target.className =
-    "shift-target";
-
-  target.innerHTML =
-    `
-      <span>TARGET</span>
-      <strong>
-        ${puzzle.target[0].join(" ")}
-      </strong>
-    `;
-
-  area.appendChild(
-    target
-  );
-
   const board =
-    document.createElement(
-      "div"
-    );
+    document.createElement("div");
 
   board.className =
-    "shift-board";
+    "eclipse-board";
 
-  state.shiftRows.forEach(
+  board.style.gridTemplateColumns =
+    `repeat(${puzzle.size}, 1fr)`;
 
-    (
-      row,
-      rowIndex
-    ) => {
+  state.eclipseMarks.forEach(
+    (value, index) => {
 
-      const wrapper =
-        document.createElement(
-          "div"
+      const cell =
+        document.createElement("button");
+
+      cell.type = "button";
+      cell.className =
+        "eclipse-cell";
+
+      const fixed =
+        puzzle.clues[index] !== 0;
+
+      if (fixed) {
+        cell.classList.add("fixed");
+      }
+
+      if (
+        value === 1
+      ) {
+        cell.classList.add("sun");
+        cell.innerHTML =
+          '<span class="sun-symbol" aria-hidden="true"></span>';
+        cell.setAttribute(
+          "aria-label",
+          fixed ? "Given sun" : "Sun"
         );
+      }
 
-      wrapper.className =
-        "shift-row";
-
-      const left =
-        document.createElement(
-          "button"
+      else if (
+        value === 2
+      ) {
+        cell.classList.add("moon");
+        cell.innerHTML =
+          '<span class="moon-symbol" aria-hidden="true"></span>';
+        cell.setAttribute(
+          "aria-label",
+          fixed ? "Given moon" : "Moon"
         );
+      }
 
-      left.type =
-        "button";
-
-      left.className =
-        "shift-button";
-
-      left.textContent =
-        "←";
-
-      left.addEventListener(
-
-        "click",
-
-        () => {
-
-          const first =
-            state.shiftRows[
-              rowIndex
-            ].shift();
-
-          state.shiftRows[
-            rowIndex
-          ].push(
-            first
-          );
-
-          renderCurrentGame();
-
-        }
-
-      );
-
-
-      const cells =
-        document.createElement(
-          "div"
+      else {
+        cell.textContent = "";
+        cell.setAttribute(
+          "aria-label",
+          "Empty square"
         );
+      }
 
-      cells.className =
-        "shift-cells shift-six";
+      if (fixed) {
+        cell.disabled = true;
+      }
 
-      row.forEach(
+      else {
+        cell.addEventListener(
+          "click",
+          () => {
+            const current =
+              state.eclipseMarks[index];
 
-        symbol => {
+            state.eclipseMarks[index] =
+              current === 0
+              ? 1
+              : current === 1
+              ? 2
+              : 0;
 
-          const cell =
-            document.createElement(
-              "div"
-            );
-
-          cell.className =
-            "shift-cell";
-
-          cell.textContent =
-            symbol;
-
-          cells.appendChild(
-            cell
-          );
-
-        }
-
-      );
-
-
-      const right =
-        document.createElement(
-          "button"
+            renderCurrentGame();
+          }
         );
+      }
 
-      right.type =
-        "button";
+      board.appendChild(cell);
+    }
+  );
 
-      right.className =
-        "shift-button";
+  area.appendChild(board);
 
-      right.textContent =
-        "→";
+  const key =
+    document.createElement("div");
 
-      right.addEventListener(
+  key.className =
+    "eclipse-key";
 
-        "click",
+  key.innerHTML = `
+    <span>
+      <i class="eclipse-key-sun" aria-hidden="true"></i>
+      Sun
+    </span>
+    <span>
+      <i class="eclipse-key-moon" aria-hidden="true"></i>
+      Moon
+    </span>
+    <span>Tap: Sun → Moon → Clear</span>
+  `;
 
-        () => {
+  area.appendChild(key);
+}
 
-          const last =
-            state.shiftRows[
-              rowIndex
-            ].pop();
+function checkEclipse() {
 
-          state.shiftRows[
-            rowIndex
-          ].unshift(
-            last
-          );
+  const puzzle =
+    state.puzzle;
 
-          renderCurrentGame();
+  const size =
+    puzzle.size;
 
-        }
+  const marks =
+    state.eclipseMarks;
 
-      );
+  if (
+    !marks ||
+    marks.includes(0)
+  ) {
+    return false;
+  }
 
-      wrapper.appendChild(
-        left
-      );
+  function validLine(line) {
 
-      wrapper.appendChild(
-        cells
-      );
+    const suns =
+      line.filter(
+        value => value === 1
+      ).length;
 
-      wrapper.appendChild(
-        right
-      );
+    const moons =
+      line.filter(
+        value => value === 2
+      ).length;
 
-      board.appendChild(
-        wrapper
-      );
-
+    if (
+      suns !== size / 2 ||
+      moons !== size / 2
+    ) {
+      return false;
     }
 
-  );
+    for (
+      let i = 0;
+      i < line.length - 2;
+      i++
+    ) {
+      if (
+        line[i] === line[i + 1] &&
+        line[i] === line[i + 2]
+      ) {
+        return false;
+      }
+    }
 
-  area.appendChild(
-    board
-  );
+    return true;
+  }
 
-}
+  const rows = [];
+  const columns = [];
 
+  for (
+    let row = 0;
+    row < size;
+    row++
+  ) {
 
-function checkShift() {
+    const values =
+      marks.slice(
+        row * size,
+        row * size + size
+      );
+
+    if (!validLine(values)) {
+      return false;
+    }
+
+    rows.push(values.join(""));
+  }
+
+  for (
+    let col = 0;
+    col < size;
+    col++
+  ) {
+
+    const values = [];
+
+    for (
+      let row = 0;
+      row < size;
+      row++
+    ) {
+      values.push(
+        marks[row * size + col]
+      );
+    }
+
+    if (!validLine(values)) {
+      return false;
+    }
+
+    columns.push(
+      values.join("")
+    );
+  }
 
   return (
-    JSON.stringify(
-      state.shiftRows
-    )
-    ===
-    JSON.stringify(
-      state.puzzle.target
-    )
+    new Set(rows).size === size &&
+    new Set(columns).size === size
   );
-
 }
-
 
 /* ==========================================================
    BALANCE
    ========================================================== */
 
-function renderBalance(
-  area
-) {
+function renderBalance(area) {
 
   const puzzle =
     state.puzzle;
@@ -4028,280 +4497,220 @@ function renderBalance(
   $("#puzzleDescription").textContent =
     puzzle.description;
 
+  const clueBox =
+    document.createElement("div");
+
+  clueBox.className =
+    "balance-hard-clues";
+
+  clueBox.innerHTML = `
+    <div>
+      <strong>LEFT</strong>
+      <span>Total ${puzzle.leftTarget}</span>
+      <span>${puzzle.leftOdd} odd number${puzzle.leftOdd === 1 ? "" : "s"}</span>
+      <span>Spread ${puzzle.leftSpread}</span>
+    </div>
+
+    <div>
+      <strong>RIGHT</strong>
+      <span>Total ${puzzle.rightTarget}</span>
+      <span>${puzzle.rightOdd} odd number${puzzle.rightOdd === 1 ? "" : "s"}</span>
+      <span>Spread ${puzzle.rightSpread}</span>
+    </div>
+  `;
+
+  area.appendChild(clueBox);
+
   const trays =
-    document.createElement(
-      "div"
-    );
+    document.createElement("div");
 
   trays.className =
     "balance-trays";
 
+  function trayMarkup(
+    title,
+    values,
+    target
+  ) {
+
+    const total =
+      values.reduce(
+        (a,b) => a + b,
+        0
+      );
+
+    return `
+      <strong>${title} = ${target}</strong>
+      <div class="tray-values">
+        ${
+          values.length
+          ? values.join(" + ")
+          : "—"
+        }
+      </div>
+      <small>
+        ${values.length}/4 weights · total ${total}
+      </small>
+    `;
+  }
+
   const left =
-    document.createElement(
-      "div"
-    );
+    document.createElement("div");
 
   left.className =
     "tray balance-hard-tray";
 
-  left.innerHTML = `
-    <strong>
-      LEFT = ${puzzle.leftTarget}
-    </strong>
-
-    <div class="tray-values">
-      ${
-        state.balanceLeft.length
-        ?
-        state.balanceLeft.join(
-          " + "
-        )
-        :
-        "—"
-      }
-    </div>
-
-    <small>
-      total ${
-        state.balanceLeft.reduce(
-          (
-            a,
-            b
-          ) =>
-            a + b,
-          0
-        )
-      }
-    </small>
-  `;
-
+  left.innerHTML =
+    trayMarkup(
+      "LEFT",
+      state.balanceLeft,
+      puzzle.leftTarget
+    );
 
   const right =
-    document.createElement(
-      "div"
-    );
+    document.createElement("div");
 
   right.className =
     "tray balance-hard-tray";
 
-  right.innerHTML = `
-    <strong>
-      RIGHT = ${puzzle.rightTarget}
-    </strong>
+  right.innerHTML =
+    trayMarkup(
+      "RIGHT",
+      state.balanceRight,
+      puzzle.rightTarget
+    );
 
-    <div class="tray-values">
-      ${
-        state.balanceRight.length
-        ?
-        state.balanceRight.join(
-          " + "
-        )
-        :
-        "—"
-      }
-    </div>
-
-    <small>
-      total ${
-        state.balanceRight.reduce(
-          (
-            a,
-            b
-          ) =>
-            a + b,
-          0
-        )
-      }
-    </small>
-  `;
-
-  trays.appendChild(
-    left
-  );
-
-  trays.appendChild(
-    right
-  );
-
-  area.appendChild(
-    trays
-  );
-
+  trays.appendChild(left);
+  trays.appendChild(right);
+  area.appendChild(trays);
 
   const weights =
-    document.createElement(
-      "div"
-    );
+    document.createElement("div");
 
   weights.className =
     "weight-grid";
 
   puzzle.weights.forEach(
-
-    (
-      value,
-      index
-    ) => {
+    value => {
 
       const button =
-        document.createElement(
-          "button"
-        );
+        document.createElement("button");
 
-      button.type =
-        "button";
-
+      button.type = "button";
       button.className =
         "weight-button";
+      button.textContent = value;
 
-      button.textContent =
-        value;
+      const inLeft =
+        state.balanceLeft.includes(value);
 
-      const leftIndex =
-        state.balanceLeft.indexOf(
-          value
-        );
-
-      const rightIndex =
-        state.balanceRight.indexOf(
-          value
-        );
+      const inRight =
+        state.balanceRight.includes(value);
 
       if (
-        leftIndex >= 0
-        ||
-        rightIndex >= 0
+        inLeft || inRight
       ) {
-
-        button.classList.add(
-          "selected"
-        );
-
+        button.classList.add("selected");
       }
 
       button.addEventListener(
-
         "click",
-
         () => {
+
+          const leftIndex =
+            state.balanceLeft.indexOf(value);
+
+          const rightIndex =
+            state.balanceRight.indexOf(value);
 
           if (
             leftIndex >= 0
           ) {
-
             state.balanceLeft.splice(
               leftIndex,
               1
             );
-
           }
 
           else if (
             rightIndex >= 0
           ) {
-
             state.balanceRight.splice(
               rightIndex,
               1
             );
-
           }
 
           else if (
-            state.balanceLeft.length <
-            3
+            state.balanceLeft.length < 4
           ) {
-
-            state.balanceLeft.push(
-              value
-            );
-
+            state.balanceLeft.push(value);
           }
 
           else if (
-            state.balanceRight.length <
-            3
+            state.balanceRight.length < 4
           ) {
-
-            state.balanceRight.push(
-              value
-            );
-
+            state.balanceRight.push(value);
           }
 
           renderCurrentGame();
-
         }
-
       );
 
-      weights.appendChild(
-        button
-      );
-
+      weights.appendChild(button);
     }
-
   );
 
-  area.appendChild(
-    weights
-  );
-
+  area.appendChild(weights);
 }
-
 
 function checkBalance() {
 
+  const puzzle =
+    state.puzzle;
+
   if (
-    state.balanceLeft.length !==
-    3
-    ||
-    state.balanceRight.length !==
-    3
+    state.balanceLeft.length !== 4 ||
+    state.balanceRight.length !== 4
   ) {
-
     return false;
-
   }
 
-  const leftTotal =
-    state.balanceLeft.reduce(
-      (
-        a,
-        b
-      ) =>
-        a + b,
+  function sum(values) {
+    return values.reduce(
+      (a,b) => a + b,
       0
     );
+  }
 
-  const rightTotal =
-    state.balanceRight.reduce(
-      (
-        a,
-        b
-      ) =>
-        a + b,
-      0
+  function oddCount(values) {
+    return values.filter(
+      value => value % 2 !== 0
+    ).length;
+  }
+
+  function spread(values) {
+    return (
+      Math.max(...values) -
+      Math.min(...values)
     );
+  }
 
   return (
-    leftTotal ===
-    state.puzzle.leftTarget
-    &&
-    rightTotal ===
-    state.puzzle.rightTarget
+    sum(state.balanceLeft) === puzzle.leftTarget &&
+    sum(state.balanceRight) === puzzle.rightTarget &&
+    oddCount(state.balanceLeft) === puzzle.leftOdd &&
+    oddCount(state.balanceRight) === puzzle.rightOdd &&
+    spread(state.balanceLeft) === puzzle.leftSpread &&
+    spread(state.balanceRight) === puzzle.rightSpread
   );
-
 }
-
 
 /* ==========================================================
    SIGNAL
    ========================================================== */
 
-function renderSignal(
-  area
-) {
+function renderSignal(area) {
 
   const puzzle =
     state.puzzle;
@@ -4313,20 +4722,36 @@ function renderSignal(
     puzzle.description;
 
   if (
-    puzzle.type ===
-    "signal-input"
+    puzzle.mode === "number" ||
+    puzzle.mode === "text"
   ) {
 
+    const display =
+      document.createElement("div");
+
+    display.className =
+      "signal-display";
+
+    display.textContent =
+      puzzle.display;
+
+    area.appendChild(display);
+
     const input =
-      document.createElement(
-        "input"
-      );
+      document.createElement("input");
 
     input.className =
       "signal-input";
 
     input.type =
-      "text";
+      puzzle.mode === "number"
+      ? "number"
+      : "text";
+
+    input.inputMode =
+      puzzle.mode === "number"
+      ? "numeric"
+      : "text";
 
     input.placeholder =
       "Your answer";
@@ -4335,164 +4760,113 @@ function renderSignal(
       state.signalAnswer;
 
     input.addEventListener(
-
       "input",
-
       () => {
-
         state.signalAnswer =
           input.value
             .trim()
             .toUpperCase();
-
       }
-
     );
 
-    area.appendChild(
-      input
-    );
-
+    area.appendChild(input);
     return;
-
   }
 
-
   if (
-    puzzle.type ===
-    "signal-order"
+    puzzle.mode === "ordering"
   ) {
+
+    const clueList =
+      document.createElement("div");
+
+    clueList.className =
+      "signal-clue-list";
+
+    puzzle.clues.forEach(
+      clue => {
+        const row =
+          document.createElement("div");
+        row.textContent = clue;
+        clueList.appendChild(row);
+      }
+    );
+
+    area.appendChild(clueList);
 
     if (
       !state.selected.length
     ) {
-
       state.selected =
-        [...puzzle.words];
-
+        [...puzzle.items];
     }
 
     const list =
-      document.createElement(
-        "div"
-      );
+      document.createElement("div");
 
     list.className =
       "signal-order";
 
     state.selected.forEach(
-
-      (
-        word,
-        index
-      ) => {
+      (item, index) => {
 
         const row =
-          document.createElement(
-            "div"
-          );
+          document.createElement("div");
 
         row.className =
           "signal-order-row";
 
         row.innerHTML = `
-
-          <strong>
-            ${index + 1}.
-            ${word}
-          </strong>
-
+          <strong>${index + 1}. ${item}</strong>
           <div>
-
-            <button
-              type="button"
-              data-dir="-1"
-            >
-              ↑
-            </button>
-
-            <button
-              type="button"
-              data-dir="1"
-            >
-              ↓
-            </button>
-
+            <button type="button" data-dir="-1" aria-label="Move ${item} up">↑</button>
+            <button type="button" data-dir="1" aria-label="Move ${item} down">↓</button>
           </div>
-
         `;
 
-        row.querySelectorAll(
-          "button"
-        ).forEach(
+        row.querySelectorAll("button")
+          .forEach(
+            button => {
+              button.addEventListener(
+                "click",
+                () => {
 
-          button => {
+                  const direction =
+                    Number(
+                      button.dataset.dir
+                    );
 
-            button.addEventListener(
+                  const target =
+                    index + direction;
 
-              "click",
+                  if (
+                    target < 0 ||
+                    target >= state.selected.length
+                  ) {
+                    return;
+                  }
 
-              () => {
+                  [
+                    state.selected[index],
+                    state.selected[target]
+                  ] = [
+                    state.selected[target],
+                    state.selected[index]
+                  ];
 
-                const direction =
-                  Number(
-                    button.dataset.dir
-                  );
-
-                const target =
-                  index
-                  +
-                  direction;
-
-                if (
-                  target < 0
-                  ||
-                  target >=
-                  state.selected.length
-                ) {
-
-                  return;
-
+                  renderCurrentGame();
                 }
+              );
+            }
+          );
 
-                [
-                  state.selected[index],
-                  state.selected[target]
-                ]
-
-                =
-
-                [
-                  state.selected[target],
-                  state.selected[index]
-                ];
-
-                renderCurrentGame();
-
-              }
-
-            );
-
-          }
-
-        );
-
-        list.appendChild(
-          row
-        );
-
+        list.appendChild(row);
       }
-
     );
 
-    area.appendChild(
-      list
-    );
-
+    area.appendChild(list);
   }
-
 }
-
 
 function checkSignal() {
 
@@ -4500,43 +4874,23 @@ function checkSignal() {
     state.puzzle;
 
   if (
-    puzzle.type ===
-    "signal-input"
+    puzzle.mode === "ordering"
   ) {
-
     return (
-      state.signalAnswer
-        .trim()
-        .toUpperCase()
-      ===
+      state.selected.join("") ===
       puzzle.answer
-        .trim()
-        .toUpperCase()
     );
-
   }
 
-  if (
-    puzzle.type ===
-    "signal-order"
-  ) {
-
-    return (
-      JSON.stringify(
-        state.selected
-      )
-      ===
-      JSON.stringify(
-        puzzle.answer
-      )
-    );
-
-  }
-
-  return false;
-
+  return (
+    String(state.signalAnswer)
+      .trim()
+      .toUpperCase() ===
+    String(puzzle.answer)
+      .trim()
+      .toUpperCase()
+  );
 }
-
 
 /* ==========================================================
    SPECIAL
@@ -4684,117 +5038,163 @@ function checkSpecial() {
 
 
 /* ==========================================================
+   SOLUTION
+   ========================================================== */
+
+function revealSolution() {
+
+  if (!state.puzzle) {
+    return;
+  }
+
+  stopTimer();
+
+  if (state.gameKey === "queens") {
+
+    state.queensMarks =
+      Array(
+        state.puzzle.size * state.puzzle.size
+      ).fill(2);
+
+    state.puzzle.solution.forEach(
+      (col, row) => {
+        state.queensMarks[
+          row * state.puzzle.size + col
+        ] = 1;
+      }
+    );
+
+  }
+
+  else if (state.gameKey === "circuit") {
+    state.circuitRotations =
+      [...state.puzzle.target];
+  }
+
+  else if (state.gameKey === "route") {
+    state.routePath =
+      [...state.puzzle.solution];
+  }
+
+  else if (state.gameKey === "cipher") {
+    state.cipherGuess =
+      [...state.puzzle.answer];
+  }
+
+  else if (state.gameKey === "eclipse") {
+    state.eclipseMarks =
+      [...state.puzzle.solution];
+  }
+
+  else if (state.gameKey === "balance") {
+    state.balanceLeft =
+      [...state.puzzle.solutionLeft];
+
+    state.balanceRight =
+      [...state.puzzle.solutionRight];
+  }
+
+  else if (state.gameKey === "signal") {
+
+    if (
+      state.puzzle.mode ===
+      "ordering"
+    ) {
+      state.selected =
+        [...state.puzzle.solution];
+    }
+    else {
+      state.signalAnswer =
+        String(state.puzzle.answer);
+    }
+
+  }
+
+  else if (state.gameKey === "special") {
+    state.selected =
+      [...state.puzzle.answer];
+  }
+
+  renderCurrentGame();
+
+  setFeedback(
+    "Solution revealed. You can study it, reset the puzzle, or move on to another round."
+  );
+
+}
+
+/* ==========================================================
    CHECK ANSWER
    ========================================================== */
 
 function checkPuzzle() {
 
-  state.attempts +=
-    1;
+  state.attempts += 1;
 
   $("#attemptsChip").textContent =
-    `${state.attempts} check${
-      state.attempts === 1
-      ?
-      ""
-      :
-      "s"
-    }`;
+    `${state.attempts} check${state.attempts === 1 ? "" : "s"}`;
 
-  let solved =
-    false;
+  let solved = false;
 
   if (
     state.gameKey === "queens"
   ) {
-
-    solved =
-      checkQueens();
-
+    solved = checkQueens();
   }
 
   else if (
     state.gameKey === "circuit"
   ) {
-
-    solved =
-      checkCircuit();
-
+    solved = checkCircuit();
   }
 
   else if (
     state.gameKey === "route"
   ) {
-
-    solved =
-      checkRoute();
-
+    solved = checkRoute();
   }
 
   else if (
     state.gameKey === "cipher"
   ) {
-
-    solved =
-      checkCipher();
-
+    solved = checkCipher();
   }
 
   else if (
-    state.gameKey === "shift"
+    state.gameKey === "eclipse"
   ) {
-
-    solved =
-      checkShift();
-
+    solved = checkEclipse();
   }
 
   else if (
     state.gameKey === "balance"
   ) {
-
-    solved =
-      checkBalance();
-
+    solved = checkBalance();
   }
 
   else if (
     state.gameKey === "signal"
   ) {
-
-    solved =
-      checkSignal();
-
+    solved = checkSignal();
   }
 
   else if (
     state.gameKey === "special"
   ) {
-
-    solved =
-      checkSpecial();
-
+    solved = checkSpecial();
   }
 
-  if (
-    solved
-  ) {
-
+  if (solved) {
     finishPuzzle();
-
   }
 
   else {
-
     setFeedback(
       "Not quite. At least one condition is still broken.",
       true
     );
-
   }
-
 }
-
 
 /* ==========================================================
    HINTS
@@ -4802,22 +5202,19 @@ function checkPuzzle() {
 
 function useHint() {
 
-  state.hints +=
-    1;
+  state.hints += 1;
 
   const puzzle =
     state.puzzle;
 
   if (
-    state.gameKey ===
-    "queens"
+    state.gameKey === "queens"
   ) {
 
     const size =
       puzzle.size;
 
-    let emptyRow =
-      -1;
+    let emptyRow = -1;
 
     for (
       let row = 0;
@@ -4832,154 +5229,199 @@ function useHint() {
         );
 
       if (
-        !values.includes(
-          1
-        )
+        !values.includes(1)
       ) {
-
-        emptyRow =
-          row;
-
+        emptyRow = row;
         break;
-
       }
-
     }
 
     if (
       emptyRow >= 0
     ) {
-
       const col =
-        puzzle.solution[
-          emptyRow
-        ];
+        puzzle.solution[emptyRow];
 
       setFeedback(
         `Focus on row ${emptyRow + 1}. Its queen belongs in the region containing column ${col + 1}.`
       );
-
     }
 
     return;
-
   }
 
-
   if (
-    state.gameKey ===
-    "circuit"
+    state.gameKey === "circuit"
   ) {
 
     const wrong =
       state.circuitRotations
         .findIndex(
-          (
-            value,
-            index
-          ) =>
+          (value, index) =>
             value !==
             puzzle.target[index]
         );
 
     setFeedback(
       wrong >= 0
-      ?
-      `Piece ${wrong + 1} is currently facing the wrong way.`
-      :
-      "Re-check all four totals."
+      ? `Piece ${wrong + 1} is currently facing the wrong way.`
+      : "Re-check all four totals."
     );
 
     return;
-
   }
 
-
   if (
-    state.gameKey ===
-    "route"
+    state.gameKey === "route"
   ) {
-
     setFeedback(
       `The final route uses exactly ${puzzle.requiredLength} cells. Check checkpoint order before heading for B.`
     );
-
     return;
-
   }
 
+  if (
+    state.gameKey === "cipher"
+  ) {
+    setFeedback(
+      `Start by combining these two clues: ${puzzle.clues[0]} ${puzzle.clues[1] || ""}`
+    );
+    return;
+  }
 
   if (
-    state.gameKey ===
-    "cipher"
+    state.gameKey === "eclipse"
   ) {
+
+    const size =
+      puzzle.size;
+
+    const marks =
+      state.eclipseMarks;
+
+    for (
+      let row = 0;
+      row < size;
+      row++
+    ) {
+
+      const start =
+        row * size;
+
+      for (
+        let col = 0;
+        col < size - 2;
+        col++
+      ) {
+
+        const a = marks[start + col];
+        const b = marks[start + col + 1];
+        const c = marks[start + col + 2];
+
+        if (
+          a !== 0 &&
+          a === b &&
+          c === 0
+        ) {
+          setFeedback(
+            `Row ${row + 1}: two matching symbols together force the next square to be the opposite symbol.`
+          );
+          return;
+        }
+
+        if (
+          b !== 0 &&
+          b === c &&
+          a === 0
+        ) {
+          setFeedback(
+            `Row ${row + 1}: two matching symbols together force the square before them to be the opposite symbol.`
+          );
+          return;
+        }
+
+        if (
+          a !== 0 &&
+          a === c &&
+          b === 0
+        ) {
+          setFeedback(
+            `Row ${row + 1}: matching symbols with one gap force the middle square to be the opposite symbol.`
+          );
+          return;
+        }
+      }
+    }
+
+    for (
+      let row = 0;
+      row < size;
+      row++
+    ) {
+
+      const line =
+        marks.slice(
+          row * size,
+          row * size + size
+        );
+
+      const suns =
+        line.filter(
+          value => value === 1
+        ).length;
+
+      const moons =
+        line.filter(
+          value => value === 2
+        ).length;
+
+      if (
+        line.includes(0) &&
+        (
+          suns === size / 2 ||
+          moons === size / 2
+        )
+      ) {
+        setFeedback(
+          `Row ${row + 1} already has all four ${suns === size / 2 ? "suns" : "moons"}. Every remaining square must be the other symbol.`
+        );
+        return;
+      }
+    }
 
     setFeedback(
-      `Start with: ${puzzle.clues[0]}`
+      "Check columns for a forced opposite symbol, then compare nearly completed rows so you do not create duplicates."
     );
-
     return;
-
   }
 
-
   if (
-    state.gameKey ===
-    "shift"
+    state.gameKey === "balance"
   ) {
-
     setFeedback(
-      "Compare the first symbol in each row with the first symbol of the target."
+      `LEFT needs exactly four weights totalling ${puzzle.leftTarget}, with ${puzzle.leftOdd} odd and spread ${puzzle.leftSpread}. Use all three constraints together.`
     );
-
     return;
-
   }
 
-
   if (
-    state.gameKey ===
-    "balance"
+    state.gameKey === "signal"
   ) {
-
     setFeedback(
-      `LEFT must total ${puzzle.leftTarget} using exactly three weights.`
+      puzzle.hint ||
+      "Try separating the information into two interacting patterns."
     );
-
     return;
-
   }
 
-
   if (
-    state.gameKey ===
-    "signal"
+    state.gameKey === "special"
   ) {
-
     setFeedback(
       puzzle.hint
-      ||
-      "Look for the smallest rule that explains every example."
     );
-
-    return;
-
   }
-
-
-  if (
-    state.gameKey ===
-    "special"
-  ) {
-
-    setFeedback(
-      puzzle.hint
-    );
-
-  }
-
 }
-
 
 /* ==========================================================
    FINISH
@@ -5753,6 +6195,13 @@ $("#hintButton")
   .addEventListener(
     "click",
     useHint
+  );
+
+
+$("#solutionButton")
+  .addEventListener(
+    "click",
+    revealSolution
   );
 
 
