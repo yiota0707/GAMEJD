@@ -1324,6 +1324,101 @@ function renderHome() {
 
   );
 
+
+  /*
+    DEANS KNOWLEDGE GP
+    Separate arcade trivia race page.
+  */
+
+  const gpCard =
+    document.createElement(
+      "button"
+    );
+
+  gpCard.type =
+    "button";
+
+  gpCard.id =
+    "knowledge-gp-card";
+
+  gpCard.className =
+    "game-card";
+
+  gpCard.style.background =
+    "linear-gradient(135deg,#dce7c9,#f4df9b)";
+
+  gpCard.innerHTML = `
+
+    <div class="game-card-top">
+
+      <div>
+
+        <div
+          style="
+            display:flex;
+            align-items:center;
+            gap:8px;
+            flex-wrap:wrap;
+          "
+        >
+
+          <h3>
+            Knowledge GP
+          </h3>
+
+          <span class="mini-pill">
+            DAILY RACE
+          </span>
+
+        </div>
+
+        <p>
+          Race DEANS to P1 using fast general-knowledge answers.
+          Knowledge controls the car.
+        </p>
+
+      </div>
+
+      <div
+        class="game-icon"
+        aria-hidden="true"
+      >
+        🏎️
+      </div>
+
+    </div>
+
+    <div class="game-card-footer">
+
+      <strong>
+        Trivia · Racing · Speed
+      </strong>
+
+      <span>
+        5–8 min
+      </span>
+
+    </div>
+
+  `;
+
+  gpCard.addEventListener(
+
+    "click",
+
+    () => {
+
+      window.location.href =
+        "knowledge-gp.html";
+
+    }
+
+  );
+
+  grid.appendChild(
+    gpCard
+  );
+
 }
 
 
