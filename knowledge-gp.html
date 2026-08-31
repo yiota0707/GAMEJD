@@ -1,0 +1,2464 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DEANS Knowledge GP</title>
+
+<style>
+:root{
+  --forest:#143c30;
+  --forest2:#0c2c22;
+  --cream:#f6f1e7;
+  --cream2:#ebe3d4;
+  --sage:#a9c3aa;
+  --asphalt:#252827;
+  --asphalt2:#313634;
+  --yellow:#f1d65a;
+  --red:#d74a45;
+  --blue:#5d89d8;
+  --orange:#ef8a44;
+  --white:#fffdf8;
+  --shadow:0 18px 50px rgba(10,30,23,.18);
+}
+
+*{
+  box-sizing:border-box;
+}
+
+html,body{
+  margin:0;
+  min-height:100%;
+}
+
+body{
+  font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  color:#17352a;
+  background:
+    radial-gradient(circle at 15% 10%,rgba(255,255,255,.7),transparent 28%),
+    linear-gradient(150deg,#eef1e4,#d8e2cf);
+}
+
+button{
+  font:inherit;
+}
+
+.app{
+  width:min(1180px,100%);
+  margin:0 auto;
+  padding:18px;
+}
+
+.topbar{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:12px;
+  margin-bottom:14px;
+}
+
+.brand{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  font-family:Georgia,serif;
+  font-weight:800;
+  letter-spacing:.04em;
+}
+
+.brand-mark{
+  width:38px;
+  height:38px;
+  display:grid;
+  place-items:center;
+  border-radius:50%;
+  background:var(--forest);
+  color:white;
+  font-family:Inter,sans-serif;
+  font-size:.72rem;
+}
+
+.back{
+  border:1px solid rgba(20,60,48,.18);
+  background:rgba(255,255,255,.55);
+  color:var(--forest);
+  border-radius:999px;
+  padding:9px 14px;
+  cursor:pointer;
+  font-weight:750;
+}
+
+.hero{
+  background:var(--cream);
+  border:1px solid rgba(20,60,48,.1);
+  border-radius:28px;
+  box-shadow:var(--shadow);
+  overflow:hidden;
+}
+
+.title-row{
+  display:flex;
+  justify-content:space-between;
+  align-items:end;
+  gap:18px;
+  padding:22px 24px 17px;
+}
+
+.eyebrow{
+  text-transform:uppercase;
+  font-size:.7rem;
+  letter-spacing:.16em;
+  font-weight:900;
+  color:#62756b;
+  margin-bottom:5px;
+}
+
+h1{
+  margin:0;
+  font-family:Georgia,serif;
+  font-size:clamp(2rem,5vw,4rem);
+  line-height:.95;
+  color:var(--forest);
+}
+
+.subtitle{
+  margin:9px 0 0;
+  max-width:650px;
+  color:#617168;
+  line-height:1.5;
+}
+
+.daily-chip{
+  flex:none;
+  background:var(--forest);
+  color:white;
+  border-radius:16px;
+  padding:11px 14px;
+  text-align:center;
+}
+
+.daily-chip small{
+  display:block;
+  opacity:.65;
+  font-size:.63rem;
+  text-transform:uppercase;
+  letter-spacing:.12em;
+}
+
+.daily-chip strong{
+  font-family:Georgia,serif;
+  font-size:1.1rem;
+}
+
+.race-layout{
+  display:grid;
+  grid-template-columns:minmax(0,1.55fr) minmax(330px,.7fr);
+  gap:14px;
+  padding:0 14px 14px;
+}
+
+.track-card{
+  position:relative;
+  min-height:620px;
+  border-radius:23px;
+  overflow:hidden;
+  background:
+    radial-gradient(circle at 20% 25%,rgba(255,255,255,.07),transparent 16%),
+    linear-gradient(145deg,#2e6f4a,#174c34);
+}
+
+.track-wrap{
+  position:absolute;
+  inset:0;
+}
+
+.track-svg{
+  width:100%;
+  height:100%;
+  display:block;
+}
+
+.track-shadow{
+  fill:none;
+  stroke:#0d251b;
+  stroke-width:88;
+  stroke-linecap:round;
+  stroke-linejoin:round;
+  opacity:.34;
+}
+
+.track-border{
+  fill:none;
+  stroke:#e8eadc;
+  stroke-width:78;
+  stroke-linecap:round;
+  stroke-linejoin:round;
+}
+
+.track-road{
+  fill:none;
+  stroke:var(--asphalt);
+  stroke-width:68;
+  stroke-linecap:round;
+  stroke-linejoin:round;
+}
+
+.track-center{
+  fill:none;
+  stroke:rgba(255,255,255,.12);
+  stroke-width:2;
+  stroke-dasharray:8 12;
+}
+
+.start-line{
+  stroke:white;
+  stroke-width:7;
+  stroke-dasharray:7 7;
+}
+
+.kerb-red{
+  stroke:#d94b45;
+  stroke-width:5;
+}
+
+.kerb-white{
+  stroke:#f4f0e4;
+  stroke-width:5;
+}
+
+.car-label{
+  font-size:9px;
+  font-weight:900;
+  fill:white;
+  text-anchor:middle;
+  paint-order:stroke;
+  stroke:#10241d;
+  stroke-width:2.5px;
+  stroke-linejoin:round;
+}
+
+.car-shadow{
+  filter:drop-shadow(0 3px 3px rgba(0,0,0,.42));
+}
+
+.race-control{
+  position:absolute;
+  top:18px;
+  left:50%;
+  transform:translateX(-50%);
+  z-index:5;
+  min-width:min(420px,86%);
+  border:1px solid rgba(255,255,255,.2);
+  background:rgba(8,30,22,.87);
+  color:white;
+  padding:10px 18px;
+  border-radius:999px;
+  text-align:center;
+  font-weight:900;
+  letter-spacing:.02em;
+  backdrop-filter:blur(8px);
+  box-shadow:0 10px 30px rgba(0,0,0,.2);
+}
+
+.hud{
+  position:absolute;
+  left:14px;
+  right:14px;
+  bottom:14px;
+  z-index:4;
+  display:grid;
+  grid-template-columns:repeat(6,minmax(0,1fr));
+  gap:7px;
+}
+
+.hud-item{
+  background:rgba(9,29,22,.88);
+  color:white;
+  border:1px solid rgba(255,255,255,.13);
+  border-radius:12px;
+  padding:8px;
+  min-width:0;
+  backdrop-filter:blur(8px);
+}
+
+.hud-item small{
+  display:block;
+  font-size:.54rem;
+  opacity:.55;
+  letter-spacing:.09em;
+  text-transform:uppercase;
+  white-space:nowrap;
+}
+
+.hud-item strong{
+  display:block;
+  margin-top:2px;
+  font-size:.84rem;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+}
+
+.speed-lines{
+  position:absolute;
+  inset:0;
+  pointer-events:none;
+  opacity:0;
+  background:
+    repeating-linear-gradient(
+      112deg,
+      transparent 0 32px,
+      rgba(255,255,255,.13) 33px 35px,
+      transparent 36px 66px
+    );
+}
+
+.speed-lines.active{
+  animation:speedFlash 1.2s ease;
+}
+
+@keyframes speedFlash{
+  0%{opacity:0}
+  20%{opacity:1}
+  100%{opacity:0}
+}
+
+.question-card{
+  display:flex;
+  flex-direction:column;
+  min-height:620px;
+  padding:20px;
+  border-radius:23px;
+  background:#fffaf0;
+}
+
+.phase-badge{
+  display:inline-flex;
+  align-self:flex-start;
+  align-items:center;
+  min-height:29px;
+  background:#e8ecdf;
+  color:var(--forest);
+  padding:5px 10px;
+  border-radius:999px;
+  font-weight:900;
+  font-size:.7rem;
+  letter-spacing:.06em;
+}
+
+.phase-badge.drs{
+  background:#dce7ff;
+  color:#2757a5;
+}
+
+.phase-badge.final{
+  background:#ffe3b7;
+  color:#8b4800;
+}
+
+.category{
+  margin-top:18px;
+  font-size:.69rem;
+  font-weight:950;
+  text-transform:uppercase;
+  letter-spacing:.12em;
+  color:#69776f;
+}
+
+.question{
+  margin:8px 0 18px;
+  font-family:Georgia,serif;
+  color:#17372b;
+  font-size:clamp(1.35rem,2.7vw,2rem);
+  line-height:1.12;
+}
+
+.timer-row{
+  display:flex;
+  align-items:center;
+  gap:12px;
+  margin-bottom:15px;
+}
+
+.timer-number{
+  width:62px;
+  flex:none;
+  font-size:1.45rem;
+  font-weight:950;
+  font-variant-numeric:tabular-nums;
+  color:var(--forest);
+}
+
+.timer-track{
+  height:11px;
+  flex:1;
+  background:#e5dfd3;
+  border-radius:999px;
+  overflow:hidden;
+}
+
+.timer-bar{
+  width:100%;
+  height:100%;
+  background:linear-gradient(90deg,#79b87f,#1f654a);
+  transform-origin:left;
+}
+
+.answers{
+  display:grid;
+  gap:8px;
+}
+
+.answer{
+  width:100%;
+  display:flex;
+  align-items:center;
+  gap:10px;
+  min-height:58px;
+  border:1px solid #ded7ca;
+  background:white;
+  color:#1c392e;
+  border-radius:14px;
+  padding:10px 12px;
+  cursor:pointer;
+  text-align:left;
+  transition:.15s ease;
+}
+
+.answer:hover:not(:disabled){
+  border-color:#648b78;
+  transform:translateY(-1px);
+}
+
+.answer:disabled{
+  cursor:default;
+}
+
+.answer.correct{
+  background:#dcefd9;
+  border-color:#77a66d;
+}
+
+.answer.wrong{
+  background:#f6d8d4;
+  border-color:#d47168;
+}
+
+.answer-letter{
+  width:31px;
+  height:31px;
+  flex:none;
+  display:grid;
+  place-items:center;
+  border-radius:9px;
+  background:#e9eee7;
+  font-weight:950;
+}
+
+.answer-feedback{
+  min-height:42px;
+  margin-top:12px;
+  color:#52675d;
+  line-height:1.35;
+  font-weight:700;
+}
+
+.start-overlay,
+.results-overlay{
+  position:absolute;
+  inset:0;
+  z-index:20;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:24px;
+  background:rgba(8,30,22,.76);
+  backdrop-filter:blur(9px);
+}
+
+.overlay-panel{
+  width:min(460px,100%);
+  border-radius:26px;
+  background:#fffaf0;
+  padding:28px;
+  text-align:center;
+  box-shadow:0 30px 70px rgba(0,0,0,.28);
+}
+
+.lights{
+  display:flex;
+  justify-content:center;
+  gap:8px;
+  margin-bottom:18px;
+}
+
+.light{
+  width:34px;
+  height:34px;
+  border-radius:50%;
+  background:#482b28;
+  box-shadow:inset 0 0 0 4px rgba(0,0,0,.18);
+}
+
+.light.on{
+  background:#ef493f;
+  box-shadow:0 0 18px rgba(239,73,63,.7);
+}
+
+.overlay-panel h2{
+  margin:0;
+  font-family:Georgia,serif;
+  font-size:2.4rem;
+  color:var(--forest);
+}
+
+.overlay-panel p{
+  color:#607268;
+  line-height:1.5;
+}
+
+.primary{
+  border:0;
+  border-radius:999px;
+  background:var(--forest);
+  color:white;
+  padding:12px 22px;
+  font-weight:900;
+  cursor:pointer;
+}
+
+.result-position{
+  margin:10px 0;
+  font-family:Georgia,serif;
+  font-size:4rem;
+  color:var(--forest);
+  line-height:1;
+}
+
+.result-grid{
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:8px;
+  margin:18px 0;
+}
+
+.result-stat{
+  padding:10px;
+  border-radius:13px;
+  background:#edf0e6;
+}
+
+.result-stat small{
+  display:block;
+  text-transform:uppercase;
+  letter-spacing:.08em;
+  color:#718078;
+  font-size:.6rem;
+}
+
+.result-stat strong{
+  display:block;
+  margin-top:3px;
+  color:#193d30;
+}
+
+.hidden{
+  display:none!important;
+}
+
+.footer-note{
+  padding:0 20px 18px;
+  color:#728078;
+  font-size:.72rem;
+  text-align:center;
+}
+
+@media(max-width:900px){
+  .race-layout{
+    grid-template-columns:1fr;
+  }
+
+  .track-card,
+  .question-card{
+    min-height:520px;
+  }
+
+  .hud{
+    grid-template-columns:repeat(3,1fr);
+  }
+}
+
+@media(max-width:540px){
+  .app{
+    padding:8px;
+  }
+
+  .title-row{
+    align-items:flex-start;
+    padding:18px 16px 14px;
+  }
+
+  .daily-chip{
+    display:none;
+  }
+
+  .race-layout{
+    padding:0 8px 8px;
+    gap:8px;
+  }
+
+  .track-card{
+    min-height:420px;
+  }
+
+  .question-card{
+    min-height:auto;
+    padding:16px;
+  }
+
+  .hud{
+    left:8px;
+    right:8px;
+    bottom:8px;
+    gap:4px;
+  }
+
+  .hud-item{
+    padding:6px;
+    border-radius:9px;
+  }
+
+  .hud-item strong{
+    font-size:.7rem;
+  }
+
+  .race-control{
+    top:9px;
+    font-size:.75rem;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<div class="app">
+
+  <div class="topbar">
+    <div class="brand">
+      <div class="brand-mark">DG</div>
+      <span>DEANS | Games</span>
+    </div>
+
+    <button class="back" onclick="location.href='index.html'">
+      Back to games
+    </button>
+  </div>
+
+  <main class="hero">
+
+    <section class="title-row">
+
+      <div>
+        <div class="eyebrow">Daily race</div>
+        <h1>DEANS Knowledge GP</h1>
+        <p class="subtitle">
+          Knowledge controls the race. Answer faster, accelerate harder and fight your way to P1.
+        </p>
+      </div>
+
+      <div class="daily-chip">
+        <small>Today's GP</small>
+        <strong id="dateLabel">Daily</strong>
+      </div>
+
+    </section>
+
+    <section class="race-layout">
+
+      <div class="track-card">
+
+        <div id="raceControl" class="race-control">
+          Answer to accelerate!
+        </div>
+
+        <div id="speedLines" class="speed-lines"></div>
+
+        <div class="track-wrap">
+
+          <svg
+            class="track-svg"
+            id="trackSvg"
+            viewBox="0 0 800 620"
+            preserveAspectRatio="xMidYMid meet"
+          >
+
+            <defs>
+              <filter id="carGlow">
+                <feGaussianBlur stdDeviation="2" result="blur"/>
+                <feMerge>
+                  <feMergeNode in="blur"/>
+                  <feMergeNode in="SourceGraphic"/>
+                </feMerge>
+              </filter>
+            </defs>
+
+            <path
+              class="track-shadow"
+              d="M170 115
+                 C290 48 530 48 650 125
+                 C750 190 738 305 650 350
+                 C582 385 570 448 630 500
+                 C530 570 320 573 190 520
+                 C80 476 72 374 150 324
+                 C220 280 225 222 165 185
+                 C118 156 122 139 170 115 Z"
+            />
+
+            <path
+              class="track-border"
+              d="M170 115
+                 C290 48 530 48 650 125
+                 C750 190 738 305 650 350
+                 C582 385 570 448 630 500
+                 C530 570 320 573 190 520
+                 C80 476 72 374 150 324
+                 C220 280 225 222 165 185
+                 C118 156 122 139 170 115 Z"
+            />
+
+            <path
+              class="track-road"
+              d="M170 115
+                 C290 48 530 48 650 125
+                 C750 190 738 305 650 350
+                 C582 385 570 448 630 500
+                 C530 570 320 573 190 520
+                 C80 476 72 374 150 324
+                 C220 280 225 222 165 185
+                 C118 156 122 139 170 115 Z"
+            />
+
+            <path
+              id="trackPath"
+              class="track-center"
+              d="M170 115
+                 C290 48 530 48 650 125
+                 C750 190 738 305 650 350
+                 C582 385 570 448 630 500
+                 C530 570 320 573 190 520
+                 C80 476 72 374 150 324
+                 C220 280 225 222 165 185
+                 C118 156 122 139 170 115 Z"
+            />
+
+            <line
+              x1="154"
+              y1="92"
+              x2="183"
+              y2="137"
+              class="start-line"
+            />
+
+            <g id="car0" class="car-shadow">
+              <g>
+                <rect x="-11" y="-18" width="22" height="36" rx="7" fill="#f1d65a"/>
+                <rect x="-7" y="-12" width="14" height="11" rx="3" fill="#163b30"/>
+                <path d="M-9 -18 L0 -25 L9 -18 Z" fill="#f1d65a"/>
+                <rect x="-16" y="-13" width="5" height="10" rx="2" fill="#111"/>
+                <rect x="11" y="-13" width="5" height="10" rx="2" fill="#111"/>
+                <rect x="-16" y="6" width="5" height="10" rx="2" fill="#111"/>
+                <rect x="11" y="6" width="5" height="10" rx="2" fill="#111"/>
+                <rect x="-15" y="15" width="30" height="4" rx="2" fill="#f1d65a"/>
+              </g>
+              <text class="car-label" x="0" y="32">DEANS</text>
+            </g>
+
+            <g id="car1" class="car-shadow">
+              <g>
+                <rect x="-10" y="-17" width="20" height="34" rx="7" fill="#d74a45"/>
+                <rect x="-6" y="-11" width="12" height="10" rx="3" fill="#192b27"/>
+                <path d="M-8 -17 L0 -23 L8 -17 Z" fill="#d74a45"/>
+                <rect x="-15" y="-12" width="5" height="9" rx="2" fill="#111"/>
+                <rect x="10" y="-12" width="5" height="9" rx="2" fill="#111"/>
+                <rect x="-15" y="6" width="5" height="9" rx="2" fill="#111"/>
+                <rect x="10" y="6" width="5" height="9" rx="2" fill="#111"/>
+              </g>
+              <text class="car-label" x="0" y="30">R1</text>
+            </g>
+
+            <g id="car2" class="car-shadow">
+              <g>
+                <rect x="-10" y="-17" width="20" height="34" rx="7" fill="#5d89d8"/>
+                <rect x="-6" y="-11" width="12" height="10" rx="3" fill="#192b27"/>
+                <path d="M-8 -17 L0 -23 L8 -17 Z" fill="#5d89d8"/>
+                <rect x="-15" y="-12" width="5" height="9" rx="2" fill="#111"/>
+                <rect x="10" y="-12" width="5" height="9" rx="2" fill="#111"/>
+                <rect x="-15" y="6" width="5" height="9" rx="2" fill="#111"/>
+                <rect x="10" y="6" width="5" height="9" rx="2" fill="#111"/>
+              </g>
+              <text class="car-label" x="0" y="30">R2</text>
+            </g>
+
+            <g id="car3" class="car-shadow">
+              <g>
+                <rect x="-10" y="-17" width="20" height="34" rx="7" fill="#ef8a44"/>
+                <rect x="-6" y="-11" width="12" height="10" rx="3" fill="#192b27"/>
+                <path d="M-8 -17 L0 -23 L8 -17 Z" fill="#ef8a44"/>
+                <rect x="-15" y="-12" width="5" height="9" rx="2" fill="#111"/>
+                <rect x="10" y="-12" width="5" height="9" rx="2" fill="#111"/>
+                <rect x="-15" y="6" width="5" height="9" rx="2" fill="#111"/>
+                <rect x="10" y="6" width="5" height="9" rx="2" fill="#111"/>
+              </g>
+              <text class="car-label" x="0" y="30">R3</text>
+            </g>
+
+          </svg>
+
+        </div>
+
+        <div class="hud">
+
+          <div class="hud-item">
+            <small>Question</small>
+            <strong id="hudQuestion">1 / 8</strong>
+          </div>
+
+          <div class="hud-item">
+            <small>DEANS</small>
+            <strong id="hudPosition">P4</strong>
+          </div>
+
+          <div class="hud-item">
+            <small>Score</small>
+            <strong id="hudScore">0 / 8</strong>
+          </div>
+
+          <div class="hud-item">
+            <small>Streak</small>
+            <strong id="hudStreak">0</strong>
+          </div>
+
+          <div class="hud-item">
+            <small>Last boost</small>
+            <strong id="hudBoost">READY</strong>
+          </div>
+
+          <div class="hud-item">
+            <small>Gap</small>
+            <strong id="hudGap">+0.0 SEC</strong>
+          </div>
+
+        </div>
+
+        <div id="startOverlay" class="start-overlay">
+
+          <div class="overlay-panel">
+
+            <div class="lights">
+              <div class="light" id="light1"></div>
+              <div class="light" id="light2"></div>
+              <div class="light" id="light3"></div>
+              <div class="light" id="light4"></div>
+              <div class="light" id="light5"></div>
+            </div>
+
+            <div class="eyebrow">Today's race</div>
+
+            <h2>Knowledge GP</h2>
+
+            <p>
+              Eight questions. Four cars. Faster correct answers mean bigger boosts.
+            </p>
+
+            <button class="primary" id="startBtn">
+              LIGHTS OUT
+            </button>
+
+          </div>
+
+        </div>
+
+        <div id="resultsOverlay" class="results-overlay hidden">
+
+          <div class="overlay-panel">
+
+            <div class="eyebrow">Race result</div>
+
+            <h2 id="resultTitle">DEANS WINS!</h2>
+
+            <div id="resultPosition" class="result-position">
+              P1
+            </div>
+
+            <div class="result-grid">
+
+              <div class="result-stat">
+                <small>Correct</small>
+                <strong id="resultCorrect">0 / 8</strong>
+              </div>
+
+              <div class="result-stat">
+                <small>Fastest</small>
+                <strong id="resultFastest">--</strong>
+              </div>
+
+              <div class="result-stat">
+                <small>Best streak</small>
+                <strong id="resultStreak">0</strong>
+              </div>
+
+              <div class="result-stat">
+                <small>Daily streak</small>
+                <strong id="resultDaily">1</strong>
+              </div>
+
+            </div>
+
+            <button class="primary" id="replayBtn">
+              RACE AGAIN
+            </button>
+
+          </div>
+
+        </div>
+
+      </div>
+
+      <aside class="question-card">
+
+        <div id="phaseBadge" class="phase-badge">
+          GREEN FLAG
+        </div>
+
+        <div id="category" class="category">
+          GENERAL KNOWLEDGE
+        </div>
+
+        <div id="question" class="question">
+          Press LIGHTS OUT to start today's race.
+        </div>
+
+        <div class="timer-row">
+
+          <div id="timerNumber" class="timer-number">
+            10.0
+          </div>
+
+          <div class="timer-track">
+            <div id="timerBar" class="timer-bar"></div>
+          </div>
+
+        </div>
+
+        <div id="answers" class="answers"></div>
+
+        <div id="answerFeedback" class="answer-feedback">
+          Knowledge controls the race.
+        </div>
+
+      </aside>
+
+    </section>
+
+    <div class="footer-note">
+      Motorsport-inspired arcade trivia. No official Formula 1 branding or team assets are used.
+    </div>
+
+  </main>
+
+</div>
+
+<script>
+"use strict";
+
+/* =========================================================
+   QUESTION BANK
+   ========================================================= */
+
+const QUESTION_BANK = [
+
+  {
+    category:"GENERAL KNOWLEDGE",
+    q:"Which metal has the chemical symbol Au?",
+    a:["Silver","Gold","Copper","Aluminium"],
+    correct:1
+  },
+
+  {
+    category:"GENERAL KNOWLEDGE",
+    q:"What is the largest ocean on Earth?",
+    a:["Atlantic","Indian","Pacific","Arctic"],
+    correct:2
+  },
+
+  {
+    category:"GENERAL KNOWLEDGE",
+    q:"Which language has the most native speakers worldwide?",
+    a:["English","Spanish","Mandarin Chinese","Hindi"],
+    correct:2
+  },
+
+  {
+    category:"MOTORSPORT",
+    q:"Which circuit is famous for Eau Rouge and Raidillon?",
+    a:["Monza","Silverstone","Spa-Francorchamps","Suzuka"],
+    correct:2
+  },
+
+  {
+    category:"MOTORSPORT",
+    q:"In circuit racing, what does a chequered flag normally signal?",
+    a:["Safety car","Race finished","Pit lane closed","Wet track"],
+    correct:1
+  },
+
+  {
+    category:"MOTORSPORT",
+    q:"Which country hosts the Monaco Grand Prix?",
+    a:["France","Italy","Monaco","Spain"],
+    correct:2
+  },
+
+  {
+    category:"HISTORY",
+    q:"Which ancient civilisation built Machu Picchu?",
+    a:["Maya","Inca","Aztec","Roman"],
+    correct:1
+  },
+
+  {
+    category:"HISTORY",
+    q:"In which year did the Berlin Wall fall?",
+    a:["1979","1985","1989","1993"],
+    correct:2
+  },
+
+  {
+    category:"HISTORY",
+    q:"Who was the first human to walk on the Moon?",
+    a:["Buzz Aldrin","Neil Armstrong","Yuri Gagarin","John Glenn"],
+    correct:1
+  },
+
+  {
+    category:"GAME OF THRONES",
+    q:"What is the name of Arya Stark's sword?",
+    a:["Oathkeeper","Longclaw","Needle","Heartsbane"],
+    correct:2
+  },
+
+  {
+    category:"GAME OF THRONES",
+    q:"Which house uses the words 'Winter Is Coming'?",
+    a:["Lannister","Stark","Baratheon","Tyrell"],
+    correct:1
+  },
+
+  {
+    category:"GAME OF THRONES",
+    q:"What is the capital of the Seven Kingdoms for most of the series?",
+    a:["Winterfell","Oldtown","King's Landing","Dragonstone"],
+    correct:2
+  },
+
+  {
+    category:"GEOGRAPHY",
+    q:"Which river runs through Budapest?",
+    a:["Rhine","Danube","Seine","Thames"],
+    correct:1
+  },
+
+  {
+    category:"GEOGRAPHY",
+    q:"Which country has the city of Marrakech?",
+    a:["Morocco","Portugal","Jordan","Egypt"],
+    correct:0
+  },
+
+  {
+    category:"GEOGRAPHY",
+    q:"Mount Kilimanjaro is in which country?",
+    a:["Kenya","Tanzania","Uganda","Ethiopia"],
+    correct:1
+  },
+
+  {
+    category:"MOVIES & TV",
+    q:"In The Matrix, which colour pill does Neo take?",
+    a:["Blue","Green","Red","White"],
+    correct:2
+  },
+
+  {
+    category:"MOVIES & TV",
+    q:"Which fictional archaeologist is famous for carrying a whip?",
+    a:["Ethan Hunt","Indiana Jones","John McClane","Rick Deckard"],
+    correct:1
+  },
+
+  {
+    category:"MOVIES & TV",
+    q:"What is the name of the coffee shop in Friends?",
+    a:["Central Perk","Daily Grind","Monk's Cafe","Java House"],
+    correct:0
+  },
+
+  {
+    category:"SPORT",
+    q:"How many players does a football team normally have on the pitch?",
+    a:["9","10","11","12"],
+    correct:2
+  },
+
+  {
+    category:"SPORT",
+    q:"In tennis, what word represents a score of zero?",
+    a:["Nil","Blank","Love","Duck"],
+    correct:2
+  },
+
+  {
+    category:"SPORT",
+    q:"Which sport uses the terms birdie, eagle and bogey?",
+    a:["Cricket","Golf","Baseball","Badminton"],
+    correct:1
+  },
+
+  {
+    category:"SCIENCE",
+    q:"Which planet is known for its prominent ring system?",
+    a:["Mars","Venus","Saturn","Mercury"],
+    correct:2
+  },
+
+  {
+    category:"SCIENCE",
+    q:"What gas do plants absorb from the atmosphere?",
+    a:["Oxygen","Hydrogen","Carbon dioxide","Helium"],
+    correct:2
+  },
+
+  {
+    category:"SCIENCE",
+    q:"Which part of a cell contains most of its genetic material?",
+    a:["Nucleus","Membrane","Cytoplasm","Ribosome"],
+    correct:0
+  },
+
+  {
+    category:"MUSIC & POP CULTURE",
+    q:"Which instrument normally has 88 keys?",
+    a:["Violin","Piano","Trumpet","Guitar"],
+    correct:1
+  },
+
+  {
+    category:"MUSIC & POP CULTURE",
+    q:"Which band released the album Abbey Road?",
+    a:["Queen","The Beatles","Oasis","U2"],
+    correct:1
+  },
+
+  {
+    category:"MUSIC & POP CULTURE",
+    q:"Which singer is associated with the album 21?",
+    a:["Adele","Rihanna","Beyonce","Dua Lipa"],
+    correct:0
+  },
+
+  {
+    category:"LOGIC",
+    q:"If every Zorp is a Blip and every Blip is a Nax, every Zorp must be what?",
+    a:["A Nax","Not a Nax","A Blip only","Impossible to know"],
+    correct:0
+  },
+
+  {
+    category:"LOGIC",
+    q:"What comes next: 2, 6, 12, 20, 30, ?",
+    a:["36","40","42","44"],
+    correct:2
+  },
+
+  {
+    category:"LOGIC",
+    q:"A clock shows 3:00. What is the angle between the hour and minute hands?",
+    a:["45 degrees","60 degrees","90 degrees","120 degrees"],
+    correct:2
+  },
+
+  {
+    category:"GENERAL KNOWLEDGE",
+    q:"Which country gifted the Statue of Liberty to the United States?",
+    a:["France","Spain","Italy","Canada"],
+    correct:0
+  },
+
+  {
+    category:"GEOGRAPHY",
+    q:"Which is the smallest country in the world by area?",
+    a:["Monaco","Malta","Vatican City","Liechtenstein"],
+    correct:2
+  },
+
+  {
+    category:"HISTORY",
+    q:"The ancient city of Pompeii was buried by which volcano?",
+    a:["Etna","Vesuvius","Stromboli","Olympus"],
+    correct:1
+  },
+
+  {
+    category:"SCIENCE",
+    q:"What is the fastest land animal?",
+    a:["Lion","Greyhound","Cheetah","Pronghorn"],
+    correct:2
+  },
+
+  {
+    category:"SPORT",
+    q:"How many rings are on the Olympic symbol?",
+    a:["4","5","6","7"],
+    correct:1
+  },
+
+  {
+    category:"MOVIES & TV",
+    q:"Which film series features the fictional school Hogwarts?",
+    a:["Twilight","Harry Potter","The Hunger Games","Narnia"],
+    correct:1
+  },
+
+  {
+    category:"MOTORSPORT",
+    q:"What does a pit stop usually allow a racing team to change most quickly?",
+    a:["Engine block","Tyres","Steering wheel","Chassis"],
+    correct:1
+  },
+
+  {
+    category:"GAME OF THRONES",
+    q:"Which substance can kill White Walkers?",
+    a:["Iron","Dragonglass","Silver","Wildfire only"],
+    correct:1
+  },
+
+  {
+    category:"LOGIC",
+    q:"If you overtake the person in second place, what position are you now in?",
+    a:["First","Second","Third","It depends"],
+    correct:1
+  },
+
+  {
+    category:"GENERAL KNOWLEDGE",
+    q:"Which board game has properties such as Mayfair and Park Lane in its UK edition?",
+    a:["Cluedo","Risk","Monopoly","Scrabble"],
+    correct:2
+  }
+
+];
+
+
+/* =========================================================
+   DAILY RANDOM
+   ========================================================= */
+
+function dateKey(){
+  const d = new Date();
+  const y = d.getFullYear();
+  const m = String(d.getMonth()+1).padStart(2,"0");
+  const day = String(d.getDate()).padStart(2,"0");
+  return y + "-" + m + "-" + day;
+}
+
+function hashString(str){
+  let h = 2166136261;
+
+  for(let i=0;i<str.length;i++){
+    h ^= str.charCodeAt(i);
+    h = Math.imul(h,16777619);
+  }
+
+  return h >>> 0;
+}
+
+function seededRandom(seed){
+  let x = seed >>> 0;
+
+  return function(){
+    x += 0x6D2B79F5;
+
+    let t = x;
+
+    t = Math.imul(t ^ (t >>> 15), t | 1);
+    t ^= t + Math.imul(t ^ (t >>> 7), t | 61);
+
+    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+  };
+}
+
+function dailyQuestions(){
+  const rng = seededRandom(hashString("DEANS-GP-" + dateKey()));
+
+  const pool = QUESTION_BANK.map((q,i)=>({q,i}));
+
+  for(let i=pool.length-1;i>0;i--){
+    const j = Math.floor(rng()*(i+1));
+    [pool[i],pool[j]] = [pool[j],pool[i]];
+  }
+
+  const chosen = [];
+  const usedCategories = new Set();
+
+  for(const item of pool){
+    if(!usedCategories.has(item.q.category)){
+      chosen.push(item.q);
+      usedCategories.add(item.q.category);
+    }
+
+    if(chosen.length===8) break;
+  }
+
+  if(chosen.length<8){
+    for(const item of pool){
+      if(!chosen.includes(item.q)){
+        chosen.push(item.q);
+      }
+
+      if(chosen.length===8) break;
+    }
+  }
+
+  return chosen;
+}
+
+
+/* =========================================================
+   DOM
+   ========================================================= */
+
+const $ = selector => document.querySelector(selector);
+
+const trackPath = $("#trackPath");
+const trackLength = trackPath.getTotalLength();
+
+const carEls = [
+  $("#car0"),
+  $("#car1"),
+  $("#car2"),
+  $("#car3")
+];
+
+const laneOffsets = [-12,-4,5,13];
+
+const state = {
+  questions:dailyQuestions(),
+  questionIndex:0,
+  correct:0,
+  streak:0,
+  bestStreak:0,
+  fastest:null,
+  answered:false,
+  phase:"idle",
+  questionStarted:0,
+  questionDuration:10,
+  timerRAF:null,
+  raceRAF:null,
+  lastBoost:"READY",
+  positions:[0.018,0.025,0.032,0.039],
+  targetPositions:[0.018,0.025,0.032,0.039],
+  raceAnimating:false,
+  finalPosition:4
+};
+
+$("#dateLabel").textContent =
+  new Date().toLocaleDateString(undefined,{
+    day:"numeric",
+    month:"short"
+  });
+
+
+/* =========================================================
+   TRACK PHYSICS
+   Cars are positioned from SVG path geometry.
+   Rotation follows the local path tangent.
+   ========================================================= */
+
+function placeCar(index,progress){
+
+  const wrapped =
+    ((progress % 1) + 1) % 1;
+
+  const distance =
+    wrapped * trackLength;
+
+  const p =
+    trackPath.getPointAtLength(distance);
+
+  const p2 =
+    trackPath.getPointAtLength(
+      Math.min(trackLength,distance+2)
+    );
+
+  const dx = p2.x-p.x;
+  const dy = p2.y-p.y;
+
+  const mag =
+    Math.sqrt(dx*dx+dy*dy) || 1;
+
+  const nx = -dy/mag;
+  const ny = dx/mag;
+
+  const offset =
+    laneOffsets[index];
+
+  const x =
+    p.x + nx*offset;
+
+  const y =
+    p.y + ny*offset;
+
+  /*
+   * Car artwork points upward.
+   * atan2 gives travel direction measured from +X.
+   * +90 aligns the car's nose with the tangent.
+   */
+
+  const angle =
+    Math.atan2(dy,dx)*180/Math.PI + 90;
+
+  carEls[index].setAttribute(
+    "transform",
+    "translate(" +
+      x.toFixed(2) +
+      " " +
+      y.toFixed(2) +
+    ") rotate(" +
+      angle.toFixed(2) +
+    ")"
+  );
+}
+
+function renderCars(){
+  state.positions.forEach((p,i)=>placeCar(i,p));
+}
+
+renderCars();
+
+
+/* =========================================================
+   POSITION / GAP
+   ========================================================= */
+
+function standings(){
+
+  return state.positions
+    .map((progress,index)=>({
+      index,
+      progress
+    }))
+    .sort((a,b)=>b.progress-a.progress);
+
+}
+
+function deansPosition(){
+
+  const order = standings();
+
+  return (
+    order.findIndex(
+      item=>item.index===0
+    ) + 1
+  );
+
+}
+
+function updateHud(){
+
+  const pos =
+    deansPosition();
+
+  $("#hudQuestion").textContent =
+    Math.min(state.questionIndex+1,state.questions.length) +
+    " / " +
+    state.questions.length;
+
+  $("#hudPosition").textContent =
+    "P" + pos;
+
+  $("#hudScore").textContent =
+    state.correct +
+    " / " +
+    state.questions.length;
+
+  $("#hudStreak").textContent =
+    state.streak > 1
+      ? state.streak + " FIRE"
+      : String(state.streak);
+
+  $("#hudBoost").textContent =
+    state.lastBoost;
+
+  const order =
+    standings();
+
+  const leader =
+    order[0];
+
+  if(leader.index===0){
+
+    $("#hudGap").textContent =
+      "LEADING";
+
+  }else{
+
+    const gap =
+      Math.max(
+        0,
+        (leader.progress-state.positions[0])*28
+      );
+
+    $("#hudGap").textContent =
+      "+" + gap.toFixed(1) + " SEC";
+
+  }
+
+}
+
+updateHud();
+
+
+/* =========================================================
+   QUESTION UI
+   ========================================================= */
+
+function loadQuestion(){
+
+  if(state.questionIndex>=state.questions.length){
+    finishRace();
+    return;
+  }
+
+  state.phase="question";
+  state.answered=false;
+
+  const q =
+    state.questions[state.questionIndex];
+
+  const final =
+    state.questionIndex === state.questions.length-1;
+
+  const drs =
+    !final &&
+    (
+      state.questionIndex===2 ||
+      state.questionIndex===5
+    );
+
+  const badge =
+    $("#phaseBadge");
+
+  badge.className =
+    "phase-badge" +
+    (final ? " final" : drs ? " drs" : "");
+
+  badge.textContent =
+    final
+      ? "FINAL LAP"
+      : drs
+        ? "DRS ZONE"
+        : "GREEN FLAG";
+
+  $("#category").textContent =
+    q.category;
+
+  $("#question").textContent =
+    q.q;
+
+  $("#answerFeedback").textContent =
+    final
+      ? "Final lap. Everything counts."
+      : drs
+        ? "DRS active. Correct answers earn an extra boost."
+        : "Answer quickly to accelerate.";
+
+  const answers =
+    $("#answers");
+
+  answers.innerHTML="";
+
+  const letters =
+    ["A","B","C","D"];
+
+  q.a.forEach((answer,index)=>{
+
+    const button =
+      document.createElement("button");
+
+    button.className =
+      "answer";
+
+    button.innerHTML =
+      '<span class="answer-letter">' +
+      letters[index] +
+      '</span><span>' +
+      answer +
+      '</span>';
+
+    button.addEventListener(
+      "click",
+      ()=>answerQuestion(index,button)
+    );
+
+    answers.appendChild(button);
+
+  });
+
+  state.questionDuration =
+    final ? 7 : 10;
+
+  state.questionStarted =
+    performance.now();
+
+  startQuestionTimer();
+
+  if(final){
+    setRaceControl("FINAL LAP!");
+  }else if(drs){
+    setRaceControl("DRS ZONE - nail this answer!");
+  }else{
+    setRaceControl("Answer to accelerate!");
+  }
+
+  updateHud();
+
+}
+
+
+/* =========================================================
+   TIMER
+   ========================================================= */
+
+function startQuestionTimer(){
+
+  cancelAnimationFrame(
+    state.timerRAF
+  );
+
+  const total =
+    state.questionDuration*1000;
+
+  function tick(now){
+
+    if(
+      state.phase!=="question" ||
+      state.answered
+    ){
+      return;
+    }
+
+    const elapsed =
+      now-state.questionStarted;
+
+    const remaining =
+      Math.max(
+        0,
+        total-elapsed
+      );
+
+    $("#timerNumber").textContent =
+      (remaining/1000).toFixed(1);
+
+    $("#timerBar").style.transform =
+      "scaleX(" +
+      (remaining/total) +
+      ")";
+
+    if(remaining<=0){
+
+      timeoutQuestion();
+
+      return;
+
+    }
+
+    state.timerRAF =
+      requestAnimationFrame(tick);
+
+  }
+
+  state.timerRAF =
+    requestAnimationFrame(tick);
+
+}
+
+
+/* =========================================================
+   ANSWER
+   ========================================================= */
+
+function answerQuestion(
+  answerIndex,
+  clickedButton
+){
+
+  if(
+    state.phase!=="question" ||
+    state.answered
+  ){
+    return;
+  }
+
+  state.answered=true;
+
+  cancelAnimationFrame(
+    state.timerRAF
+  );
+
+  const q =
+    state.questions[
+      state.questionIndex
+    ];
+
+  const elapsed =
+    Math.min(
+      state.questionDuration,
+      (performance.now()-state.questionStarted)/1000
+    );
+
+  const buttons =
+    [...document.querySelectorAll(".answer")];
+
+  buttons.forEach(
+    button=>button.disabled=true
+  );
+
+  buttons[q.correct]
+    .classList.add("correct");
+
+  const correct =
+    answerIndex===q.correct;
+
+  if(!correct){
+    clickedButton.classList.add("wrong");
+  }
+
+  processResult(
+    correct,
+    elapsed
+  );
+
+}
+
+function timeoutQuestion(){
+
+  if(state.answered){
+    return;
+  }
+
+  state.answered=true;
+
+  const q =
+    state.questions[
+      state.questionIndex
+    ];
+
+  const buttons =
+    [...document.querySelectorAll(".answer")];
+
+  buttons.forEach(
+    button=>button.disabled=true
+  );
+
+  buttons[q.correct]
+    .classList.add("correct");
+
+  $("#timerNumber").textContent =
+    "0.0";
+
+  $("#timerBar").style.transform =
+    "scaleX(0)";
+
+  processResult(
+    false,
+    state.questionDuration,
+    true
+  );
+
+}
+
+
+/* =========================================================
+   BOOST LOGIC
+   ========================================================= */
+
+function boostForTime(
+  elapsed,
+  correct
+){
+
+  if(!correct){
+
+    return {
+      name:"NO BOOST",
+      amount:.042,
+      message:"Rivals gaining!"
+    };
+
+  }
+
+  if(elapsed<=3){
+
+    return {
+      name:"MEGA BOOST",
+      amount:.132,
+      message:"DEANS is flying!"
+    };
+
+  }
+
+  if(elapsed<=6){
+
+    return {
+      name:"DRS BOOST",
+      amount:.108,
+      message:"DEANS closes the gap!"
+    };
+
+  }
+
+  if(elapsed<=9){
+
+    return {
+      name:"NORMAL BOOST",
+      amount:.088,
+      message:"Good drive from DEANS!"
+    };
+
+  }
+
+  return {
+    name:"SMALL BOOST",
+    amount:.072,
+    message:"Just in time!"
+  };
+
+}
+
+function processResult(
+  correct,
+  elapsed,
+  timedOut=false
+){
+
+  state.phase =
+    "race";
+
+  const final =
+    state.questionIndex ===
+    state.questions.length-1;
+
+  const drs =
+    !final &&
+    (
+      state.questionIndex===2 ||
+      state.questionIndex===5
+    );
+
+  const boost =
+    boostForTime(
+      elapsed,
+      correct
+    );
+
+  if(correct){
+
+    state.correct++;
+    state.streak++;
+
+    state.bestStreak =
+      Math.max(
+        state.bestStreak,
+        state.streak
+      );
+
+    if(
+      state.fastest===null ||
+      elapsed<state.fastest
+    ){
+      state.fastest=elapsed;
+    }
+
+  }else{
+
+    state.streak=0;
+
+  }
+
+  let deansMove =
+    boost.amount;
+
+  if(drs && correct){
+    deansMove *= 1.24;
+  }
+
+  if(final && correct){
+    deansMove *= 1.18;
+  }
+
+  state.lastBoost =
+    timedOut
+      ? "TIME OUT"
+      : boost.name;
+
+  $("#answerFeedback").textContent =
+    timedOut
+      ? "Time out. The rivals keep pushing."
+      : correct
+        ? boost.name + " - " + elapsed.toFixed(1) + "s"
+        : "Wrong answer. Rivals pull away.";
+
+  if(
+    correct &&
+    elapsed<=3
+  ){
+    const lines =
+      $("#speedLines");
+
+    lines.classList.remove("active");
+
+    void lines.offsetWidth;
+
+    lines.classList.add("active");
+  }
+
+  const oldPosition =
+    deansPosition();
+
+  const rivalBase =
+    .079;
+
+  const targets =
+    [...state.positions];
+
+  targets[0] =
+    Math.min(
+      .94,
+      targets[0] + deansMove
+    );
+
+  for(let i=1;i<4;i++){
+
+    const variation =
+      (Math.random()-.5)*.018;
+
+    targets[i] =
+      Math.min(
+        .94,
+        targets[i] +
+        rivalBase +
+        variation
+      );
+
+  }
+
+  if(!correct){
+
+    targets[0] =
+      Math.min(
+        .94,
+        state.positions[0] +
+        (
+          timedOut
+            ? .027
+            : .043
+        )
+      );
+
+  }
+
+  animateRace(
+    targets,
+    1550,
+    ()=>{
+      const newPosition =
+        deansPosition();
+
+      if(
+        newPosition < oldPosition
+      ){
+
+        setRaceControl(
+          "DEANS takes P" +
+          newPosition +
+          "!"
+        );
+
+      }else{
+
+        setRaceControl(
+          timedOut
+            ? "Rivals gaining!"
+            : boost.message
+        );
+
+      }
+
+      updateHud();
+
+      setTimeout(
+        ()=>{
+          state.questionIndex++;
+          loadQuestion();
+        },
+        500
+      );
+
+    }
+  );
+
+}
+
+
+/* =========================================================
+   RACE ANIMATION
+   ========================================================= */
+
+function animateRace(
+  targets,
+  duration,
+  done
+){
+
+  cancelAnimationFrame(
+    state.raceRAF
+  );
+
+  const start =
+    performance.now();
+
+  const from =
+    [...state.positions];
+
+  function ease(t){
+    return 1-Math.pow(1-t,3);
+  }
+
+  function frame(now){
+
+    const raw =
+      Math.min(
+        1,
+        (now-start)/duration
+      );
+
+    const e =
+      ease(raw);
+
+    for(let i=0;i<4;i++){
+
+      state.positions[i] =
+        from[i] +
+        (
+          targets[i]-from[i]
+        )*e;
+
+    }
+
+    renderCars();
+    updateHud();
+
+    if(raw<1){
+
+      state.raceRAF =
+        requestAnimationFrame(frame);
+
+    }else{
+
+      state.positions =
+        [...targets];
+
+      renderCars();
+
+      if(done){
+        done();
+      }
+
+    }
+
+  }
+
+  state.raceRAF =
+    requestAnimationFrame(frame);
+
+}
+
+
+/* =========================================================
+   FINISH
+   ========================================================= */
+
+function finishRace(){
+
+  state.phase =
+    "finish";
+
+  cancelAnimationFrame(
+    state.timerRAF
+  );
+
+  $("#timerNumber").textContent =
+    "0.0";
+
+  $("#timerBar").style.transform =
+    "scaleX(0)";
+
+  const orderBeforeFinish =
+    standings();
+
+  state.finalPosition =
+    orderBeforeFinish.findIndex(
+      item=>item.index===0
+    ) + 1;
+
+  setRaceControl(
+    "CHEQUERED FLAG!"
+  );
+
+  const max =
+    Math.max(
+      ...state.positions
+    );
+
+  const finishTargets =
+    state.positions.map(
+      (p,i)=>{
+        const rank =
+          orderBeforeFinish.findIndex(
+            item=>item.index===i
+          );
+
+        return (
+          1.015 -
+          rank*.006
+        );
+      }
+    );
+
+  animateRace(
+    finishTargets,
+    1900,
+    ()=>{
+      showResults();
+    }
+  );
+
+}
+
+
+/* =========================================================
+   RESULTS + DAILY STORAGE
+   ========================================================= */
+
+function loadProgress(){
+  try{
+    return JSON.parse(
+      localStorage.getItem(
+        "deansKnowledgeGP"
+      ) || "{}"
+    );
+  }catch{
+    return {};
+  }
+}
+
+function saveDailyResult(){
+
+  const store =
+    loadProgress();
+
+  const today =
+    dateKey();
+
+  const previousDate =
+    store.lastPlayed || null;
+
+  const yesterday =
+    new Date();
+
+  yesterday.setDate(
+    yesterday.getDate()-1
+  );
+
+  const yKey =
+    yesterday.getFullYear() +
+    "-" +
+    String(
+      yesterday.getMonth()+1
+    ).padStart(2,"0") +
+    "-" +
+    String(
+      yesterday.getDate()
+    ).padStart(2,"0");
+
+  let dailyStreak =
+    store.dailyStreak || 0;
+
+  if(previousDate!==today){
+
+    if(previousDate===yKey){
+      dailyStreak++;
+    }else{
+      dailyStreak=1;
+    }
+
+  }
+
+  const result = {
+    position:state.finalPosition,
+    correct:state.correct,
+    fastest:state.fastest,
+    bestStreak:state.bestStreak
+  };
+
+  store.lastPlayed =
+    today;
+
+  store.dailyStreak =
+    dailyStreak;
+
+  store.results =
+    store.results || {};
+
+  store.results[today] =
+    result;
+
+  localStorage.setItem(
+    "deansKnowledgeGP",
+    JSON.stringify(store)
+  );
+
+  return dailyStreak;
+}
+
+function showResults(){
+
+  const streak =
+    saveDailyResult();
+
+  const p =
+    state.finalPosition;
+
+  $("#resultTitle").textContent =
+    p===1
+      ? "DEANS WINS!"
+      : "DEANS FINISHES P" + p;
+
+  $("#resultPosition").textContent =
+    "P" + p;
+
+  $("#resultCorrect").textContent =
+    state.correct +
+    " / " +
+    state.questions.length;
+
+  $("#resultFastest").textContent =
+    state.fastest===null
+      ? "--"
+      : state.fastest.toFixed(1) + "s";
+
+  $("#resultStreak").textContent =
+    String(
+      state.bestStreak
+    );
+
+  $("#resultDaily").textContent =
+    String(streak);
+
+  $("#resultsOverlay")
+    .classList.remove(
+      "hidden"
+    );
+
+}
+
+
+/* =========================================================
+   RACE CONTROL
+   ========================================================= */
+
+function setRaceControl(message){
+
+  $("#raceControl").textContent =
+    message;
+
+}
+
+
+/* =========================================================
+   LIGHTS OUT
+   ========================================================= */
+
+function lightsOut(){
+
+  $("#startBtn").disabled =
+    true;
+
+  const lights = [
+    $("#light1"),
+    $("#light2"),
+    $("#light3"),
+    $("#light4"),
+    $("#light5")
+  ];
+
+  let i=0;
+
+  const interval =
+    setInterval(
+      ()=>{
+
+        if(i<lights.length){
+
+          lights[i]
+            .classList.add("on");
+
+          i++;
+
+          return;
+
+        }
+
+        clearInterval(
+          interval
+        );
+
+        setTimeout(
+          ()=>{
+
+            lights.forEach(
+              light=>
+                light.classList.remove(
+                  "on"
+                )
+            );
+
+            $("#startOverlay")
+              .classList.add(
+                "hidden"
+              );
+
+            setRaceControl(
+              "LIGHTS OUT!"
+            );
+
+            loadQuestion();
+
+          },
+          450
+        );
+
+      },
+      280
+    );
+
+}
+
+
+/* =========================================================
+   REPLAY
+   ========================================================= */
+
+function replay(){
+
+  state.questions =
+    dailyQuestions();
+
+  state.questionIndex=0;
+  state.correct=0;
+  state.streak=0;
+  state.bestStreak=0;
+  state.fastest=null;
+  state.answered=false;
+  state.phase="idle";
+  state.lastBoost="READY";
+
+  state.positions=[
+    .018,
+    .025,
+    .032,
+    .039
+  ];
+
+  state.targetPositions=[
+    ...state.positions
+  ];
+
+  $("#resultsOverlay")
+    .classList.add(
+      "hidden"
+    );
+
+  $("#startOverlay")
+    .classList.remove(
+      "hidden"
+    );
+
+  $("#startBtn").disabled =
+    false;
+
+  $("#question").textContent =
+    "Press LIGHTS OUT to start today's race.";
+
+  $("#category").textContent =
+    "GENERAL KNOWLEDGE";
+
+  $("#answers").innerHTML =
+    "";
+
+  $("#answerFeedback").textContent =
+    "Knowledge controls the race.";
+
+  $("#timerNumber").textContent =
+    "10.0";
+
+  $("#timerBar").style.transform =
+    "scaleX(1)";
+
+  setRaceControl(
+    "Answer to accelerate!"
+  );
+
+  renderCars();
+  updateHud();
+
+}
+
+
+/* =========================================================
+   EVENTS
+   ========================================================= */
+
+$("#startBtn").addEventListener(
+  "click",
+  lightsOut
+);
+
+$("#replayBtn").addEventListener(
+  "click",
+  replay
+);
+
+
+/* Keep cars correctly oriented on initial render. */
+
+window.addEventListener(
+  "resize",
+  renderCars
+);
+
+</script>
+</body>
+</html>
