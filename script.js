@@ -372,9 +372,9 @@ const RULES = {
     <div class="rule-row">
       <div class="rule-icon">🏁</div>
       <div>
-        <strong>Jack Special.</strong>
+        <strong>A different Jack Challenge every day.</strong>
         <br>
-        Bonus rounds occasionally use cars, Formula 1 and fantasy themes.
+        Specials rotate between F1, deduction, sequences, mystery and fantasy mini-games.
       </div>
     </div>
   `
@@ -424,7 +424,11 @@ const state = {
 
   balanceRight: [],
 
-  signalAnswer: ""
+  signalAnswer: "",
+
+  specialGuess: "",
+
+  specialCluesShown: 1
 
 };
 
@@ -1096,6 +1100,38 @@ function renderHome() {
     )} · Day ${dailyNumber(
       state.dateKey
     )}`;
+
+  const todaySpecial =
+    getPuzzle(
+      "special",
+      state.dateKey,
+      "daily"
+    );
+
+  const specialTitle =
+    $("#specialTitle");
+
+  const specialDescription =
+    $("#specialDescription");
+
+  const specialIcon =
+    $("#specialIcon");
+
+  if (specialTitle) {
+    specialTitle.textContent =
+      todaySpecial.title;
+  }
+
+  if (specialDescription) {
+    specialDescription.textContent =
+      todaySpecial.description;
+  }
+
+  if (specialIcon) {
+    specialIcon.textContent =
+      todaySpecial.icon || "🏁";
+  }
+
 
   const grid =
     $("#gameGrid");
@@ -2842,126 +2878,117 @@ function createSignalPuzzle(token) {
 const SPECIAL_BANK = [
 
   {
-    title:
-      "Grid Legends",
-
-    prompt:
-      "Which four belong on a modern Formula 1 grid?",
-
-    items:
-      [
-        "FERRARI",
-        "MCLAREN",
-        "MERCEDES",
-        "RED BULL",
-        "BUGATTI",
-        "PAGANI",
-        "BENTLEY",
-        "KOENIGSEGG",
-        "VOLVO",
-        "LEXUS",
-        "JEEP",
-        "MINI"
-      ],
-
-    answer:
-      [
-        "FERRARI",
-        "MCLAREN",
-        "MERCEDES",
-        "RED BULL"
-      ],
-
+    kind: "choice4",
+    title: "Grid Legends",
+    icon: "🏎️",
+    prompt: "Four belong on the Formula 1 grid. Which ones?",
     description:
-      "Select the four Formula 1 names.",
-
+      "Pick exactly four. The decoys are all real car names, so look carefully.",
+    items: [
+      "FERRARI",
+      "MCLAREN",
+      "MERCEDES",
+      "RED BULL",
+      "BUGATTI",
+      "PAGANI",
+      "BENTLEY",
+      "KOENIGSEGG",
+      "VOLVO",
+      "LEXUS",
+      "JEEP",
+      "MINI"
+    ],
+    answer: [
+      "FERRARI",
+      "MCLAREN",
+      "MERCEDES",
+      "RED BULL"
+    ],
     explanation:
-      "Ferrari, McLaren, Mercedes and Red Bull are major Formula 1 team or constructor names.",
-
+      "Ferrari, McLaren, Mercedes and Red Bull are Formula 1 constructor or team names.",
     hint:
-      "Think race grid, not road-car brands."
+      "Think about names you would actually see on an F1 starting grid."
   },
 
   {
-    title:
-      "Seven Kingdoms",
-
-    prompt:
-      "Find the four major Westeros houses.",
-
-    items:
-      [
-        "STARK",
-        "LANNISTER",
-        "TARGARYEN",
-        "BARATHEON",
-        "BAGGINS",
-        "POTTER",
-        "SKYWALKER",
-        "CORLEONE",
-        "WAYNE",
-        "BOND",
-        "DRAKE",
-        "SHELBY"
-      ],
-
-    answer:
-      [
-        "STARK",
-        "LANNISTER",
-        "TARGARYEN",
-        "BARATHEON"
-      ],
-
+    kind: "whoami",
+    title: "Who Am I?",
+    icon: "🕵️",
+    prompt: "Name the driver before all five clues are revealed.",
     description:
-      "Select four names belonging to the same fantasy world.",
-
+      "Reveal clues one at a time. Earlier guesses are more impressive.",
+    clues: [
+      "I am a multiple Formula 1 world champion.",
+      "I have raced for McLaren and Mercedes.",
+      "I became the youngest F1 world champion at the time in 2008.",
+      "Car number 44 is strongly associated with me.",
+      "My first name is Lewis."
+    ],
+    answerText: "LEWIS HAMILTON",
     explanation:
-      "Stark, Lannister, Targaryen and Baratheon are major noble houses in Westeros.",
-
+      "The clues point to Lewis Hamilton: McLaren, Mercedes, seven world titles and car number 44.",
     hint:
-      "Think Game of Thrones."
+      "Reveal one more clue before guessing."
   },
 
   {
-    title:
-      "Italian Icons",
-
-    prompt:
-      "Find four Italian performance marques.",
-
-    items:
-      [
-        "FERRARI",
-        "LAMBORGHINI",
-        "PAGANI",
-        "MASERATI",
-        "PORSCHE",
-        "MCLAREN",
-        "ASTON MARTIN",
-        "BUGATTI",
-        "BMW",
-        "AUDI",
-        "LEXUS",
-        "VOLVO"
-      ],
-
-    answer:
-      [
-        "FERRARI",
-        "LAMBORGHINI",
-        "PAGANI",
-        "MASERATI"
-      ],
-
+    kind: "number",
+    title: "Impossible Sequence",
+    icon: "🧠",
+    prompt: "What number comes next?",
     description:
-      "Select the four Italian marques.",
-
+      "This one hides a changing pattern. Enter the next number.",
+    sequence: [4, 7, 13, 22, 34, 49],
+    answerText: "67",
     explanation:
-      "Ferrari, Lamborghini, Pagani and Maserati are Italian performance-car marques.",
-
+      "The gaps are +3, +6, +9, +12, +15, so the next gap is +18: 49 + 18 = 67.",
     hint:
-      "Country of origin matters."
+      "Do not study the numbers first. Study the gaps between them."
+  },
+
+  {
+    kind: "single",
+    title: "The Case",
+    icon: "🕵️‍♂️",
+    prompt: "Who took the final parking space?",
+    description:
+      "Alex arrived before Ben. Cara arrived after Ben. Dan arrived before Alex. The final arrival took the last space.",
+    items: [
+      "ALEX",
+      "BEN",
+      "CARA",
+      "DAN"
+    ],
+    answer: ["CARA"],
+    explanation:
+      "The only order consistent with all clues is Dan → Alex → Ben → Cara, so Cara arrived last.",
+    hint:
+      "Build the chain from the strongest clue: Dan is before Alex, Alex is before Ben, and Ben is before Cara."
+  },
+
+  {
+    kind: "order",
+    title: "Throne Room",
+    icon: "⚔️",
+    prompt: "Put the houses in the correct order.",
+    description:
+      "Stark is before Targaryen. Lannister is immediately after Stark. Baratheon is after Targaryen.",
+    items: [
+      "STARK",
+      "LANNISTER",
+      "TARGARYEN",
+      "BARATHEON"
+    ],
+    answer: [
+      "STARK",
+      "LANNISTER",
+      "TARGARYEN",
+      "BARATHEON"
+    ],
+    explanation:
+      "Stark must come first, Lannister directly after it, Targaryen later, and Baratheon after Targaryen.",
+    hint:
+      "The immediate relationship between Stark and Lannister fixes the beginning."
   }
 
 ];
@@ -3113,6 +3140,12 @@ function openGame(
 
     state.signalAnswer =
     "";
+
+    state.specialGuess =
+    "";
+
+    state.specialCluesShown =
+    1;
 
   $("#timer").textContent =
     "00:00";
@@ -4854,128 +4887,520 @@ function renderSpecial(
   $("#puzzleDescription").textContent =
     puzzle.description;
 
-  const rng =
-    rngFrom(
-      state.dateKey
-      +
-      state.gameKey
-    );
-
-  const items =
-    shuffle(
-      puzzle.items,
-      rng
-    );
-
-  const grid =
+  const shell =
     document.createElement(
       "div"
     );
 
-  grid.className =
-    "choice-grid";
+  shell.className =
+    "special-game-shell";
 
-  items.forEach(
 
-    item => {
+  if (
+    puzzle.kind ===
+    "choice4"
+    ||
+    puzzle.kind ===
+    "single"
+  ) {
 
-      const button =
+    const rng =
+      rngFrom(
+        state.dateKey
+        +
+        state.gameKey
+        +
+        puzzle.title
+      );
+
+    const items =
+      shuffle(
+        puzzle.items,
+        rng
+      );
+
+    const grid =
+      document.createElement(
+        "div"
+      );
+
+    grid.className =
+      "choice-grid special-choice-grid";
+
+    items.forEach(
+      item => {
+
+        const button =
+          document.createElement(
+            "button"
+          );
+
+        button.type =
+          "button";
+
+        button.className =
+          "choice-tile";
+
+        button.textContent =
+          item;
+
+        if (
+          state.selected.includes(
+            item
+          )
+        ) {
+          button.classList.add(
+            "selected"
+          );
+        }
+
+        button.addEventListener(
+          "click",
+          () => {
+
+            if (
+              puzzle.kind ===
+              "single"
+            ) {
+
+              state.selected =
+                [item];
+
+            }
+            else {
+
+              const position =
+                state.selected.indexOf(
+                  item
+                );
+
+              if (
+                position >= 0
+              ) {
+
+                state.selected.splice(
+                  position,
+                  1
+                );
+
+              }
+              else if (
+                state.selected.length <
+                4
+              ) {
+
+                state.selected.push(
+                  item
+                );
+
+              }
+
+            }
+
+            renderCurrentGame();
+
+          }
+        );
+
+        grid.appendChild(
+          button
+        );
+
+      }
+    );
+
+    shell.appendChild(
+      grid
+    );
+
+  }
+
+
+  else if (
+    puzzle.kind ===
+    "whoami"
+  ) {
+
+    const clueBox =
+      document.createElement(
+        "div"
+      );
+
+    clueBox.className =
+      "special-clue-stack";
+
+    puzzle.clues
+      .slice(
+        0,
+        state.specialCluesShown
+      )
+      .forEach(
+        (clue, index) => {
+
+          const row =
+            document.createElement(
+              "div"
+            );
+
+          row.className =
+            "special-clue";
+
+          row.innerHTML =
+            `<strong>CLUE ${index + 1}</strong><span>${clue}</span>`;
+
+          clueBox.appendChild(
+            row
+          );
+
+        }
+      );
+
+    shell.appendChild(
+      clueBox
+    );
+
+    if (
+      state.specialCluesShown <
+      puzzle.clues.length
+    ) {
+
+      const reveal =
         document.createElement(
           "button"
         );
 
-      button.type =
+      reveal.type =
         "button";
 
-      button.className =
-        "choice-tile";
+      reveal.className =
+        "button secondary special-reveal-button";
 
-      button.textContent =
-        item;
+      reveal.textContent =
+        "Reveal another clue";
 
-      if (
-        state.selected.includes(
-          item
-        )
-      ) {
-
-        button.classList.add(
-          "selected"
-        );
-
-      }
-
-      button.addEventListener(
-
+      reveal.addEventListener(
         "click",
-
         () => {
 
-          const position =
-            state.selected.indexOf(
-              item
+          state.specialCluesShown +=
+            1;
+
+          renderCurrentGame();
+
+        }
+      );
+
+      shell.appendChild(
+        reveal
+      );
+
+    }
+
+    const input =
+      document.createElement(
+        "input"
+      );
+
+    input.className =
+      "special-answer-input";
+
+    input.type =
+      "text";
+
+    input.placeholder =
+      "Type your answer…";
+
+    input.value =
+      state.specialGuess;
+
+    input.autocomplete =
+      "off";
+
+    input.addEventListener(
+      "input",
+      event => {
+
+        state.specialGuess =
+          event.target.value;
+
+      }
+    );
+
+    shell.appendChild(
+      input
+    );
+
+  }
+
+
+  else if (
+    puzzle.kind ===
+    "number"
+  ) {
+
+    const sequence =
+      document.createElement(
+        "div"
+      );
+
+    sequence.className =
+      "special-sequence";
+
+    sequence.textContent =
+      `${puzzle.sequence.join("  →  ")}  →  ?`;
+
+    shell.appendChild(
+      sequence
+    );
+
+    const input =
+      document.createElement(
+        "input"
+      );
+
+    input.className =
+      "special-answer-input";
+
+    input.type =
+      "number";
+
+    input.inputMode =
+      "numeric";
+
+    input.placeholder =
+      "Next number";
+
+    input.value =
+      state.specialGuess;
+
+    input.addEventListener(
+      "input",
+      event => {
+
+        state.specialGuess =
+          event.target.value;
+
+      }
+    );
+
+    shell.appendChild(
+      input
+    );
+
+  }
+
+
+  else if (
+    puzzle.kind ===
+    "order"
+  ) {
+
+    const remaining =
+      puzzle.items.filter(
+        item =>
+          !state.selected.includes(
+            item
+          )
+      );
+
+    const order =
+      document.createElement(
+        "div"
+      );
+
+    order.className =
+      "special-order-strip";
+
+    if (
+      state.selected.length ===
+      0
+    ) {
+
+      order.innerHTML =
+        `<span class="special-order-empty">Tap the houses in order</span>`;
+
+    }
+    else {
+
+      state.selected.forEach(
+        (item, index) => {
+
+          const chip =
+            document.createElement(
+              "button"
             );
 
-          if (
-            position >= 0
-          ) {
+          chip.type =
+            "button";
 
-            state.selected.splice(
-              position,
-              1
-            );
+          chip.className =
+            "special-order-chip";
 
-          }
+          chip.textContent =
+            `${index + 1}. ${item}`;
 
-          else if (
-            state.selected.length <
-            4
-          ) {
+          chip.addEventListener(
+            "click",
+            () => {
+
+              state.selected =
+                state.selected.filter(
+                  selected =>
+                    selected !==
+                    item
+                );
+
+              renderCurrentGame();
+
+            }
+          );
+
+          order.appendChild(
+            chip
+          );
+
+        }
+      );
+
+    }
+
+    shell.appendChild(
+      order
+    );
+
+    const choices =
+      document.createElement(
+        "div"
+      );
+
+    choices.className =
+      "choice-grid special-order-choices";
+
+    remaining.forEach(
+      item => {
+
+        const button =
+          document.createElement(
+            "button"
+          );
+
+        button.type =
+          "button";
+
+        button.className =
+          "choice-tile";
+
+        button.textContent =
+          item;
+
+        button.addEventListener(
+          "click",
+          () => {
 
             state.selected.push(
               item
             );
 
+            renderCurrentGame();
+
           }
+        );
 
-          renderCurrentGame();
+        choices.appendChild(
+          button
+        );
 
-        }
+      }
+    );
 
-      );
+    shell.appendChild(
+      choices
+    );
 
-      grid.appendChild(
-        button
-      );
+  }
 
-    }
-
-  );
 
   area.appendChild(
-    grid
+    shell
   );
+
+}
+
+
+function normaliseSpecialAnswer(
+  value
+) {
+
+  return String(
+    value || ""
+  )
+    .trim()
+    .toUpperCase()
+    .replace(
+      /\s+/g,
+      " "
+    );
 
 }
 
 
 function checkSpecial() {
 
-  const selected =
-    [...state.selected]
-      .sort();
+  const puzzle =
+    state.puzzle;
 
-  const answer =
-    [...state.puzzle.answer]
-      .sort();
+  if (
+    puzzle.kind ===
+    "choice4"
+    ||
+    puzzle.kind ===
+    "single"
+  ) {
+
+    const selected =
+      [...state.selected]
+        .sort();
+
+    const answer =
+      [...puzzle.answer]
+        .sort();
+
+    return (
+      JSON.stringify(
+        selected
+      )
+      ===
+      JSON.stringify(
+        answer
+      )
+    );
+
+  }
+
+  if (
+    puzzle.kind ===
+    "order"
+  ) {
+
+    return (
+      JSON.stringify(
+        state.selected
+      )
+      ===
+      JSON.stringify(
+        puzzle.answer
+      )
+    );
+
+  }
 
   return (
-    JSON.stringify(
-      selected
+    normaliseSpecialAnswer(
+      state.specialGuess
     )
     ===
-    JSON.stringify(
-      answer
+    normaliseSpecialAnswer(
+      puzzle.answerText
     )
   );
 
@@ -5056,8 +5481,39 @@ function revealSolution() {
   }
 
   else if (state.gameKey === "special") {
-    state.selected =
-      [...state.puzzle.answer];
+
+    if (
+      state.puzzle.kind ===
+      "choice4"
+      ||
+      state.puzzle.kind ===
+      "single"
+      ||
+      state.puzzle.kind ===
+      "order"
+    ) {
+
+      state.selected =
+        [...state.puzzle.answer];
+
+    }
+    else {
+
+      state.specialGuess =
+        state.puzzle.answerText;
+
+      if (
+        state.puzzle.kind ===
+        "whoami"
+      ) {
+
+        state.specialCluesShown =
+          state.puzzle.clues.length;
+
+      }
+
+    }
+
   }
 
   renderCurrentGame();
@@ -5362,6 +5818,28 @@ function useHint() {
   if (
     state.gameKey === "special"
   ) {
+
+    if (
+      puzzle.kind ===
+      "whoami"
+      &&
+      state.specialCluesShown <
+      puzzle.clues.length
+    ) {
+
+      state.specialCluesShown +=
+        1;
+
+      renderCurrentGame();
+
+      setFeedback(
+        `Clue ${state.specialCluesShown} revealed.`
+      );
+
+      return;
+
+    }
+
     setFeedback(
       puzzle.hint
     );
